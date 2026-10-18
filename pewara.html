@@ -37,6 +37,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite}
 .spinner.dark{border-color:var(--border);border-top-color:var(--rose-primary)}
@@ -73,12 +74,12 @@ input,select,textarea{font-family:inherit;font-size:15px}
 /* ============================================================
  * §3 LAYOUT
  * ============================================================ */
-#app{height:100%;display:flex;flex-direction:column;max-width:1400px;margin:0 auto;background:var(--bg)}
+#app{height:100%;display:flex;flex-direction:column;max-width:1500px;margin:0 auto;background:var(--bg)}
 .view{display:none;flex:1;flex-direction:column;overflow:hidden;animation:fadeIn 0.25s ease}
 .view.active{display:flex}
 
 .appbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.7rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-shrink:0;box-shadow:var(--shadow-sm);z-index:10}
-.appbar .back{width:36px;height:36px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:18px;transition:var(--trans);flex-shrink:0}
+.appbar .back{width:36px;height:36px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:18px;transition:var(--trans);flex-shrink:0;text-decoration:none}
 .appbar .back:hover{background:var(--rose-light);color:var(--rose-deep)}
 .appbar h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:800;color:var(--rose-deep);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .appbar .spacer{width:36px}
@@ -91,12 +92,14 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .state-badge.final{background:var(--hijau-light);color:#065f46}
 
 .content{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:1rem}
-.content.no-pad{padding:0}
+.content.no-pad{padding:0;gap:0;display:flex;flex-direction:column}
 
 /* ============================================================
  * §4 LOGIN
  * ============================================================ */
-#view-login{align-items:center;justify-content:center}
+#view-login{align-items:center;justify-content:center;position:relative}
+.back-home-link{position:absolute;top:1.5rem;left:1.5rem;display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:700;color:var(--ink-light);text-decoration:none;transition:var(--trans);z-index:10;background:var(--surface);padding:0.4rem 0.8rem;border-radius:var(--r-md);border:1px solid var(--border)}
+.back-home-link:hover{color:var(--rose-deep);border-color:var(--rose-primary)}
 .login-card{background:var(--surface);border-radius:var(--r-lg);padding:2.5rem;box-shadow:var(--shadow-lg);border:1px solid var(--border);width:100%;max-width:420px;text-align:center}
 .login-card .icon-big{font-size:3rem;color:var(--rose-primary);margin-bottom:0.6rem}
 .login-card h1{font-size:1.6rem;margin-bottom:0.3rem}
@@ -131,9 +134,19 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .transition-bar .info span{font-size:0.82rem;color:var(--ink-light)}
 
 /* ============================================================
- * §6 INPUT TABLE
+ * §6 INPUT TABLE & LIVE RANKING
  * ============================================================ */
-.table-progress{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.6rem}
+.input-workspace{display:flex;flex:1;overflow:hidden}
+.input-left{flex:1;display:flex;flex-direction:column;min-width:0;padding:1rem 1.2rem 0}
+.input-right{width:300px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+
+@media (max-width: 1024px){
+  .input-workspace{flex-direction:column;overflow-y:auto}
+  .input-left{overflow:visible;padding-bottom:1rem}
+  .input-right{width:100%;border-left:none;border-top:1px solid var(--border);max-height:400px}
+}
+
+.table-progress{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:0.8rem}
 .progress-label{display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.85rem}
 .progress-label strong{color:var(--rose-deep)}
 .progress-bar{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
@@ -149,7 +162,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .missing-item{padding:0.3rem 0.7rem;background:var(--surface-2);border-radius:6px;font-size:0.76rem;font-weight:700;color:var(--ink);cursor:pointer;transition:var(--trans);border:none}
 .missing-item:hover{background:var(--danger-light);color:var(--danger)}
 
-.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;max-height:calc(100vh - 340px);box-shadow:var(--shadow-sm)}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;flex:1;box-shadow:var(--shadow-sm);margin-bottom:0.8rem}
 .input-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;font-variant-numeric:tabular-nums}
 .input-table thead th{position:sticky;background:var(--surface-2);padding:6px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;color:var(--ink-light);border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;z-index:4}
 .input-table thead tr:nth-child(1) th{top:0;height:var(--h1)}
@@ -184,12 +197,40 @@ input[type=number]{-moz-appearance:textfield}
 
 .row-total{font-weight:800;color:var(--rose-deep);font-size:15px;font-variant-numeric:tabular-nums}
 
-.save-bar{position:sticky;bottom:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:0.75rem 1.2rem;display:flex;gap:0.75rem;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 -4px 12px rgba(0,0,0,0.05)}
+.save-bar{position:sticky;bottom:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:0.75rem 1.2rem;display:flex;gap:0.75rem;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 -4px 12px rgba(0,0,0,0.05);z-index:20}
 .save-bar .info{font-size:0.8rem;color:var(--ink-light)}
 .save-bar .info strong{color:var(--rose-deep)}
 .save-bar button{min-width:200px}
 
-.blind-banner{background:#FEF3C7;border-left:4px solid var(--gold);border-radius:var(--r-md);padding:0.7rem 1rem;font-size:0.82rem;color:#92400e;display:flex;gap:0.5rem;align-items:center}
+.blind-banner{background:#FEF3C7;border-left:4px solid var(--gold);border-radius:var(--r-md);padding:0.7rem 1rem;font-size:0.82rem;color:#92400e;display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem}
+
+/* Live Ranking Panel */
+.rank-panel{display:flex;flex-direction:column;height:100%}
+.rank-head{padding:1rem 1.2rem;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.rank-head h3{font-size:0.95rem;font-weight:800;margin-bottom:0.2rem;display:flex;align-items:center;gap:0.4rem}
+.rank-head p{font-size:0.72rem;color:var(--ink-light)}
+.rank-list{flex:1;overflow-y:auto;padding:0.8rem 1rem;display:flex;flex-direction:column;gap:0.5rem}
+.rank-item{display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);transition:var(--trans);animation:slideInRight 0.3s ease}
+.rank-item:hover{border-color:var(--rose-primary)}
+.rank-item.top1{background:linear-gradient(135deg, #FFFBEB, #FEF3C7);border-color:var(--gold)}
+.rank-item.top2{background:linear-gradient(135deg, #F8FAFC, #F1F5F9);border-color:#CBD5E1}
+.rank-item.top3{background:linear-gradient(135deg, #FFF7ED, #FFEDD5);border-color:#FDBA74}
+
+.rank-badge{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#fff;flex-shrink:0}
+.rank-badge.r1{background:var(--gold);color:var(--rose-deep)}
+.rank-badge.r2{background:#94A3B8}
+.rank-badge.r3{background:#D97706}
+.rank-badge.rn{background:var(--surface-2);color:var(--ink-light)}
+
+.rank-info{flex:1;min-width:0}
+.rank-info .no{font-family:'Fraunces',serif;font-weight:900;font-size:1rem;color:var(--rose-deep);line-height:1.1}
+.rank-info .nm{font-size:0.7rem;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-score{font-weight:800;font-size:1rem;color:var(--hijau);text-align:right;line-height:1}
+.rank-score small{display:block;font-size:0.6rem;color:var(--ink-light);font-weight:600;margin-top:2px}
+.rank-tie{font-size:0.6rem;font-weight:800;color:var(--danger);background:var(--danger-light);padding:0.1rem 0.3rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle}
+
+.rank-empty{text-align:center;padding:2rem 1rem;color:var(--ink-light);font-size:0.8rem;display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.rank-empty .icon{font-size:2rem;opacity:0.3}
 
 /* ============================================================
  * §7 KEHADIRAN CARDS
@@ -302,7 +343,7 @@ input[type=number]{-moz-appearance:textfield}
 .tier-badge.tn{background:var(--surface-2);color:var(--ink-light)}
 
 /* ============================================================
- * §12 RESPONSIVE (basic desktop-first fallback)
+ * §12 RESPONSIVE
  * ============================================================ */
 @media (max-width: 768px){
   .content{padding:0.8rem}
@@ -313,6 +354,7 @@ input[type=number]{-moz-appearance:textfield}
   .input-cell{width:44px;height:34px;font-size:14px}
   .save-bar button{min-width:auto;flex:1}
   .print-page{width:auto;min-height:auto;padding:12mm 8mm}
+  .back-home-link{top:1rem;left:1rem}
 }
 </style>
 </head>
@@ -321,6 +363,10 @@ input[type=number]{-moz-appearance:textfield}
 <div id="app">
   <!-- ══════════════ LOGIN ══════════════ -->
   <div id="view-login" class="view active">
+    <a href="./index.html" class="back-home-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Beranda
+    </a>
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem">
       <div class="login-card">
         <div class="icon-big">🕌</div>
@@ -339,7 +385,12 @@ input[type=number]{-moz-appearance:textfield}
   <!-- ══════════════ DASHBOARD ══════════════ -->
   <div id="view-dashboard" class="view">
     <div class="appbar">
-      <h1 id="dashTitle">Dashboard</h1>
+      <div style="display:flex; align-items:center; gap:0.8rem;">
+        <a href="./index.html" class="back" title="Kembali ke Beranda" style="text-decoration:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </a>
+        <h1 id="dashTitle">Dashboard</h1>
+      </div>
       <button class="btn btn-ghost btn-sm" id="btnLogout">Keluar</button>
     </div>
     <div class="content" id="dashContent"></div>
@@ -352,12 +403,29 @@ input[type=number]{-moz-appearance:textfield}
       <h1 id="inputTitle">Input Nilai</h1>
       <span class="state-badge draft" id="inputStateBadge">Draft</span>
     </div>
-    <div class="content no-pad" style="padding:0;gap:0;display:flex;flex-direction:column">
-      <div style="padding:1rem 1.2rem 0.5rem;display:flex;flex-direction:column;gap:0.75rem" id="inputHeader"></div>
-      <div style="flex:1;overflow:hidden;padding:0 1.2rem 0;display:flex;flex-direction:column">
+    
+    <!-- Workspace with Left (Table) & Right (Live Ranking) -->
+    <div class="input-workspace">
+      <div class="input-left">
+        <div id="inputHeader" style="padding:1rem 0 0.5rem;display:flex;flex-direction:column;gap:0.75rem"></div>
         <div class="table-wrap" id="inputTableWrap" style="flex:1"></div>
+        <div class="save-bar no-print" id="inputSaveBar"></div>
       </div>
-      <div class="save-bar no-print" id="inputSaveBar"></div>
+      <div class="input-right" id="liveRankPanel">
+        <!-- Live Ranking Panel -->
+        <div class="rank-panel">
+          <div class="rank-head">
+            <h3>🏆 Live Ranking</h3>
+            <p>Top 5 sementara (berdasarkan input)</p>
+          </div>
+          <div class="rank-list" id="liveRankList">
+            <div class="rank-empty">
+              <div class="icon">⏳</div>
+              <div>Menunggu input nilai lengkap...</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -451,14 +519,13 @@ input[type=number]{-moz-appearance:textfield}
    * ══════════════════════════════════════════════════════════════ */
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
   const LS_TOKEN = 'mtq_pewara_token';
-  const LS_DRAFT_PREFIX = 'mtq_pewara_draft_';
 
   const State = {
     token: localStorage.getItem(LS_TOKEN) || '',
-    login: null,          // {pewara, config, lcp_fase, penilaian_buka}
-    dashboard: null,      // {state, cabang, kode, label, kriteria, juri, rows, ...}
+    login: null,
+    dashboard: null,
     currentView: 'login',
-    dirty: false,
+    dirty: false
   };
 
   /* ══════════════════════════════════════════════════════════════
@@ -468,7 +535,6 @@ input[type=number]{-moz-appearance:textfield}
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   function toast(msg, type = 'info') {
     const wrap = $('#toastContainer');
@@ -564,7 +630,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §4 LOGIN
+   * §4 LOGIN & BOOT
    * ══════════════════════════════════════════════════════════════ */
   function renderLogin() {
     showView('login');
@@ -692,15 +758,13 @@ input[type=number]{-moz-appearance:textfield}
 
   function buildModules(state) {
     const isDraft = state === 'draft';
-    const isLocked = state === 'locked';
     const isSidang = state === 'sidang';
-    const isFinal = state === 'final';
     const penilaianBuka = isPenilaianBuka();
 
     const canInput = (isDraft || isSidang) && penilaianBuka && !isLcp();
     const canKehadiran = (isDraft || isSidang) && penilaianBuka;
     const canSeri = (isDraft || isSidang) && (State.dashboard.seri_belum_putus || []).length > 0;
-    const canPrint = !isDraft;
+    const canPrint = state !== 'draft';
 
     const canLcpPenyisihan = isLcp() && isDraft && getTahap() === 'penyisihan' && penilaianBuka;
     const canLcpFinalis = isLcp() && isDraft && getTahap() === 'penyisihan' && penilaianBuka;
@@ -826,6 +890,8 @@ input[type=number]{-moz-appearance:textfield}
   /* ══════════════════════════════════════════════════════════════
    * §7 INPUT NILAI (non-LCP)
    * ══════════════════════════════════════════════════════════════ */
+  let rankDebounce = null;
+
   function renderInput() {
     showView('input');
     const d = State.dashboard;
@@ -881,7 +947,6 @@ input[type=number]{-moz-appearance:textfield}
     $('#inputTableWrap').innerHTML = buildInputTableHtml(crit, juri, rows, blind);
 
     // Save bar
-    const totalCells = rows.length * juri.length;
     $('#inputSaveBar').innerHTML = `
       <div class="info">Edit nilai → auto-hitung total · <strong>Simpan</strong> untuk commit</div>
       <button class="btn btn-primary" id="btnSaveNilai" ${!isPenilaianBuka() ? 'disabled' : ''}>
@@ -895,15 +960,15 @@ input[type=number]{-moz-appearance:textfield}
     $$('.missing-item').forEach(b => {
       b.onclick = () => focusRow(b.dataset.no);
     });
+
+    // Render Live Ranking awal
+    calculateLiveRank();
   }
 
   function buildInputTableHtml(crit, juri, rows, blind) {
     if (!rows.length) return '<div style="text-align:center;padding:3rem;color:var(--ink-light)">Belum ada peserta</div>';
 
-    // Header row 1: juri group
     const groupCols = juri.map((j, idx) => `<th class="th-juri th-juri-${idx+1}" colspan="${crit.length}">Juri ${j.Urutan} — ${esc(j.Nama)}</th>`).join('');
-
-    // Header row 2: criteria
     const critCols = juri.map((j, idx) =>
       crit.map(c => `<th class="th-juri-${idx+1}">${esc(c.key)}<br><small style="font-weight:500;font-size:9px;opacity:0.75">/${c.max}</small></th>`).join('')
     ).join('');
@@ -920,7 +985,6 @@ input[type=number]{-moz-appearance:textfield}
         </tr>
       </thead>`;
 
-    // Body rows
     const bodyRows = rows.map(r => {
       const no = r.No_Undian;
       const complete = isRowComplete(r);
@@ -1000,7 +1064,6 @@ input[type=number]{-moz-appearance:textfield}
 
   function handleCellInput(inp) {
     let v = String(inp.value).replace(/[^0-9.]/g, '');
-    // Only one dot
     const parts = v.split('.');
     if (parts.length > 2) v = parts[0] + '.' + parts.slice(1).join('');
     const max = parseFloat(inp.dataset.max);
@@ -1017,7 +1080,6 @@ input[type=number]{-moz-appearance:textfield}
     inp.classList.toggle('filled', v !== '');
     inp.classList.remove('invalid');
 
-    // Validate
     if (v !== '' && v !== '.') {
       const n = parseFloat(v);
       if (isNaN(n) || n < min || n > max) {
@@ -1029,7 +1091,7 @@ input[type=number]{-moz-appearance:textfield}
     const tr = inp.closest('tr');
     updateRowState(tr);
 
-    // Auto-advance on 2-digit complete or if max ≤ 9 and value filled
+    // Auto-advance
     const maxLen = inp.maxLength;
     if (v.length >= maxLen && v !== '') {
       setTimeout(() => focusCellNext(inp), 60);
@@ -1070,6 +1132,10 @@ input[type=number]{-moz-appearance:textfield}
 
     // Update progress
     updateProgress();
+
+    // Trigger Live Rank calculation (debounce 300ms)
+    clearTimeout(rankDebounce);
+    rankDebounce = setTimeout(calculateLiveRank, 300);
   }
 
   function updateProgress() {
@@ -1084,6 +1150,107 @@ input[type=number]{-moz-appearance:textfield}
     if (pctSpan) pctSpan.textContent = pct + '%';
   }
 
+  /* ══════════════════════════════════════════════════════════════
+   * §7b LIVE RANKING ENGINE
+   * ══════════════════════════════════════════════════════════════ */
+  function calculateLiveRank() {
+    const rows = $$('.input-table tbody tr');
+    const data = [];
+    const juriCount = getJuriList().length;
+    const critCount = getKriteria().length;
+
+    rows.forEach(tr => {
+      const no = tr.dataset.no;
+      const nama = tr.querySelector('.row-id .nama')?.textContent || '';
+      const inputs = tr.querySelectorAll('.input-cell');
+      let totalSum = 0, completeJuri = 0;
+
+      // Group by juri
+      const juriMap = {};
+      inputs.forEach(inp => {
+        const j = inp.dataset.juri;
+        if (!juriMap[j]) juriMap[j] = { filled: 0, sum: 0 };
+        const v = parseFloat(inp.value);
+        if (!isNaN(v) && inp.value !== '') {
+          juriMap[j].sum += v;
+          juriMap[j].filled++;
+        }
+      });
+
+      Object.values(juriMap).forEach(j => {
+        if (j.filled === critCount) {
+          totalSum += j.sum;
+          completeJuri++;
+        }
+      });
+
+      if (completeJuri === juriCount && juriCount > 0) {
+        data.push({
+          no,
+          nama,
+          total: totalSum / juriCount
+        });
+      }
+    });
+
+    // Sort descending by total
+    data.sort((a, b) => b.total - a.total);
+
+    // Take Top 5
+    const top5 = data.slice(0, 5);
+    const listEl = $('#liveRankList');
+
+    if (!top5.length) {
+      listEl.innerHTML = `
+        <div class="rank-empty">
+          <div class="icon">⏳</div>
+          <div>Menunggu input nilai lengkap...</div>
+        </div>`;
+      return;
+    }
+
+    // Check for ties
+    const tieSet = new Set();
+    for (let i = 0; i < top5.length; i++) {
+      for (let j = i + 1; j < top5.length; j++) {
+        if (top5[i].total === top5[j].total) {
+          tieSet.add(top5[i].no);
+          tieSet.add(top5[j].no);
+        }
+      }
+    }
+
+    listEl.innerHTML = top5.map((item, idx) => {
+      const rank = idx + 1;
+      let badgeCls = 'rn';
+      let itemCls = '';
+      if (rank === 1) { badgeCls = 'r1'; itemCls = 'top1'; }
+      else if (rank === 2) { badgeCls = 'r2'; itemCls = 'top2'; }
+      else if (rank === 3) { badgeCls = 'r3'; itemCls = 'top3'; }
+
+      const isTie = tieSet.has(item.no);
+      const tieHtml = isTie ? '<span class="rank-tie">TIE</span>' : '';
+      const namaHtml = isBlind() ? '' : `<div class="nm">${esc(item.nama)}</div>`;
+
+      return `
+        <div class="rank-item ${itemCls}">
+          <div class="rank-badge ${badgeCls}">${rank}</div>
+          <div class="rank-info">
+            <div class="no">${esc(item.no)} ${tieHtml}</div>
+            ${namaHtml}
+          </div>
+          <div class="rank-score">
+            ${item.total.toFixed(2)}
+            <small>Skor</small>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+   * §8 SAVE NILAI
+   * ══════════════════════════════════════════════════════════════ */
   function focusCellNext(inp) {
     const all = Array.from(document.querySelectorAll('.input-table .input-cell'));
     const i = all.indexOf(inp);
@@ -1183,7 +1350,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §8 KEHADIRAN
+   * §9 KEHADIRAN
    * ══════════════════════════════════════════════════════════════ */
   function renderKehadiran() {
     showView('kehadiran');
@@ -1265,7 +1432,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §9 SERI
+   * §10 SERI
    * ══════════════════════════════════════════════════════════════ */
   function renderSeri() {
     showView('seri');
@@ -1345,7 +1512,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §10 PRINT ENGINE (BA / DH)
+   * §11 PRINT ENGINE (BA / DH)
    * ══════════════════════════════════════════════════════════════ */
   function buildKopHtml(kop) {
     if (!kop) return '';
@@ -1548,7 +1715,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §11 LCP — PENYISIHAN
+   * §12 LCP — PENYISIHAN
    * ══════════════════════════════════════════════════════════════ */
   function renderLcpPenyisihan() {
     showView('lcp-penyisihan');
@@ -1629,7 +1796,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §12 LCP — TETAPKAN FINALIS
+   * §13 LCP — TETAPKAN FINALIS
    * ══════════════════════════════════════════════════════════════ */
   function renderLcpFinalis() {
     showView('lcp-finalis');
@@ -1717,7 +1884,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §13 LCP — FINAL
+   * §14 LCP — FINAL
    * ══════════════════════════════════════════════════════════════ */
   const LCP_FINAL_TABS = [
     { key: 'final_wajib',   label: 'Wajib Timing', maxBenar: 7 },
@@ -1818,7 +1985,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §14 BOOT
+   * §15 BOOT
    * ══════════════════════════════════════════════════════════════ */
   $('#btnLogin').onclick = doLogin;
   $('#inputToken').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
