@@ -13,7 +13,7 @@
 
     <style>
         /* ============================================================
-         * §1 DESIGN TOKENS (Modern & High Contrast)
+         * §1 DESIGN TOKENS
          * ============================================================ */
         :root {
             --cream: #FFF9F0;
@@ -220,7 +220,7 @@
         }
 
         /* ============================================================
-         * §5 PORTAL SECTION (Updated Colors & Sizes)
+         * §5 PORTAL SECTION (Perbaikan Kontras & Ukuran)
          * ============================================================ */
         .portal-section {
             background: var(--surface);
@@ -251,43 +251,55 @@
         .portal-card {
             display: flex; flex-direction: column;
             padding: 1.2rem; border-radius: var(--r-lg);
-            text-decoration: none; color: #fff;
+            text-decoration: none; 
             transition: var(--trans); position: relative; overflow: hidden;
-            min-height: 170px; border: 2px solid var(--border-dark);
+            min-height: 140px; /* Ukuran kotak diperkecil */
+            border: 2px solid var(--border-dark);
             box-shadow: 3px 3px 0 var(--border);
         }
         .portal-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--border-dark); }
         
-        /* New Color Palette for better readability */
+        /* Warna Background */
         .portal-card.primary { background: #4F46E5; border-color: #4338CA; box-shadow: 3px 3px 0 #C7D2FE; }
         .portal-card.primary:hover { box-shadow: 6px 6px 0 #C7D2FE; }
         
         .portal-card.accent { background: #059669; border-color: #047857; box-shadow: 3px 3px 0 #A7F3D0; }
         .portal-card.accent:hover { box-shadow: 6px 6px 0 #A7F3D0; }
         
-        .portal-card.pewara { background: #D97706; border-color: #B45309; box-shadow: 3px 3px 0 #FDE68A; color: #fff; }
+        .portal-card.pewara { background: #F59E0B; border-color: #B45309; box-shadow: 3px 3px 0 #FDE68A; }
         .portal-card.pewara:hover { box-shadow: 6px 6px 0 #FDE68A; }
         
         .portal-card.admin { background: #1E293B; border-color: #0F172A; box-shadow: 3px 3px 0 #CBD5E1; }
         .portal-card.admin:hover { box-shadow: 6px 6px 0 #CBD5E1; }
 
         .portal-icon {
-            width: 38px; height: 38px; border-radius: var(--r-sm);
+            width: 36px; height: 36px; border-radius: var(--r-sm);
             background: rgba(255,255,255,0.2);
             display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.3);
         }
         .portal-icon svg { width: 20px; height: 20px; color: #fff; }
 
+        /* PERBAIKAN UTAMA: Memaksa teks menjadi putih */
         .portal-card h3 {
             font-size: 1.15rem; font-weight: 800; margin: 0 0 .3rem;
             display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
-            color: #fff;
+            color: #ffffff !important; 
         }
         .portal-card p {
             font-size: .8rem; line-height: 1.4; margin: 0 0 1rem;
-            flex: 1; color: rgba(255,255,255,.9);
+            flex: 1; color: rgba(255,255,255,.9) !important;
         }
+
+        /* Pengecualian untuk kartu kuning (Pewara) agar teksnya gelap */
+        .portal-card.pewara h3, 
+        .portal-card.pewara p {
+            color: #4A2E3F !important; 
+        }
+        .portal-card.pewara .portal-icon {
+            background: rgba(74,46,63,0.1); border-color: rgba(74,46,63,0.2);
+        }
+        .portal-card.pewara .portal-icon svg { color: #4A2E3F; }
 
         .portal-btn {
             display: inline-flex; align-items: center; gap: .4rem;
@@ -300,11 +312,16 @@
         .portal-btn svg { width: 14px; height: 14px; }
 
         .portal-card.disabled { opacity: .6; cursor: not-allowed; pointer-events: none; filter: grayscale(1); }
+        
+        /* Perbaikan Label TOKEN */
         .lock-badge {
             display: inline-flex; align-items: center; gap: .2rem;
             padding: .15rem .4rem; background: rgba(0,0,0,.2); border-radius: 4px;
             font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
             border: 1px solid rgba(255,255,255,0.2); color: #fff;
+        }
+        .portal-card.pewara .lock-badge {
+            background: rgba(74,46,63,.15); border-color: rgba(74,46,63,0.3); color: #4A2E3F;
         }
         .lock-badge svg { width: 10px; height: 10px; }
 
@@ -755,7 +772,7 @@ const STATE = {
   cabang: null, 
   panggung: null, 
   countdownTarget: null,
-  activeTab: 'MTQ', // Menyimpan state tab yang aktif
+  activeTab: 'MTQ',
   isPolling: false
 };
 
@@ -965,21 +982,21 @@ function startCountdown() {
  * PANGGUNG POLLING (ANTI BOTTLENECK & RACE CONDITION)
  * ============================================================ */
 async function pollPanggung() {
-  if (STATE.isPolling) return; // Cegah tumpukan request
-  if (document.hidden) return; // Hemat kuota saat tab tidak aktif
+  if (STATE.isPolling) return; 
+  if (document.hidden) return; 
 
   STATE.isPolling = true;
   try {
     const res = await api('publik_panggung');
     if (res.status === 'success') {
       STATE.panggung = res.cabang || [];
-      updateCabangStatusDots(); // Hanya update titik status, TIDAK re-render seluruh list
+      updateCabangStatusDots(); 
     }
   } catch (e) {
     console.warn('[panggung] poll gagal:', e);
   } finally {
     STATE.isPolling = false;
-    setTimeout(pollPanggung, 30000); // Loop berantai
+    setTimeout(pollPanggung, 30000); 
   }
 }
 
@@ -1011,7 +1028,6 @@ function updateCabangStatusDots() {
       else if (p.status_lomba === 'selesai') span.textContent = '✓ Selesai';
       else if (p.status_nilai === 'final') span.textContent = '🏆 Final';
       else {
-        // Reset text ke default jika belum berlangsung
         const c = STATE.cabang.find(x => x.key === p.key);
         span.textContent = subtitleFor(c || {});
       }
@@ -1020,7 +1036,7 @@ function updateCabangStatusDots() {
 }
 
 /* ============================================================
- * CABANG — ICONS + DETAILS (FIXED TAB BUG)
+ * CABANG — ICONS + DETAILS
  * ============================================================ */
 const CABANG_ICONS = {
   MTQ: '<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0V5z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0V5z"/><path d="M12 9c1-.4 2-.4 3 0M12 13c1-.4 2-.4 3 0"/>',
@@ -1197,7 +1213,7 @@ function subtitleFor(c) {
   return '1 peserta (putra/putri)';
 }
 
-/* ── RENDER LOMBA LIST (Sekali saja) ── */
+/* ── RENDER LOMBA LIST ── */
 function renderCabangList() {
   const list = $('#lombaList');
   if (!list) return;
@@ -1215,7 +1231,6 @@ function renderCabangList() {
     `;
   }).join('');
 
-  // Event Delegation untuk Tab (Anti Bug saat re-render)
   list.addEventListener('click', (e) => {
     const btn = e.target.closest('.lomba-item');
     if (!btn) return;
@@ -1223,16 +1238,13 @@ function renderCabangList() {
     const targetKey = btn.dataset.key;
     STATE.activeTab = targetKey;
 
-    // Update Class Active di List
     $$('.lomba-item', list).forEach(b => b.setAttribute('aria-selected', 'false'));
     btn.setAttribute('aria-selected', 'true');
 
-    // Toggle Panel
     $$('.detail').forEach(p => p.classList.remove('active'));
     const targetPanel = document.getElementById('d-' + targetKey);
     if (targetPanel) targetPanel.classList.add('active');
 
-    // Scroll ke panel di mobile
     if (window.innerWidth < 900) {
       const panel = $('.panel');
       if (panel) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -1240,7 +1252,7 @@ function renderCabangList() {
   });
 }
 
-/* ── RENDER DETAIL PANELS (Sekali saja) ── */
+/* ── RENDER DETAIL PANELS ── */
 function renderDetailPanels() {
   const panel = $('#detailPanel');
   if (!panel) return;
@@ -1299,13 +1311,12 @@ async function boot() {
   renderCabangList();
   renderDetailPanels();
   startCountdown();
-  pollPanggung(); // Mulai loop polling berantai
+  pollPanggung();
   
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       updateStatusBanner();
       updatePortalButtons();
-      // Opsional: trigger pollPanggung() langsung jika tab kembali aktif
       if (!STATE.isPolling) {
         setTimeout(pollPanggung, 1000);
       }
