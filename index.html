@@ -111,18 +111,16 @@
         .topbar nav a.btn-cta:hover { background: var(--rose-primary); border-color: var(--rose-primary); }
 
         /* ============================================================
-         * §4 HERO SECTION (PERBAIKAN PROPORSIONAL)
+         * §4 HERO SECTION
          * ============================================================ */
         .hero {
             min-height: 100svh;
             background-color: var(--cream);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; position: relative; overflow: hidden;
-            /* Padding vertikal disesuaikan agar lebih ringkas */
             padding: calc(var(--topbar-h) + 1.5rem) var(--section-pad-x) 2rem;
             border-bottom: 2px solid var(--border-dark);
-            /* GAP Fleksibel: Mengatur jarak antar anak elemen secara otomatis */
-            gap: clamp(0.8rem, 2.5vh, 2rem); 
+            gap: clamp(0.8rem, 2.5vh, 2rem); /* Gap dinamis mengikuti tinggi layar */
         }
 
         /* Ornamen Geometris */
@@ -135,7 +133,6 @@
         }
         .hero > * { position: relative; z-index: 1; }
 
-        /* Menghapus margin bawaan anak-anak hero karena sudah dihandle oleh GAP */
         .kicker {
             color: var(--rose-primary); font-weight: 800;
             font-size: clamp(0.7rem, 1.2vw, 0.85rem);
@@ -168,7 +165,7 @@
         .tagline .pil.c2 { background: var(--gold); border: 1.5px solid var(--rose-deep); }
         .tagline .pil.c3 { background: var(--hijau); color: #fff; border: 1.5px solid var(--rose-deep); }
 
-        /* Banner Status: Hanya menambah tinggi jika muncul (.show) */
+        /* Banner Status */
         .status-banner {
             display: none; margin: 0;
             padding: 0.6rem 1.2rem; border-radius: var(--r-sm);
@@ -186,7 +183,7 @@
         .countdown {
             display: flex; gap: clamp(0.5rem, 1.5vw, 1rem);
             flex-wrap: wrap; justify-content: center; 
-            margin: 0; /* Margin dihapus */
+            margin: 0;
         }
         .waktu-box {
             background: var(--surface); color: var(--rose-deep);
@@ -224,7 +221,7 @@
         .scroll-cue.ghost:hover { background: var(--cream); }
         .scroll-cue svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-        /* Penyesuaian untuk Layar Laptop/Desktop yang lebih pendek (di bawah 750px) */
+        /* Penyesuaian untuk Layar Laptop/Desktop yang lebih pendek */
         @media (max-height: 750px) {
             .hero { 
                 padding-top: calc(var(--topbar-h) + 0.5rem); 
@@ -775,10 +772,9 @@
 (() => {
 
 /* ============================================================
- * KONFIGURASI
+ * KONFIGURASI & STATE
  * ============================================================ */
 const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
-
 const STATE = { config: null, cabang: null, panggung: null, countdownTarget: null };
 
 const FALLBACK_CONFIG = {
@@ -808,24 +804,29 @@ const FALLBACK_CABANG = [
 ];
 
 /* ============================================================
- * API
+ * UTILS
  * ============================================================ */
-async function api(action, payload) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action }, payload || {}))
-  });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return await res.json();
-}
-
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+async function api(action, payload = {}) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action }, payload))
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.warn('[API Error]', e);
+    throw e;
+  }
+}
+
 /* ============================================================
- * CONFIG LOADER
+ * CONFIG LOADER & RENDER DINAMIS
  * ============================================================ */
 async function loadConfig() {
   try {
@@ -984,7 +985,7 @@ function startCountdown() {
 }
 
 /* ============================================================
- * PANGGUNG STATUS
+ * PANGGUNG STATUS (Polling)
  * ============================================================ */
 async function pollPanggung() {
   try {
@@ -1026,7 +1027,7 @@ function updateCabangStatusDots() {
 }
 
 /* ============================================================
- * CABANG — ICONS + DETAILS
+ * CABANG — ICONS & DETAILS
  * ============================================================ */
 const CABANG_ICONS = {
   MTQ: '<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0V5z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0V5z"/><path d="M12 9c1-.4 2-.4 3 0M12 13c1-.4 2-.4 3 0"/>',
@@ -1190,21 +1191,29 @@ const SARITILAWAH = [
   ]}
 ];
 
+/* ============================================================
+ * RENDER TABS & PANELS (PERBAIKAN BUG KLIK)
+ * ============================================================ */
 function renderCabangList() {
   const list = $('#lombaList');
   if (!list) return;
   const cabang = STATE.cabang || FALLBACK_CABANG;
+  
+  // Cek apakah sedang ada tab yang aktif
+  const currentActive = list.querySelector('.lomba-item[aria-selected="true"]');
+  const activeKey = currentActive ? currentActive.dataset.key : (cabang[0] ? cabang[0].key : '');
+
   list.innerHTML = cabang.map((c, i) => {
     const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
+    const isSel = c.key === activeKey;
     return `
-      <button class="lomba-item" role="tab" aria-selected="${i===0}" data-target="d-${esc(c.key)}" data-key="${esc(c.key)}">
+      <button class="lomba-item" role="tab" aria-selected="${isSel}" data-target="d-${esc(c.key)}" data-key="${esc(c.key)}">
         <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
         <span class="teks"><h3>${i+1}. ${esc(shortLabel(c.label))}</h3><span>${esc(subtitleFor(c))}</span></span>
         <span class="status-dot"></span>
       </button>
     `;
   }).join('');
-  bindTabs();
 }
 
 function shortLabel(label) {
@@ -1223,8 +1232,10 @@ function subtitleFor(c) {
 function renderDetailPanels() {
   const panel = $('#detailPanel');
   if (!panel) return;
+  
   const cabang = STATE.cabang || FALLBACK_CABANG;
   const currentActive = panel.querySelector('.detail.active')?.id || `d-${cabang[0]?.key}`;
+  
   panel.innerHTML = cabang.map((c, i) => {
     const d = CABANG_DETAILS[c.key] || {};
     const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
@@ -1266,21 +1277,37 @@ function renderDetailPanels() {
   }).join('');
 }
 
+// Event Delegation: Pasang listener di container induk agar kebal DOM re-render
 function bindTabs() {
-  const tabs = $$('.lomba-item');
-  const panels = $$('.detail');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-      tab.setAttribute('aria-selected', 'true');
-      panels.forEach(p => p.classList.remove('active'));
-      const target = document.getElementById(tab.dataset.target);
-      if (target) target.classList.add('active');
+  const listContainer = document.getElementById('lombaList');
+  const panelContainer = document.getElementById('detailPanel');
+  if (!listContainer || !panelContainer) return;
+
+  // Hindari pemasangan listener ganda
+  if (listContainer.dataset.bound === 'true') return;
+  listContainer.dataset.bound = 'true';
+
+  listContainer.addEventListener('click', (e) => {
+    const btn = e.target.closest('.lomba-item');
+    if (!btn) return;
+
+    // 1. Ubah status aria-selected
+    listContainer.querySelectorAll('.lomba-item').forEach(el => el.setAttribute('aria-selected', 'false'));
+    btn.setAttribute('aria-selected', 'true');
+
+    // 2. Sembunyikan semua panel detail
+    panelContainer.querySelectorAll('.detail').forEach(el => el.classList.remove('active'));
+
+    // 3. Tampilkan panel yang dituju
+    const targetId = btn.dataset.target;
+    const targetPanel = document.getElementById(targetId);
+    if (targetPanel) {
+      targetPanel.classList.add('active');
+      // Scroll ke panel jika di layar kecil (mobile)
       if (window.innerWidth < 900) {
-        const panel = $('.panel');
-        if (panel) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        panelContainer.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
-    });
+    }
   });
 }
 
@@ -1291,6 +1318,7 @@ async function boot() {
   await loadConfig();
   renderCabangList();
   renderDetailPanels();
+  bindTabs(); // Panggil setelah render
   startCountdown();
   pollPanggung();
   setInterval(pollPanggung, 30000);
