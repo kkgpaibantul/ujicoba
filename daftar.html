@@ -16,14 +16,12 @@
  * ============================================================ */
 :root {
   --cream: #FFF9F0;
-  --cream-dark: #F2E9DB;
   --rose-deep: #4A2E3F;
   --rose-primary: #9E5F7B;
   --rose-light: #F3D5E0;
   --accent: #E5989B;
   --hijau: #2A9D8F;
   --hijau-light: #E8F6F4;
-  --hijau-border: #A3D9D3;
   --gold: #E9C46A;
   --gold-light: #FEF5E7;
   --ink: #2D3748;
@@ -36,30 +34,28 @@
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
   
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
   
   --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --max-w: 1000px;
 }
 
 /* ============================================================
- * §2 RESET & BASE
+ * §2 RESET & BASE (ANTI-SCROLL)
  * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body {
+html, body { 
+  height: 100dvh; /* Memaksa pas 1 layar */
+  overflow: hidden; /* Menghilangkan scroll di body */
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background-color: var(--bg);
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 20px 20px;
   color: var(--ink); line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  min-height: 100vh; min-height: 100dvh;
-  display: flex; flex-direction: column;
 }
 h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; color: var(--rose-deep); }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -78,22 +74,31 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ============================================================
- * §3 APP SHELL
+ * §3 APP SHELL & AUTH LAYOUT
  * ============================================================ */
 #app { 
-  width: 100%; max-width: var(--max-w); margin: 0 auto; 
-  flex: 1; display: flex; flex-direction: column; 
-  padding: 1rem 1rem 3rem 1rem; /* Dikurangi padding-nya */
+  width: 100%; height: 100dvh; 
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
 }
-.screen { display: none; width: 100%; animation: fadeIn 0.4s ease; }
-.screen.active { display: block; }
+.screen { display: none; width: 100%; height: 100%; }
+.screen.active { display: flex; animation: fadeIn 0.4s ease; }
+
+/* Dashboard Screen (Scrollable internal) */
+#view-dashboard { flex-direction: column; max-width: 1000px; margin: 0 auto; overflow-y: auto; }
+
+/* Auth Screen (Fixed no scroll) */
+#view-auth {
+  flex-direction: column; max-width: 1050px; margin: 0 auto;
+  justify-content: center; gap: 1.5rem;
+}
 
 /* ============================================================
  * §4 UI COMPONENTS
  * ============================================================ */
 .btn {
   display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem;
-  padding: 0.75rem 1.25rem; border-radius: var(--r-md); font-size: 0.95rem; font-weight: 700;
+  padding: 0.65rem 1rem; border-radius: var(--r-md); font-size: 0.95rem; font-weight: 700;
   transition: var(--trans); border: none; cursor: pointer;
 }
 .btn:active { transform: translateY(1px); }
@@ -107,71 +112,83 @@ a { color: inherit; text-decoration: none; }
 .btn-block { width: 100%; }
 .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: var(--r-sm); }
 
-.form-group { margin-bottom: 0.8rem; }
-.form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--ink-light); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group { margin-bottom: 0.7rem; }
+.form-group label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--ink-light); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .form-group label span { color: var(--danger); }
 .form-control {
-  width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--r-md);
-  font-size: 0.95rem; background: var(--surface); color: var(--ink); transition: var(--trans); font-weight: 500;
+  width: 100%; padding: 0.55rem 0.8rem; border: 1.5px solid var(--border); border-radius: var(--r-md);
+  font-size: 0.9rem; background: var(--surface); color: var(--ink); transition: var(--trans); font-weight: 500;
 }
 .form-control:focus { outline: none; border-color: var(--rose-primary); box-shadow: 0 0 0 4px var(--rose-light); }
 
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.form-row .form-group { margin-bottom: 0; }
+
 /* ============================================================
- * §5 AUTH PAGE (LOGIN & REGISTER)
+ * §5 AUTH HEADER & GUIDE (Desain Baru)
  * ============================================================ */
-.auth-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  padding: 0 0.5rem;
+.auth-header { text-align: center; margin-bottom: 0.5rem; }
+.title-kicker {
+  display: inline-block; font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--rose-primary);
+  background: var(--rose-light); padding: 0.2rem 0.8rem; border-radius: 99px; margin-bottom: 0.6rem;
 }
 .main-title {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: clamp(1.1rem, 3vw, 1.6rem);
-  font-weight: 900;
-  color: var(--rose-deep);
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem); /* Ukuran proporsional */
+  font-weight: 900; color: var(--rose-deep);
+  line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.3rem;
+}
+.title-sub {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem); font-weight: 600; color: var(--ink-light); margin: 0;
 }
 
-.guide-box { 
-  background: linear-gradient(135deg, var(--rose-deep) 0%, var(--rose-primary) 100%); 
-  color: #fff; border-radius: var(--r-lg); 
-  padding: 1rem 1.25rem; /* Padding dikurangi */
-  margin-bottom: 1.5rem; box-shadow: var(--shadow-md); 
-  max-width: 900px; margin-left: auto; margin-right: auto;
+/* Panduan Langkah Horizontal */
+.guide-steps { 
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; 
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 0.6rem 1.5rem; box-shadow: var(--shadow-sm); width: fit-content; margin: 0 auto;
 }
-.guide-box h3 { color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; margin-bottom: 0.5rem; }
-.guide-box ol { margin-left: 1.2rem; font-size: 0.85rem; color: rgba(255,255,255,0.9); line-height: 1.5; }
+.guide-step { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--ink-light); }
+.guide-step b { color: var(--rose-deep); }
+.guide-step-num { 
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 50%; background: var(--rose-deep); color: #fff;
+  font-size: 0.65rem; font-weight: 800;
+}
+.guide-arrow { color: var(--border); font-weight: bold; font-size: 1.1rem; }
 
+/* ============================================================
+ * §6 AUTH CARDS (SPLIT)
+ * ============================================================ */
 .auth-container { 
-  display: grid; grid-template-columns: 1fr; gap: 1.5rem; 
-  max-width: 900px; margin: 0 auto; 
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; 
+  max-width: 1000px; margin: 0 auto; width: 100%;
+  align-items: stretch;
 }
-@media (min-width: 800px) { 
-  .auth-container { grid-template-columns: 1fr 1fr; align-items: start; } 
+@media (max-width: 800px) { 
+  .auth-container { grid-template-columns: 1fr; } 
+  #view-auth { overflow-y: auto; justify-content: flex-start; } 
 }
 
 .auth-card { 
   background: var(--surface); border-radius: var(--r-lg); 
-  padding: 1.5rem; /* Padding dikurangi dari 2rem */
-  box-shadow: var(--shadow-md); border: 1px solid var(--border); 
+  padding: 1.5rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+  display: flex; flex-direction: column;
 }
-.auth-card h2 { font-size: 1.25rem; margin-bottom: 0.3rem; }
+.auth-card h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
 .auth-card p.desc { font-size: 0.8rem; color: var(--ink-light); margin-bottom: 1.2rem; }
-.link-btn { font-size: 0.85rem; font-weight: 700; color: var(--rose-primary); }
+.link-btn { font-size: 0.8rem; font-weight: 700; color: var(--rose-primary); }
 .link-btn:hover { text-decoration: underline; }
 
+.login-form-wrap { margin: auto 0; } 
+.token-input { text-align:center; letter-spacing:0.2em; font-weight:800; font-size:1.2rem; text-transform:uppercase; }
+
 /* ============================================================
- * §6 DASHBOARD (BRANCH GRID)
+ * §7 DASHBOARD (BRANCH GRID)
  * ============================================================ */
-.appbar { 
-  position: sticky; top: 0; z-index: 50; 
-  background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); 
-  border-bottom: 1px solid var(--border); display: flex; 
-  align-items: center; justify-content: space-between; 
-  padding: 0.8rem 1.2rem; margin: -1rem -1rem 1.2rem -1rem; 
-}
+.appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.2rem; margin-bottom: 1.2rem; }
 .appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem; }
 .appbar-brand svg { width: 22px; height: 22px; color: var(--accent); }
 
@@ -185,21 +202,17 @@ a { color: inherit; text-decoration: none; }
 .progress-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
 
-/* Grid 9 Cabang */
 .branch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.8rem; }
 @media (max-width: 600px) { .branch-grid { grid-template-columns: 1fr; } }
 
 .branch-card { background: var(--surface); border-radius: var(--r-lg); border: 2px dashed var(--border); padding: 1.2rem; transition: var(--trans); cursor: pointer; display: flex; flex-direction: column; justify-content: center; min-height: 110px; position: relative; }
 .branch-card:hover { border-color: var(--rose-primary); background: var(--rose-light); transform: translateY(-2px); }
-
-.branch-card.filled { border: 1.5px solid var(--hijau-border); background: var(--surface); cursor: default; box-shadow: var(--shadow-sm); }
-.branch-card.filled:hover { transform: none; border-color: var(--hijau); background: var(--surface); }
+.branch-card.filled { border: 1.5px solid var(--hijau); background: var(--surface); cursor: default; box-shadow: var(--shadow-sm); }
+.branch-card.filled:hover { transform: none; background: var(--surface); }
 
 .branch-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
 .branch-code { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rose-primary); }
 .branch-card.filled .branch-code { color: var(--hijau); background: var(--hijau-light); padding: 0.1rem 0.5rem; border-radius: 4px; }
-
-.branch-name { font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
 
 .branch-card.empty { align-items: center; text-align: center; justify-content: center; }
 .branch-card.empty .branch-head, .branch-card.empty .branch-name { display: none; }
@@ -214,7 +227,6 @@ a { color: inherit; text-decoration: none; }
 .filled-info h4 { margin: 0 0 0.1rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: var(--ink); }
 .filled-actions { margin-top: 0.8rem; display: flex; gap: 0.4rem; border-top: 1px solid var(--border); padding-top: 0.8rem; }
 
-/* Upload Area di Dashboard */
 .upload-area { display: none; padding-top: 0.8rem; margin-top: 0.8rem; border-top: 1px dashed var(--border); }
 .upload-area.active { display: block; animation: fadeIn 0.3s ease; }
 .upload-box { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem; border: 1.5px dashed var(--border); border-radius: var(--r-sm); background: var(--bg); cursor: pointer; transition: var(--trans); margin-bottom: 0.4rem; }
@@ -225,7 +237,7 @@ a { color: inherit; text-decoration: none; }
 .upload-text small { display: block; font-size: 0.65rem; color: var(--ink-light); font-weight: 400; }
 
 /* ============================================================
- * §7 FULL SCREEN FORM
+ * §8 FULL SCREEN FORM
  * ============================================================ */
 .full-form { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 100; overflow-y: auto; display: none; }
 .full-form.active { display: block; }
@@ -246,7 +258,7 @@ a { color: inherit; text-decoration: none; }
 .radio-pill.selected { background: var(--rose-primary); border-color: var(--rose-primary); color: #fff; }
 
 .search-select { position: relative; }
-.search-trigger { width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--r-md); background: var(--surface); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 0.95rem; }
+.search-trigger { width: 100%; padding: 0.55rem 0.8rem; border: 1.5px solid var(--border); border-radius: var(--r-md); background: var(--surface); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 0.9rem; }
 .search-trigger.active { border-color: var(--rose-primary); box-shadow: 0 0 0 4px var(--rose-light); }
 .search-dropdown { position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border); z-index: 50; display: none; flex-direction: column; max-height: 250px; overflow: hidden; }
 .search-dropdown.active { display: flex; }
@@ -271,7 +283,6 @@ a { color: inherit; text-decoration: none; }
 .fab-save { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); width: calc(100% - 2.4rem); max-width: 640px; padding: 0.9rem; border-radius: var(--r-md); background: var(--rose-deep); color: #fff; font-size: 0.95rem; font-weight: 800; text-align: center; box-shadow: var(--shadow-lg); z-index: 50; border: none; cursor: pointer; }
 .fab-save:hover { background: var(--rose-primary); }
 
-/* Toast */
 .toast-container { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
 .toast { background: var(--ink); color: #fff; padding: 0.6rem 1.2rem; border-radius: 99px; font-size: 0.8rem; font-weight: 600; box-shadow: var(--shadow-md); animation: fadeIn 0.3s ease; }
 .toast.error { background: var(--danger); }
@@ -310,21 +321,24 @@ a { color: inherit; text-decoration: none; }
     <div class="branch-grid" id="branchGrid"></div>
   </div>
 
-  <!-- AUTH VIEW -->
+  <!-- AUTH VIEW (FULL SCREEN NO SCROLL) -->
   <div id="view-auth" class="screen">
     
     <div class="auth-header">
-      <h1 class="main-title">PENDAFTARAN PESERTA MTQ PELAJAR SD<br>TINGKAT KABUPATEN BANTUL TAHUN 2026</h1>
+      <span class="title-kicker">KKG PAI Kabupaten Bantul</span>
+      <h1 class="main-title">Pendaftaran Peserta</h1>
+      <p class="title-sub">MTQ Pelajar SD Tingkat Kabupaten Bantul Tahun 2026</p>
     </div>
 
-    <div class="guide-box">
-      <h3>Cara Mendapatkan Token</h3>
-      <ol>
-        <li>Isi formulir <b>Daftar Baru</b> (form kanan).</li>
-        <li>Cek kotak masuk / folder Spam email Anda.</li>
-        <li>Salin <b>Token Akses</b> (8 karakter) dari email.</li>
-        <li>Kembali ke sini, dan masuk melalui form <b>Login</b> (form kiri).</li>
-      </ol>
+    <!-- Compact Guide Box -->
+    <div class="guide-steps">
+      <div class="guide-step"><span class="guide-step-num">1</span> Isi <b>Daftar Baru</b></div>
+      <span class="guide-arrow">→</span>
+      <div class="guide-step"><span class="guide-step-num">2</span> Cek Email / Spam</div>
+      <span class="guide-arrow">→</span>
+      <div class="guide-step"><span class="guide-step-num">3</span> Salin <b>Token</b></div>
+      <span class="guide-arrow">→</span>
+      <div class="guide-step"><span class="guide-step-num">4</span> <b>Login</b> di sini</div>
     </div>
 
     <div class="auth-container">
@@ -332,42 +346,52 @@ a { color: inherit; text-decoration: none; }
       <div class="auth-card">
         <h2>Login</h2>
         <p class="desc">Masukkan token yang dikirim ke email Anda.</p>
-        <div class="form-group">
-          <label>Token Akses</label>
-          <input type="text" id="loginToken" class="form-control" placeholder="XXXXXXXX" maxlength="8" style="text-align:center;letter-spacing:0.2em;font-weight:800;font-size:1.2rem;text-transform:uppercase;">
-        </div>
-        <button class="btn btn-primary btn-block" id="btnLogin">Masuk</button>
-        <div style="text-align:center;margin-top:0.8rem;">
-          <button class="link-btn" id="btnLupaToken">Lupa Token?</button>
+        
+        <div class="login-form-wrap">
+          <div class="form-group">
+            <label>Token Akses</label>
+            <input type="text" id="loginToken" class="form-control token-input" placeholder="XXXXXXXX" maxlength="8">
+          </div>
+          <button class="btn btn-primary btn-block" id="btnLogin" style="margin-top: 1rem;">Masuk</button>
+          <div style="text-align:center;margin-top:1rem;">
+            <button class="link-btn" id="btnLupaToken">Lupa Token?</button>
+          </div>
         </div>
       </div>
 
-      <!-- Register -->
+      <!-- Register (2-Column Grid) -->
       <div class="auth-card">
         <h2>Daftar Baru</h2>
         <p class="desc">Belum punya token? Daftarkan kapanewon Anda di sini.</p>
         
-        <div class="form-group">
-          <label>Kapanewon <span>*</span></label>
-          <select id="regKapanewon" class="form-control"><option value="">Memuat data...</option></select>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kapanewon <span>*</span></label>
+            <select id="regKapanewon" class="form-control"><option value="">Memuat...</option></select>
+          </div>
+          <div class="form-group">
+            <label>Nama Lengkap <span>*</span></label>
+            <input type="text" id="regNama" class="form-control" placeholder="Nama Anda">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Nama Lengkap Ofisial <span>*</span></label>
-          <input type="text" id="regNama" class="form-control" placeholder="Nama Anda">
-        </div>
-        <div class="form-group">
+
+        <div class="form-group" style="margin-top: 0.7rem;">
           <label>Asal Sekolah <span>*</span></label>
           <div id="regSekolahContainer"></div>
         </div>
-        <div class="form-group">
-          <label>Email Aktif <span>*</span></label>
-          <input type="email" id="regEmail" class="form-control" placeholder="nama@email.com">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Aktif <span>*</span></label>
+            <input type="email" id="regEmail" class="form-control" placeholder="nama@email.com">
+          </div>
+          <div class="form-group">
+            <label>No. WhatsApp <span>*</span></label>
+            <input type="tel" id="regWA" class="form-control" placeholder="08xxxxxxxxxx">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Nomor WhatsApp <span>*</span></label>
-          <input type="tel" id="regWA" class="form-control" placeholder="08xxxxxxxxxx">
-        </div>
-        <button class="btn btn-accent btn-block" id="btnRegister">Daftar & Kirim Token</button>
+
+        <button class="btn btn-accent btn-block" id="btnRegister" style="margin-top: 1.2rem;">Daftar & Kirim Token</button>
       </div>
     </div>
   </div>
@@ -451,7 +475,6 @@ a { color: inherit; text-decoration: none; }
     $$('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
     if (el) el.classList.add('active');
-    window.scrollTo(0, 0);
   }
 
   // BOOT
@@ -535,11 +558,11 @@ a { color: inherit; text-decoration: none; }
     api('kapanewon_status').then(res => {
       if (res.status === 'success' && res.kapanewon) {
         const taken = new Set(res.kapanewon.filter(k => k.terisi).map(k => k.nama));
-        selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + 
-          res.kapanewon.map(k => `<option value="${k.nama}" ${k.terisi?'disabled':''}>${k.nama} ${k.terisi?'(Sudah ada)':''}</option>`).join('');
+        selKap.innerHTML = '<option value="">— Pilih —</option>' + 
+          res.kapanewon.map(k => `<option value="${k.nama}" ${k.terisi?'disabled':''}>${k.nama} ${k.terisi?'(Ada)':''}</option>`).join('');
       } else throw new Error();
     }).catch(() => {
-      selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + 
+      selKap.innerHTML = '<option value="">— Pilih —</option>' + 
         KAPANEWON_LIST.map(k => `<option value="${k}">${k}</option>`).join('');
     });
 
@@ -605,7 +628,6 @@ a { color: inherit; text-decoration: none; }
       const p = State.peserta.find(x => x.Cabang === c.key);
       
       if (p) {
-        // TAMPILAN TERISI (HIJAU)
         const isTeam = !!c.team;
         const needAkta = isTeam ? 3 : 1;
         const hasAkta = [p.has_akta1, p.has_akta2, p.has_akta3].filter(Boolean).length;
@@ -663,7 +685,6 @@ a { color: inherit; text-decoration: none; }
           </div>
         `;
       } else {
-        // TAMPILAN KOSONG
         const canAdd = State.slotTerpakai + c.slot <= State.kuota;
         return `
           <div class="branch-card empty ${canAdd ? 'clickable' : 'disabled'}" data-key="${esc(c.key)}" ${!canAdd ? 'style="opacity:0.5;cursor:not-allowed;"' : ''}>
@@ -751,7 +772,7 @@ a { color: inherit; text-decoration: none; }
       asalSekolah: isEdit ? p.Asal_Sekolah : '',
       sekolahManual: isEdit ? String(p.Catatan).includes('Sekolah manual') : false,
       members: isEdit ? [] : [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }],
-      files: {}, // Menyimpan file yang akan diupload
+      files: {}, 
       existingFiles: isEdit ? { akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3 } : {}
     };
 
@@ -852,7 +873,6 @@ a { color: inherit; text-decoration: none; }
     });
   }
 
-  // RENDER UPLOAD BOXES DI DALAM FORM
   function renderFormUploads() {
     const isTeam = State.form.members.length > 1;
     const requiredFiles = isTeam ? [
@@ -910,7 +930,6 @@ a { color: inherit; text-decoration: none; }
     });
   }
 
-  // REUSABLE SEARCH SELECT
   function renderSearchSelect(container, list, currentVal, onSelect) {
     if (!container) return;
     if (list.length === 0) {
@@ -982,7 +1001,6 @@ a { color: inherit; text-decoration: none; }
     filterList();
   }
 
-  // SAVE (Data + Upload)
   async function saveData() {
     const f = State.form;
     if (!f.asalSekolah || f.asalSekolah.length < 3) return toast('Asal sekolah wajib diisi', 'error');
@@ -1014,13 +1032,11 @@ a { color: inherit; text-decoration: none; }
       const endpoint = f.mode === 'edit' ? 'update_peserta' : 'daftar_peserta';
       const body = f.mode === 'edit' ? { id: State.formId, payload } : { payload };
       
-      // 1. Simpan Data
       const res = await api(endpoint, body);
       if (res.error) throw new Error(res.messages ? res.messages[0] : res.message);
       
       const pId = f.mode === 'edit' ? State.formId : res.id;
 
-      // 2. Upload File yang Dipilih
       if (f.files && Object.keys(f.files).length > 0) {
         const fileKeys = Object.keys(f.files);
         for (let i = 0; i < fileKeys.length; i++) {
@@ -1064,7 +1080,6 @@ a { color: inherit; text-decoration: none; }
     } catch (e) { toast(e.message, 'error'); }
   }
 
-  // FILE UTILS
   function compressImage(file) {
     return new Promise((resolve, reject) => {
       const img = new Image();
