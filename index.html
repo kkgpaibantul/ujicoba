@@ -7,19 +7,13 @@
     <meta name="description" content="Musabaqah Tilawatil Qur'an Pelajar SD Tingkat Kabupaten Bantul Tahun 2026" />
     <title>MTQ Pelajar SD Kabupaten Bantul 2026</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
         /* ============================================================
-         * §1 DESIGN TOKENS (Solid Colors)
+         * §1 DESIGN TOKENS (Modern & High Contrast)
          * ============================================================ */
         :root {
             --cream: #FFF9F0;
@@ -32,9 +26,9 @@
             --gold: #E9C46A;
             --gold-light: #FEF5E7;
             
-            --ink: #2D3748;
-            --ink-light: #718096;
-            --bg: #F9F9F9;
+            --ink: #1E293B;
+            --ink-light: #64748B;
+            --bg: #F8FAFC;
             --surface: #FFFFFF;
             --border: #E2E8F0;
             --border-dark: #CBD5E0;
@@ -63,7 +57,6 @@
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
-            /* Pola titik halus */
             background-image: radial-gradient(var(--border-dark) 1px, transparent 1px);
             background-size: 24px 24px;
             color: var(--ink); line-height: 1.6;
@@ -84,7 +77,7 @@
         :focus-visible { outline: 3px solid var(--rose-primary); outline-offset: 2px; }
 
         /* ============================================================
-         * §3 TOPBAR (Solid White)
+         * §3 TOPBAR
          * ============================================================ */
         .topbar {
             position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
@@ -120,10 +113,9 @@
             text-align: center; position: relative; overflow: hidden;
             padding: calc(var(--topbar-h) + 1.5rem) var(--section-pad-x) 2rem;
             border-bottom: 2px solid var(--border-dark);
-            gap: clamp(0.8rem, 2.5vh, 2rem); /* Gap dinamis mengikuti tinggi layar */
+            gap: clamp(0.8rem, 2.5vh, 2rem); 
         }
 
-        /* Ornamen Geometris */
         .hero::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
             background-image: 
@@ -165,7 +157,6 @@
         .tagline .pil.c2 { background: var(--gold); border: 1.5px solid var(--rose-deep); }
         .tagline .pil.c3 { background: var(--hijau); color: #fff; border: 1.5px solid var(--rose-deep); }
 
-        /* Banner Status */
         .status-banner {
             display: none; margin: 0;
             padding: 0.6rem 1.2rem; border-radius: var(--r-sm);
@@ -179,7 +170,6 @@
         .status-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.6s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
 
-        /* Countdown */
         .countdown {
             display: flex; gap: clamp(0.5rem, 1.5vw, 1rem);
             flex-wrap: wrap; justify-content: center; 
@@ -207,7 +197,6 @@
 
         .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
-        /* Scroll Cue (Tombol) */
         .scroll-cue {
             display: inline-flex; align-items: center; gap: 0.5rem;
             color: #fff; background: var(--rose-deep); text-decoration: none; font-weight: 700;
@@ -221,13 +210,8 @@
         .scroll-cue.ghost:hover { background: var(--cream); }
         .scroll-cue svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-        /* Penyesuaian untuk Layar Laptop/Desktop yang lebih pendek */
         @media (max-height: 750px) {
-            .hero { 
-                padding-top: calc(var(--topbar-h) + 0.5rem); 
-                padding-bottom: 1rem;
-                gap: 0.6rem; 
-            }
+            .hero { padding-top: calc(var(--topbar-h) + 0.5rem); padding-bottom: 1rem; gap: 0.6rem; }
             .hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
             .tagline { font-size: 0.85rem; }
             .waktu-box { padding: 0.5rem 0.4rem; }
@@ -236,7 +220,7 @@
         }
 
         /* ============================================================
-         * §5 PORTAL SECTION (Solid Cards)
+         * §5 PORTAL SECTION (Updated Colors & Sizes)
          * ============================================================ */
         .portal-section {
             background: var(--surface);
@@ -244,7 +228,7 @@
             border-bottom: 2px solid var(--border-dark);
         }
         .portal-inner { max-width: var(--max-width); margin: 0 auto; }
-        .portal-head { text-align: center; margin-bottom: 2.5rem; }
+        .portal-head { text-align: center; margin-bottom: 2rem; }
         .portal-head .eyebrow {
             display: inline-block; font-size: .75rem; font-weight: 800;
             letter-spacing: .1em; color: var(--rose-deep);
@@ -257,75 +241,75 @@
 
         .portal-group-label {
             font-size: .8rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
-            color: var(--ink); margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 1rem;
+            color: var(--ink); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 1rem;
         }
         .portal-group-label::after { content: ''; flex: 1; height: 2px; background: var(--border); }
 
-        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
         @media (max-width: 640px) { .portal-grid { grid-template-columns: 1fr; gap: 1rem; } }
 
         .portal-card {
             display: flex; flex-direction: column;
-            padding: 1.8rem; border-radius: var(--r-lg);
+            padding: 1.2rem; border-radius: var(--r-lg);
             text-decoration: none; color: #fff;
             transition: var(--trans); position: relative; overflow: hidden;
-            min-height: 210px; border: 2px solid var(--rose-deep);
-            box-shadow: 4px 4px 0 var(--rose-light);
+            min-height: 170px; border: 2px solid var(--border-dark);
+            box-shadow: 3px 3px 0 var(--border);
         }
-        .portal-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--rose-light); }
+        .portal-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--border-dark); }
         
-        /* Solid Colors */
-        .portal-card.primary { background: var(--rose-deep); }
-        .portal-card.accent  { background: var(--hijau); border-color: var(--hijau); box-shadow: 4px 4px 0 var(--hijau-light); }
-        .portal-card.accent:hover { box-shadow: 8px 8px 0 var(--hijau-light); }
-        .portal-card.pewara  { background: var(--gold); border-color: var(--rose-deep); color: var(--rose-deep); }
-        .portal-card.admin   { background: var(--ink); border-color: var(--ink); box-shadow: 4px 4px 0 var(--border-dark); }
-        .portal-card.admin:hover { box-shadow: 8px 8px 0 var(--border-dark); }
+        /* New Color Palette for better readability */
+        .portal-card.primary { background: #4F46E5; border-color: #4338CA; box-shadow: 3px 3px 0 #C7D2FE; }
+        .portal-card.primary:hover { box-shadow: 6px 6px 0 #C7D2FE; }
+        
+        .portal-card.accent { background: #059669; border-color: #047857; box-shadow: 3px 3px 0 #A7F3D0; }
+        .portal-card.accent:hover { box-shadow: 6px 6px 0 #A7F3D0; }
+        
+        .portal-card.pewara { background: #D97706; border-color: #B45309; box-shadow: 3px 3px 0 #FDE68A; color: #fff; }
+        .portal-card.pewara:hover { box-shadow: 6px 6px 0 #FDE68A; }
+        
+        .portal-card.admin { background: #1E293B; border-color: #0F172A; box-shadow: 3px 3px 0 #CBD5E1; }
+        .portal-card.admin:hover { box-shadow: 6px 6px 0 #CBD5E1; }
 
         .portal-icon {
-            width: 50px; height: 50px; border-radius: var(--r-sm);
+            width: 38px; height: 38px; border-radius: var(--r-sm);
             background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.3);
         }
-        .portal-card.pewara .portal-icon { background: rgba(74,46,63,0.1); border-color: rgba(74,46,63,0.2); }
-        .portal-icon svg { width: 26px; height: 26px; color: #fff; }
-        .portal-card.pewara .portal-icon svg { color: var(--rose-deep); }
+        .portal-icon svg { width: 20px; height: 20px; color: #fff; }
 
         .portal-card h3 {
-            font-size: 1.25rem; font-weight: 800; margin: 0 0 .4rem;
+            font-size: 1.15rem; font-weight: 800; margin: 0 0 .3rem;
             display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+            color: #fff;
         }
         .portal-card p {
-            font-size: .88rem; line-height: 1.5; margin: 0 0 1.5rem;
-            flex: 1;
+            font-size: .8rem; line-height: 1.4; margin: 0 0 1rem;
+            flex: 1; color: rgba(255,255,255,.9);
         }
-        .portal-card.primary p, .portal-card.accent p, .portal-card.admin p { color: rgba(255,255,255,.9); }
-        .portal-card.pewara p { color: var(--rose-deep); opacity: 0.8; }
 
         .portal-btn {
-            display: inline-flex; align-items: center; gap: .5rem;
-            background: #fff; color: var(--rose-deep); font-size: .88rem; font-weight: 800;
-            padding: .6rem 1.2rem; border-radius: var(--r-sm);
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: #fff; color: #1E293B; font-size: .8rem; font-weight: 800;
+            padding: .5rem 1rem; border-radius: var(--r-sm);
             transition: var(--trans); margin-top: auto; width: fit-content;
-            border: 1.5px solid var(--rose-deep);
+            border: 1.5px solid transparent;
         }
-        .portal-card.accent .portal-btn { border-color: var(--hijau); color: var(--hijau); }
-        .portal-card.admin .portal-btn { border-color: var(--ink); color: var(--ink); }
         .portal-card:hover .portal-btn { transform: translateX(4px); }
-        .portal-btn svg { width: 16px; height: 16px; }
+        .portal-btn svg { width: 14px; height: 14px; }
 
         .portal-card.disabled { opacity: .6; cursor: not-allowed; pointer-events: none; filter: grayscale(1); }
         .lock-badge {
             display: inline-flex; align-items: center; gap: .2rem;
-            padding: .15rem .5rem; background: rgba(0,0,0,.2); border-radius: 4px;
-            font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: .15rem .4rem; background: rgba(0,0,0,.2); border-radius: 4px;
+            font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+            border: 1px solid rgba(255,255,255,0.2); color: #fff;
         }
         .lock-badge svg { width: 10px; height: 10px; }
 
         /* ============================================================
-         * §6 SHARED SECTION (Info & Juknis)
+         * §6 INFO & JUKNIS
          * ============================================================ */
         section.page { padding: var(--section-pad-y) var(--section-pad-x); background: var(--surface); }
         section.page.alt { background: var(--bg); }
@@ -335,12 +319,11 @@
         .page-head h2 { font-size: clamp(1.5rem, 3.2vw, 2rem); font-weight: 900; margin: 0; }
         .page-head p { margin: 0.5rem 0 0; color: var(--ink-light); font-size: 1rem; max-width: 60ch; }
 
-        /* Info Cards */
         .info-layout { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 1.5rem; align-items: stretch; }
         .info-card {
             background: var(--surface); color: var(--ink);
             border-radius: var(--r-lg); border: 2px solid var(--border);
-            padding: 1.8rem; display: flex; flex-direction: column; gap: 1.2rem;
+            padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem;
             box-shadow: 3px 3px 0 var(--border);
         }
         .info-card .ikon-lg {
@@ -356,7 +339,7 @@
         .info-blok p.sub { margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--ink-light); }
         .info-divider { height: 2px; background: var(--border); border: none; margin: 0; }
         
-        .timeline-panel { background: var(--cream); border-radius: var(--r-lg); padding: 1.8rem; border: 2px solid var(--border-dark); box-shadow: 3px 3px 0 var(--border); }
+        .timeline-panel { background: var(--cream); border-radius: var(--r-lg); padding: 1.5rem; border: 2px solid var(--border-dark); box-shadow: 3px 3px 0 var(--border); }
         .timeline-panel > p.intro { margin: 0 0 1.2rem; font-weight: 800; color: var(--rose-deep); font-size: 1rem; }
         .timeline { border-left: 3px solid var(--rose-primary); margin-left: 0.5rem; padding-left: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
         .tl-item { position: relative; }
@@ -370,7 +353,6 @@
         .tl-item p.ket { margin: 0; color: var(--ink); font-size: 0.9rem; line-height: 1.5; }
         .chip { display: inline-block; margin-left: 0.5rem; font-size: 0.65rem; font-weight: 800; color: #fff; background: var(--rose-deep); padding: 0.15rem 0.6rem; border-radius: var(--r-sm); vertical-align: middle; }
 
-        /* Juknis */
         .mega-chip { font-size: 0.8rem; font-weight: 800; color: var(--rose-deep); background: var(--rose-light); padding: 0.2rem 0.8rem; border-radius: var(--r-sm); border: 1.5px solid var(--rose-primary); display: inline-block; vertical-align: middle; }
         .juknis-layout { display: grid; grid-template-columns: minmax(240px, 320px) 1fr; gap: 1.5rem; align-items: start; }
         
@@ -378,7 +360,7 @@
         .lomba-item {
             display: flex; align-items: center; gap: 0.8rem; text-align: left;
             background: var(--surface); border: 2px solid var(--border);
-            border-radius: var(--r-md); padding: 0.8rem 1rem;
+            border-radius: var(--r-md); padding: 0.7rem 0.9rem;
             cursor: pointer; color: var(--ink); flex-shrink: 0;
             transition: var(--trans); width: 100%; font-size: inherit;
         }
@@ -391,7 +373,7 @@
         }
         .lomba-item .ikon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         .lomba-item .teks { flex: 1; min-width: 0; }
-        .lomba-item .teks h3 { font-size: 0.9rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--ink); }
+        .lomba-item .teks h3 { font-size: 0.88rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--ink); }
         .lomba-item .teks span { display: block; margin-top: 0.2rem; font-size: 0.7rem; font-weight: 700; color: var(--ink-light); }
         
         .lomba-item .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-dark); flex-shrink: 0; }
@@ -405,7 +387,7 @@
 
         .panel {
             background: var(--surface); border: 2px solid var(--border-dark);
-            border-radius: var(--r-lg); padding: 1.8rem;
+            border-radius: var(--r-lg); padding: 1.5rem;
             max-height: min(70vh, 650px); overflow-y: auto;
             box-shadow: 4px 4px 0 var(--border);
             scrollbar-width: thin; scrollbar-color: var(--rose-primary) transparent;
@@ -432,7 +414,6 @@
         .detail-body h4 { margin: 1.5rem 0 0.5rem; font-weight: 800; color: var(--rose-deep); font-size: 1rem; }
         .detail-body ol { margin: 0.5rem 0 1rem; padding-left: 1.2rem; }
         .detail-body ol li { margin-bottom: 0.5rem; }
-        .detail-body ol.sub-list { list-style: lower-alpha; }
         
         .label-title { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; font-weight: 800; color: var(--ink-light); margin: 1.2rem 0 0.5rem; }
         .tabel-scroll { overflow-x: auto; margin: 0.5rem 0 1rem; border-radius: var(--r-sm); border: 2px solid var(--border); }
@@ -442,10 +423,6 @@
         .tabel-nilai tr.total td { font-weight: 800; background: var(--rose-light); color: var(--rose-deep); border-bottom: none; }
         .tabel-nilai td.num { text-align: center; font-weight: 700; color: var(--rose-primary); width: 90px; }
 
-        .lagu-box { background: var(--bg); border-left: 4px solid var(--rose-primary); border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 1rem; margin: 0.5rem 0 1rem; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .lagu-box p { margin: 0 0 0.4rem; font-size: 0.9rem; font-weight: 600; }
-        .lagu-box .pencipta { color: var(--ink-light); font-style: italic; font-size: 0.8em; font-weight: 400; }
-
         .mini-toggle { margin-top: 1rem; background: var(--bg); border: 2px solid var(--border); border-radius: var(--r-sm); padding: 0.8rem 1rem; }
         .mini-toggle summary { cursor: pointer; font-weight: 800; color: var(--rose-deep); font-size: 0.9rem; }
         .mini-toggle .lampiran-isi { margin-top: 1rem; }
@@ -453,7 +430,7 @@
         .mini-toggle .lampiran-isi ol { margin: 0 0 0.5rem; padding-left: 1.2rem; font-size: 0.85rem; }
 
         /* ============================================================
-         * §7 FOOTER
+         * §7 FOOTER & FLOATING
          * ============================================================ */
         .site-footer { background: var(--rose-deep); color: #fff; padding: 3rem var(--section-pad-x) 2rem; border-top: 4px solid var(--rose-light); }
         .footer-inner { max-width: var(--max-width); margin: 0 auto; text-align: center; }
@@ -469,9 +446,6 @@
         .footer-link svg { width: 16px; height: 16px; }
         .footer-copy { font-size: .75rem; color: var(--rose-light); opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
 
-        /* ============================================================
-         * §8 FLOATING & BACK TO TOP
-         * ============================================================ */
         .fab-wa {
             position: fixed; right: 20px; bottom: 20px; bottom: calc(20px + env(safe-area-inset-bottom));
             z-index: 100; width: 56px; height: 56px; border-radius: 50%;
@@ -495,13 +469,13 @@
         .back-to-top svg { width: 20px; height: 20px; }
 
         /* ============================================================
-         * §9 RESPONSIVE
+         * §8 RESPONSIVE
          * ============================================================ */
         @media (max-width: 900px) {
             .info-layout { grid-template-columns: 1fr; }
             .juknis-layout { grid-template-columns: 1fr; }
             .lomba-list { flex-direction: row; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
-            .lomba-item { flex: 1 1 200px; padding: 0.8rem; }
+            .lomba-item { flex: 1 1 200px; padding: 0.7rem; }
             .panel { max-height: none; overflow-y: visible; }
         }
         @media (max-width: 680px) {
@@ -775,7 +749,15 @@
  * KONFIGURASI & STATE
  * ============================================================ */
 const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
-const STATE = { config: null, cabang: null, panggung: null, countdownTarget: null };
+
+const STATE = { 
+  config: null, 
+  cabang: null, 
+  panggung: null, 
+  countdownTarget: null,
+  activeTab: 'MTQ', // Menyimpan state tab yang aktif
+  isPolling: false
+};
 
 const FALLBACK_CONFIG = {
   nama_acara: "Musabaqah Tilawatil Qur'an Pelajar Sekolah Dasar Tingkat Kabupaten Bantul Tahun 2026",
@@ -804,29 +786,24 @@ const FALLBACK_CABANG = [
 ];
 
 /* ============================================================
- * UTILS
+ * API
  * ============================================================ */
+async function api(action, payload) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action }, payload || {}))
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-async function api(action, payload = {}) {
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(Object.assign({ action }, payload))
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
-  } catch (e) {
-    console.warn('[API Error]', e);
-    throw e;
-  }
-}
-
 /* ============================================================
- * CONFIG LOADER & RENDER DINAMIS
+ * CONFIG LOADER & INITIAL RENDER
  * ============================================================ */
 async function loadConfig() {
   try {
@@ -985,32 +962,43 @@ function startCountdown() {
 }
 
 /* ============================================================
- * PANGGUNG STATUS (Polling)
+ * PANGGUNG POLLING (ANTI BOTTLENECK & RACE CONDITION)
  * ============================================================ */
 async function pollPanggung() {
+  if (STATE.isPolling) return; // Cegah tumpukan request
+  if (document.hidden) return; // Hemat kuota saat tab tidak aktif
+
+  STATE.isPolling = true;
   try {
     const res = await api('publik_panggung');
     if (res.status === 'success') {
       STATE.panggung = res.cabang || [];
-      renderCabangList();
-      renderDetailPanels();
-      updateCabangStatusDots();
+      updateCabangStatusDots(); // Hanya update titik status, TIDAK re-render seluruh list
     }
-  } catch (e) { console.warn('[panggung] poll gagal:', e); }
+  } catch (e) {
+    console.warn('[panggung] poll gagal:', e);
+  } finally {
+    STATE.isPolling = false;
+    setTimeout(pollPanggung, 30000); // Loop berantai
+  }
 }
 
 function updateCabangStatusDots() {
   if (!STATE.panggung) return;
   const byKey = {};
   STATE.panggung.forEach(c => { byKey[c.key] = c; });
+  
   $$('.lomba-item').forEach(btn => {
     const p = byKey[btn.dataset.key];
     if (!p) return;
+    
     const dot = btn.querySelector('.status-dot');
     if (!dot) return;
+    
     dot.classList.remove('live', 'final');
     if (p.status_lomba === 'berlangsung') dot.classList.add('live');
     else if (p.status_lomba === 'selesai' || p.status_nilai === 'final') dot.classList.add('final');
+    
     const span = btn.querySelector('.teks span');
     if (span) {
       if (p.status_lomba === 'berlangsung' && p.mode === 'queue' && p.sekarang) span.textContent = `▶ ${p.sekarang.No_Undian}`;
@@ -1022,12 +1010,17 @@ function updateCabangStatusDots() {
       else if (p.status_lomba === 'berlangsung' && p.mode === 'phase' && p.phase_label) span.textContent = `▶ ${p.phase_label}`;
       else if (p.status_lomba === 'selesai') span.textContent = '✓ Selesai';
       else if (p.status_nilai === 'final') span.textContent = '🏆 Final';
+      else {
+        // Reset text ke default jika belum berlangsung
+        const c = STATE.cabang.find(x => x.key === p.key);
+        span.textContent = subtitleFor(c || {});
+      }
     }
   });
 }
 
 /* ============================================================
- * CABANG — ICONS & DETAILS
+ * CABANG — ICONS + DETAILS (FIXED TAB BUG)
  * ============================================================ */
 const CABANG_ICONS = {
   MTQ: '<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0V5z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0V5z"/><path d="M12 9c1-.4 2-.4 3 0M12 13c1-.4 2-.4 3 0"/>',
@@ -1191,31 +1184,6 @@ const SARITILAWAH = [
   ]}
 ];
 
-/* ============================================================
- * RENDER TABS & PANELS (PERBAIKAN BUG KLIK)
- * ============================================================ */
-function renderCabangList() {
-  const list = $('#lombaList');
-  if (!list) return;
-  const cabang = STATE.cabang || FALLBACK_CABANG;
-  
-  // Cek apakah sedang ada tab yang aktif
-  const currentActive = list.querySelector('.lomba-item[aria-selected="true"]');
-  const activeKey = currentActive ? currentActive.dataset.key : (cabang[0] ? cabang[0].key : '');
-
-  list.innerHTML = cabang.map((c, i) => {
-    const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
-    const isSel = c.key === activeKey;
-    return `
-      <button class="lomba-item" role="tab" aria-selected="${isSel}" data-target="d-${esc(c.key)}" data-key="${esc(c.key)}">
-        <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
-        <span class="teks"><h3>${i+1}. ${esc(shortLabel(c.label))}</h3><span>${esc(subtitleFor(c))}</span></span>
-        <span class="status-dot"></span>
-      </button>
-    `;
-  }).join('');
-}
-
 function shortLabel(label) {
   const m = String(label).match(/\(([^)]+)\)\s*$/);
   if (m && m[1].length < 25) return m[1];
@@ -1229,12 +1197,54 @@ function subtitleFor(c) {
   return '1 peserta (putra/putri)';
 }
 
+/* ── RENDER LOMBA LIST (Sekali saja) ── */
+function renderCabangList() {
+  const list = $('#lombaList');
+  if (!list) return;
+  const cabang = STATE.cabang || FALLBACK_CABANG;
+  
+  list.innerHTML = cabang.map((c, i) => {
+    const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
+    const isActive = c.key === STATE.activeTab;
+    return `
+      <button class="lomba-item" role="tab" aria-selected="${isActive}" data-target="d-${esc(c.key)}" data-key="${esc(c.key)}">
+        <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
+        <span class="teks"><h3>${i+1}. ${esc(shortLabel(c.label))}</h3><span>${esc(subtitleFor(c))}</span></span>
+        <span class="status-dot"></span>
+      </button>
+    `;
+  }).join('');
+
+  // Event Delegation untuk Tab (Anti Bug saat re-render)
+  list.addEventListener('click', (e) => {
+    const btn = e.target.closest('.lomba-item');
+    if (!btn) return;
+    
+    const targetKey = btn.dataset.key;
+    STATE.activeTab = targetKey;
+
+    // Update Class Active di List
+    $$('.lomba-item', list).forEach(b => b.setAttribute('aria-selected', 'false'));
+    btn.setAttribute('aria-selected', 'true');
+
+    // Toggle Panel
+    $$('.detail').forEach(p => p.classList.remove('active'));
+    const targetPanel = document.getElementById('d-' + targetKey);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    // Scroll ke panel di mobile
+    if (window.innerWidth < 900) {
+      const panel = $('.panel');
+      if (panel) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  });
+}
+
+/* ── RENDER DETAIL PANELS (Sekali saja) ── */
 function renderDetailPanels() {
   const panel = $('#detailPanel');
   if (!panel) return;
-  
   const cabang = STATE.cabang || FALLBACK_CABANG;
-  const currentActive = panel.querySelector('.detail.active')?.id || `d-${cabang[0]?.key}`;
   
   panel.innerHTML = cabang.map((c, i) => {
     const d = CABANG_DETAILS[c.key] || {};
@@ -1242,6 +1252,7 @@ function renderDetailPanels() {
     const ket = d.ketentuan || [];
     const pen = d.penilaian || [];
     let lampiranHtml = '';
+    
     if (d.lampiran) {
       lampiranHtml = `
         <details class="mini-toggle">
@@ -1251,8 +1262,11 @@ function renderDetailPanels() {
           </div>
         </details>`;
     }
+    
+    const isActive = c.key === STATE.activeTab;
+    
     return `
-      <div class="detail ${('d-'+c.key) === currentActive ? 'active' : ''}" id="d-${esc(c.key)}" role="tabpanel">
+      <div class="detail ${isActive ? 'active' : ''}" id="d-${esc(c.key)}" role="tabpanel">
         <div class="detail-head">
           <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
           <div><h3>${esc(d.judul || c.label)}</h3><span>${esc(d.peserta || subtitleFor(c))}</span></div>
@@ -1277,40 +1291,6 @@ function renderDetailPanels() {
   }).join('');
 }
 
-// Event Delegation: Pasang listener di container induk agar kebal DOM re-render
-function bindTabs() {
-  const listContainer = document.getElementById('lombaList');
-  const panelContainer = document.getElementById('detailPanel');
-  if (!listContainer || !panelContainer) return;
-
-  // Hindari pemasangan listener ganda
-  if (listContainer.dataset.bound === 'true') return;
-  listContainer.dataset.bound = 'true';
-
-  listContainer.addEventListener('click', (e) => {
-    const btn = e.target.closest('.lomba-item');
-    if (!btn) return;
-
-    // 1. Ubah status aria-selected
-    listContainer.querySelectorAll('.lomba-item').forEach(el => el.setAttribute('aria-selected', 'false'));
-    btn.setAttribute('aria-selected', 'true');
-
-    // 2. Sembunyikan semua panel detail
-    panelContainer.querySelectorAll('.detail').forEach(el => el.classList.remove('active'));
-
-    // 3. Tampilkan panel yang dituju
-    const targetId = btn.dataset.target;
-    const targetPanel = document.getElementById(targetId);
-    if (targetPanel) {
-      targetPanel.classList.add('active');
-      // Scroll ke panel jika di layar kecil (mobile)
-      if (window.innerWidth < 900) {
-        panelContainer.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      }
-    }
-  });
-}
-
 /* ============================================================
  * BOOT
  * ============================================================ */
@@ -1318,10 +1298,19 @@ async function boot() {
   await loadConfig();
   renderCabangList();
   renderDetailPanels();
-  bindTabs(); // Panggil setelah render
   startCountdown();
-  pollPanggung();
-  setInterval(pollPanggung, 30000);
+  pollPanggung(); // Mulai loop polling berantai
+  
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      updateStatusBanner();
+      updatePortalButtons();
+      // Opsional: trigger pollPanggung() langsung jika tab kembali aktif
+      if (!STATE.isPolling) {
+        setTimeout(pollPanggung, 1000);
+      }
+    }
+  });
 }
 
 if (document.readyState === 'loading') {
@@ -1329,14 +1318,6 @@ if (document.readyState === 'loading') {
 } else {
   boot();
 }
-
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    pollPanggung();
-    updateStatusBanner();
-    updatePortalButtons();
-  }
-});
 
 })();
 </script>
