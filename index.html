@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#533B4D" />
+    <meta name="description" content="Musabaqah Tilawatil Qur'an Pelajar SD Tingkat Kabupaten Bantul Tahun 2026" />
+    <title>MTQ Pelajar SD Kabupaten Bantul 2026</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ===== RESET & VARIABEL ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cream: #FFF5E4;
+            --blush: #FAC3C1;
+            --rose: #FAA4BD;
+            --rose-deep: #533B4D;
+            --accent-pink: #F599C6;
+            --accent-pink-text: color-mix(in srgb, #F599C6 70%, white 30%);
+            --hero-bg: #FFEA88;
+            --hero-ink: #4D6787;
+            --teal: #7DCCAD;
+            --gold: #D9A441;
+            --hijau: #2F6F53;
+            --ink: #3E4C63;
+
+            --topbar-h: clamp(3rem, 6vw, 4.2rem);
+            --r-card: 18px;
+            --max-width: 1400px;
+            --section-pad-x: clamp(1rem, 4vw, 3rem);
+            --section-pad-y: clamp(2rem, 5vh, 4rem);
+        }
+
+        html { scroll-behavior: smooth; scroll-snap-type: y proximity; -webkit-text-size-adjust: 100%; }
+        body {
+            margin: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: var(--cream); color: var(--ink); line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; margin: 0; line-height: 1.2; }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; }
+        img, svg { display: block; max-width: 100%; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+        }
+        :focus-visible { outline: 3px solid var(--accent-pink); outline-offset: 3px; }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+            background: var(--rose-deep);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.5rem; padding: 0 var(--section-pad-x);
+            z-index: 20; border-bottom: 3px solid var(--accent-pink);
+            box-shadow: 0 2px 12px rgba(83, 59, 77, 0.25);
+        }
+        .topbar .brand { color: var(--cream); font-weight: 700; font-size: clamp(0.75rem, 1.4vw, 1.05rem); letter-spacing: 0.3px; white-space: nowrap; flex-shrink: 0; }
+        .topbar .brand b { color: var(--accent-pink-text); }
+        .topbar nav { display: flex; align-items: center; gap: 0.3rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 1; min-width: 0; padding: 0.2rem 0; }
+        .topbar nav::-webkit-scrollbar { display: none; }
+        .topbar nav a {
+            color: var(--cream); text-decoration: none; font-weight: 600;
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            padding: 0.4rem 0.7rem; border-radius: 100px;
+            border: 2px solid transparent; white-space: nowrap;
+            flex-shrink: 0; transition: border-color 0.2s, background 0.2s;
+        }
+        .topbar nav a:hover { border-color: var(--accent-pink); }
+        .topbar nav a.btn-cta { background: var(--accent-pink); color: var(--rose-deep); border-color: var(--accent-pink); font-weight: 700; }
+        .topbar nav a.btn-cta:hover { filter: brightness(1.08); transform: scale(1.02); }
+        @media (max-width: 480px) {
+            .topbar .brand .sub { display: none; }
+            .topbar nav a { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
+            .topbar nav { gap: 0.2rem; }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100svh; background: var(--hero-bg); color: var(--hero-ink);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+            padding: calc(var(--topbar-h) + 1.5rem) var(--section-pad-x) calc(var(--topbar-h) + 0.5rem);
+            position: relative; scroll-snap-align: start; overflow: hidden;
+        }
+        .motif {
+            position: absolute; left: 0; right: 0; height: 16px;
+            background-image:
+                linear-gradient(45deg, var(--accent-pink) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--accent-pink) 25%, transparent 25%);
+            background-size: 18px 18px; opacity: 0.9;
+        }
+        .motif.top { top: 0; }
+        .motif.bottom { bottom: 0; }
+
+        .kicker {
+            color: var(--hero-ink); font-weight: 700;
+            font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+            letter-spacing: 2.5px; text-transform: uppercase;
+            margin-bottom: 0.3rem; opacity: 0.8;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 900; line-height: 1.02;
+            color: var(--hero-ink); letter-spacing: -0.02em;
+        }
+        .hero .lokasi {
+            margin-top: 0.3rem; font-family: 'Fraunces', serif;
+            font-weight: 600; font-style: italic;
+            font-size: clamp(0.85rem, 1.8vw, 1.2rem); color: var(--rose-deep);
+        }
+        .tagline {
+            margin-top: 0.6rem; font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+            font-weight: 600; color: var(--hero-ink);
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 0.3rem 0.5rem;
+        }
+        .tagline .pil { font-weight: 700; padding: 0.1rem 0.6rem; border-radius: 100px; color: var(--rose-deep); font-size: 0.9em; }
+        .tagline .pil.c1 { background: var(--accent-pink); }
+        .tagline .pil.c2 { background: var(--gold); }
+        .tagline .pil.c3 { background: var(--teal); }
+
+        .status-banner {
+            display: none; margin: 1rem auto 0;
+            padding: 0.5rem 1rem; border-radius: 100px;
+            font-size: clamp(0.7rem, 1vw, 0.82rem);
+            font-weight: 700; align-items: center; gap: 0.4rem;
+            box-shadow: 2px 2px 0 rgba(0,0,0,.08);
+        }
+        .status-banner.show { display: inline-flex; }
+        .status-banner.open { background: var(--hijau); color: var(--cream); }
+        .status-banner.closed { background: #c53030; color: #fff; }
+        .status-banner .dot {
+            width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.3); }
+        }
+
+        .countdown {
+            display: flex; gap: clamp(0.4rem, 1.5vw, 1.2rem);
+            flex-wrap: wrap; justify-content: center;
+            margin: clamp(1rem, 2.5vh, 1.8rem) 0 clamp(0.8rem, 2vh, 1.4rem);
+        }
+        .waktu-box {
+            background: var(--cream); color: var(--rose-deep);
+            min-width: clamp(56px, 10vw, 92px);
+            padding: clamp(0.6rem, 1.4vw, 1.2rem) clamp(0.4rem, 1vw, 0.9rem);
+            border-radius: 14px; border-bottom: 5px solid var(--accent-pink);
+            box-shadow: 4px 4px 0 var(--hero-ink);
+            flex: 1 0 auto; max-width: 120px;
+        }
+        .waktu-box span {
+            display: block; font-family: 'Fraunces', serif;
+            font-weight: 900; font-size: clamp(1.6rem, 4.5vw, 2.8rem);
+            line-height: 1; letter-spacing: 0.02em;
+        }
+        .waktu-box small {
+            display: block; margin-top: 0.3rem;
+            font-size: clamp(0.5rem, 0.9vw, 0.72rem);
+            font-weight: 700; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--ink);
+        }
+
+        .hero-cta {
+            display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+            margin-top: 0.4rem;
+        }
+        .scroll-cue {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            color: var(--rose-deep); background: var(--cream);
+            text-decoration: none; font-weight: 700;
+            font-size: clamp(0.75rem, 1.1vw, 0.88rem);
+            padding: 0.5rem 1.1rem; border-radius: 100px;
+            box-shadow: 3px 3px 0 var(--hero-ink);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            border: none; cursor: pointer;
+        }
+        .scroll-cue:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--hero-ink); }
+        .scroll-cue svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+        /* ===== PORTAL SECTION ===== */
+        .portal-section {
+            background: var(--cream);
+            padding: clamp(2rem, 5vh, 3.5rem) var(--section-pad-x) clamp(2.5rem, 6vh, 4rem);
+            scroll-snap-align: start;
+        }
+        .portal-inner { max-width: 900px; margin: 0 auto; }
+        .portal-head { text-align: center; margin-bottom: 1.6rem; }
+        .portal-head .eyebrow {
+            display: inline-block; font-size: .7rem; font-weight: 800;
+            letter-spacing: .12em; color: var(--rose-deep);
+            background: var(--accent-pink); padding: .35rem .8rem;
+            border-radius: 999px; margin-bottom: .6rem;
+        }
+        .portal-head h2 {
+            font-size: clamp(1.3rem, 3.6vw, 1.9rem);
+            font-weight: 900; color: var(--rose-deep); margin: 0 0 .3rem;
+        }
+        .portal-head p { font-size: .9rem; color: var(--ink); opacity: .75; margin: 0; }
+
+        .portal-group-label {
+            font-size: .72rem; font-weight: 800;
+            letter-spacing: .08em; text-transform: uppercase;
+            color: var(--ink); opacity: .6;
+            margin: 1.4rem 0 .6rem;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .portal-group-label:first-of-type { margin-top: 0; }
+        .portal-group-label::after {
+            content: ''; flex: 1; height: 1px; background: currentColor; opacity: .3;
+        }
+
+        .portal-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+        }
+        @media (max-width: 640px) { .portal-grid { grid-template-columns: 1fr; } }
+
+        .portal-card {
+            display: flex; flex-direction: column;
+            padding: 1.4rem; border-radius: 18px;
+            text-decoration: none; color: #fff;
+            transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s;
+            position: relative; overflow: hidden; min-height: 190px;
+            box-shadow: 0 4px 12px -2px rgba(0,0,0,.08);
+        }
+        .portal-card::before {
+            content: ''; position: absolute;
+            top: -50%; right: -20%; width: 60%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .portal-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px -6px rgba(0,0,0,.2); }
+
+        .portal-card.primary { background: linear-gradient(135deg, var(--hijau) 0%, #4a9c73 100%); }
+        .portal-card.accent  { background: linear-gradient(135deg, var(--rose-deep) 0%, #7a5970 100%); }
+        .portal-card.pewara  { background: linear-gradient(135deg, #1E5A8A 0%, #3B82C4 100%); }
+        .portal-card.admin   { background: linear-gradient(135deg, #2C2C3E 0%, #4A4A5E 100%); }
+
+        /* Staff cards — lebih compact */
+        .portal-card.staff { min-height: 150px; padding: 1.15rem; border-radius: 14px; }
+        .portal-card.staff .portal-icon {
+            width: 40px; height: 40px; border-radius: 11px;
+            margin-bottom: .65rem;
+        }
+        .portal-card.staff .portal-icon svg { width: 20px; height: 20px; }
+        .portal-card.staff h3 { font-size: .96rem; margin-bottom: .25rem; }
+        .portal-card.staff p { font-size: .74rem; line-height: 1.4; margin-bottom: .75rem; flex: 1; }
+        .portal-card.staff .portal-btn { font-size: .76rem; padding: .45rem .8rem; }
+
+        .portal-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: rgba(255,255,255,.2);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: .9rem; flex-shrink: 0;
+        }
+        .portal-icon svg { width: 24px; height: 24px; color: #fff; }
+
+        .portal-card h3 {
+            font-size: 1.1rem; font-weight: 800; margin: 0 0 .35rem;
+            color: #fff; font-family: 'Fraunces', serif;
+            display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+        }
+        .portal-card p {
+            font-size: .8rem; line-height: 1.5; margin: 0 0 1rem;
+            color: rgba(255,255,255,.9); flex: 1;
+        }
+        .portal-btn {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: rgba(255,255,255,.95); color: #111;
+            font-size: .82rem; font-weight: 700;
+            padding: .55rem 1rem; border-radius: 10px;
+            transition: background .15s; margin-top: auto; width: fit-content;
+        }
+        .portal-card.primary .portal-btn { color: var(--hijau); }
+        .portal-card.accent  .portal-btn { color: var(--rose-deep); }
+        .portal-card.pewara  .portal-btn { color: #1E5A8A; }
+        .portal-card.admin   .portal-btn { color: #2C2C3E; }
+        .portal-card:hover .portal-btn { background: #fff; }
+        .portal-btn svg { width: 16px; height: 16px; }
+
+        .portal-card.disabled {
+            opacity: .55; cursor: not-allowed;
+            pointer-events: none; filter: grayscale(.5);
+        }
+
+        .lock-badge {
+            display: inline-flex; align-items: center; gap: .2rem;
+            padding: .1rem .4rem;
+            background: rgba(255,255,255,.25);
+            border-radius: 4px;
+            font-size: .58rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: .04em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            align-self: center;
+        }
+        .lock-badge svg { width: 9px; height: 9px; }
+
+        /* ===== SHARED SECTION ===== */
+        section.page {
+            padding: calc(var(--topbar-h) + 1.2rem) var(--section-pad-x) var(--section-pad-y);
+        }
+        section.page.snap { scroll-snap-align: start; }
+        section.page.full { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-start; }
+        .page-inner { max-width: var(--max-width); margin: 0 auto; width: 100%; }
+        .page-head {
+            display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+            gap: 1rem; margin-bottom: 1rem;
+            border-bottom: 3px solid var(--ink); padding-bottom: 1rem;
+        }
+        .page-head h2 { font-size: clamp(1.4rem, 3.2vw, 2.4rem); font-weight: 700; color: var(--rose-deep); }
+        .page-head p { margin: 0.35rem 0 0; max-width: 50ch; color: var(--ink); font-size: clamp(0.85rem, 1.1vw, 0.95rem); }
+        .btn-unduh {
+            background: var(--rose-deep); color: var(--cream);
+            text-decoration: none; font-weight: 700;
+            font-size: clamp(0.8rem, 1vw, 0.9rem);
+            padding: 0.7rem 1.4rem; border-radius: 100px; white-space: nowrap;
+            box-shadow: 4px 4px 0 var(--ink);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-unduh:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+
+        /* ===== INFO ===== */
+        .info-layout { display: grid; grid-template-columns: minmax(240px, 360px) 1fr; gap: 1.2rem; align-items: stretch; }
+        .info-card {
+            background: var(--rose-deep); color: var(--cream);
+            border-radius: var(--r-card);
+            padding: clamp(1.2rem, 2.4vw, 1.9rem);
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .info-card .ikon-lg {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: var(--accent-pink);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .info-card .ikon-lg svg { width: 17px; height: 17px; stroke: var(--rose-deep); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .info-blok-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; }
+        .info-blok p.label { margin: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.4px; color: var(--rose); text-transform: uppercase; }
+        .info-blok h3 { font-size: clamp(1rem, 1.8vw, 1.3rem); font-weight: 600; line-height: 1.3; }
+        .info-blok p.sub { margin: 0.15rem 0 0; font-size: clamp(0.8rem, 1vw, 0.88rem); color: var(--cream); opacity: 0.85; }
+        .info-divider { height: 2px; background: color-mix(in srgb, var(--cream) 25%, transparent); border: none; margin: 0; }
+        .timeline-panel { background: var(--blush); border-radius: var(--r-card); padding: clamp(1.2rem, 2.4vw, 2.1rem); }
+        .timeline-panel > p.intro { margin: 0 0 1rem; font-weight: 700; color: var(--ink); font-size: clamp(0.85rem, 1.1vw, 0.92rem); }
+        .timeline { border-left: 3px solid var(--rose); margin-left: 0.5rem; padding-left: 1.5rem; display: flex; flex-direction: column; gap: clamp(1rem, 2.2vw, 1.6rem); }
+        .tl-item { position: relative; }
+        .tl-item::before {
+            content: ''; position: absolute; left: -1.94rem; top: 0.2rem;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent-pink); border: 3px solid var(--rose-deep);
+        }
+        .tl-item.puncak::before { background: var(--rose-deep); border-color: var(--accent-pink); }
+        .tl-bulan { margin: 0 0 0.2rem; font-family: 'Fraunces', serif; font-weight: 700; color: var(--rose-deep); font-size: clamp(0.9rem, 1.3vw, 1.1rem); }
+        .tl-item p.ket { margin: 0; color: var(--ink); font-size: clamp(0.8rem, 1vw, 0.9rem); line-height: 1.5; }
+        .chip {
+            display: inline-block; margin-left: 0.4rem;
+            font-size: 0.6rem; font-weight: 700; color: var(--rose-deep);
+            background: var(--accent-pink); padding: 0.15rem 0.5rem;
+            border-radius: 100px; vertical-align: middle;
+        }
+
+        /* ===== JUKNIS ===== */
+        .mega-chip {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3px;
+            color: var(--rose-deep); background: var(--accent-pink);
+            padding: 0.15rem 0.6rem; border-radius: 100px;
+            display: inline-block; vertical-align: middle;
+        }
+        .juknis-layout { display: grid; grid-template-columns: minmax(200px, 320px) 1fr; gap: 1.2rem; align-items: start; }
+        .lomba-list { display: flex; flex-direction: column; gap: 0.3rem; }
+        .lomba-item {
+            display: flex; align-items: center; gap: 0.5rem; text-align: left;
+            background: var(--blush); border: 2px solid var(--ink);
+            border-radius: 9px; padding: 0.3rem 0.55rem;
+            cursor: pointer; color: var(--ink); flex-shrink: 0;
+            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            width: 100%; font-size: inherit; position: relative;
+        }
+        .lomba-item:hover { background: var(--cream); }
+        .lomba-item .ikon {
+            width: 22px; height: 22px; border-radius: 6px;
+            background: var(--rose-deep);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .lomba-item .ikon svg { width: 11px; height: 11px; stroke: var(--accent-pink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .lomba-item .teks { flex: 1; min-width: 0; }
+        .lomba-item .teks h3 { font-size: clamp(0.7rem, 1vw, 0.8rem); font-weight: 600; line-height: 1.15; margin: 0; }
+        .lomba-item .teks span { display: block; margin-top: 0.05rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2px; color: var(--rose-deep); }
+        .lomba-item .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e0; flex-shrink: 0; }
+        .lomba-item .status-dot.live { background: var(--hijau); box-shadow: 0 0 0 3px rgba(47,111,83,.25); animation: pulse 1.6s infinite; }
+        .lomba-item .status-dot.final { background: var(--gold); }
+        .lomba-item[aria-selected="true"] { background: var(--cream); border-color: var(--accent-pink); box-shadow: 3px 3px 0 var(--accent-pink); }
+        .lomba-item[aria-selected="true"] .ikon { background: var(--accent-pink); }
+        .lomba-item[aria-selected="true"] .ikon svg { stroke: var(--rose-deep); }
+
+        .panel {
+            background: var(--blush);
+            border: 2.5px solid var(--ink); border-radius: var(--r-card);
+            padding: clamp(1.2rem, 2.6vw, 2.1rem);
+            max-height: min(64vh, 600px); overflow-y: auto;
+            scrollbar-width: thin; scrollbar-color: var(--rose) transparent;
+        }
+        .panel::-webkit-scrollbar { width: 5px; }
+        .panel::-webkit-scrollbar-track { background: transparent; }
+        .panel::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 10px; }
+
+        .detail { display: none; animation: fadePanel 0.25s ease; }
+        .detail.active { display: block; }
+        @keyframes fadePanel { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .detail-head {
+            display: flex; align-items: flex-start; gap: 0.9rem;
+            border-bottom: 2px dashed var(--rose);
+            padding-bottom: 0.8rem; margin-bottom: 1rem;
+        }
+        .detail-head .ikon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: var(--rose-deep);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .detail-head .ikon svg { width: 20px; height: 20px; stroke: var(--accent-pink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+        .detail-head h3 { font-size: clamp(1rem, 1.8vw, 1.4rem); font-weight: 700; color: var(--rose-deep); }
+        .detail-head span { display: block; margin-top: 0.2rem; font-size: clamp(0.7rem, 0.9vw, 0.82rem); font-weight: 700; color: var(--ink); }
+        .detail-body { color: var(--ink); font-size: clamp(0.9rem, 1vw, 1rem); line-height: 1.65; }
+        .detail-body p { margin: 0 0 0.5rem; }
+        .detail-body h4 { margin: 1rem 0 0.35rem; font-family: 'Fraunces', serif; font-weight: 700; color: var(--rose-deep); font-size: clamp(0.9rem, 1.1vw, 0.98rem); }
+        .detail-body ol { margin: 0.3rem 0 0.8rem; padding-left: 1.2rem; }
+        .detail-body ol li { margin-bottom: 0.4rem; }
+        .detail-body ol.sub-list { margin: 0.3rem 0 0.2rem; list-style: lower-alpha; }
+        .detail-body strong { color: var(--rose-deep); }
+
+        .label-title { text-transform: uppercase; letter-spacing: 0.4px; font-size: 0.7rem; font-weight: 700; color: var(--rose-deep); margin: 0.8rem 0 0.3rem; }
+        .tabel-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.4rem 0 0.8rem; border-radius: 8px; }
+        .tabel-scroll .tabel-nilai { min-width: 280px; width: 100%; margin: 0; }
+        .tabel-nilai { width: 100%; border-collapse: collapse; font-size: clamp(0.8rem, 0.95vw, 0.95rem); }
+        .tabel-nilai th { background: var(--rose-deep); color: var(--cream); padding: 0.4rem 0.6rem; text-align: left; font-weight: 700; }
+        .tabel-nilai td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rose); }
+        .tabel-nilai tr:nth-child(even) td { background: var(--cream); }
+        .tabel-nilai tr.total td { font-weight: 700; background: var(--accent-pink); color: var(--ink); border-bottom: none; }
+        .tabel-nilai td.num { text-align: center; width: 80px; white-space: nowrap; }
+
+        .lagu-box { background: var(--cream); border-left: 3px solid var(--rose-deep); border-radius: 8px; padding: 0.6rem 0.9rem; margin: 0.4rem 0 0.8rem; }
+        .lagu-box p { margin: 0 0 0.2rem; font-size: clamp(0.8rem, 0.95vw, 0.9rem); }
+        .lagu-box .pencipta { color: var(--ink); opacity: 0.7; font-style: italic; font-size: 0.78em; }
+
+        .mini-toggle { margin-top: 0.8rem; background: var(--cream); border: 1.5px dashed var(--hijau); border-radius: 10px; padding: 0.5rem 0.8rem; }
+        .mini-toggle summary { cursor: pointer; font-weight: 700; color: var(--hijau); font-size: clamp(0.8rem, 0.95vw, 0.88rem); }
+        .mini-toggle .lampiran-isi { margin-top: 0.6rem; }
+        .mini-toggle .lampiran-isi h5 { font-family: 'Fraunces', serif; font-weight: 700; color: var(--hijau); font-size: clamp(0.8rem, 0.95vw, 0.9rem); margin: 0.6rem 0 0.2rem; }
+        .mini-toggle .lampiran-isi ol { margin: 0 0 0.3rem; padding-left: 1.2rem; font-size: clamp(0.78rem, 0.9vw, 0.85rem); }
+        .mini-toggle .lampiran-isi ol li { margin-bottom: 0.15rem; }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            background: var(--rose-deep); color: var(--cream);
+            padding: 2rem var(--section-pad-x);
+            border-top: 3px solid var(--accent-pink);
+        }
+        .footer-inner { max-width: var(--max-width); margin: 0 auto; text-align: center; }
+        .footer-title {
+            font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700;
+            margin-bottom: .5rem; color: var(--cream);
+        }
+        .footer-desc { font-size: .82rem; opacity: .7; margin-bottom: 1.2rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+        .footer-links {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: .5rem .75rem; margin-bottom: 1rem;
+        }
+        .footer-link {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .45rem .9rem; border-radius: 100px;
+            font-size: .78rem; font-weight: 700;
+            background: rgba(255,255,255,.1);
+            color: var(--cream); text-decoration: none;
+            border: 1px solid rgba(255,255,255,.15);
+            transition: background .15s, border-color .15s;
+        }
+        .footer-link:hover { background: rgba(255,255,255,.2); border-color: var(--accent-pink); }
+        .footer-link svg { width: 13px; height: 13px; }
+        .footer-copy {
+            font-size: .7rem; opacity: .5; margin-top: 1rem;
+            padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.1);
+        }
+
+        /* ===== FLOATING WHATSAPP ===== */
+        .fab-wa {
+            position: fixed; right: 18px;
+            bottom: 18px; bottom: calc(18px + env(safe-area-inset-bottom));
+            z-index: 25; width: 56px; height: 56px; border-radius: 50%;
+            background: #25D366; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(37,211,102,.4);
+            transition: transform .18s; text-decoration: none;
+        }
+        .fab-wa:hover { transform: scale(1.08); }
+        .fab-wa:active { transform: scale(.95); }
+        .fab-wa svg { width: 30px; height: 30px; fill: currentColor; }
+        .fab-wa[hidden] { display: none; }
+
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed; bottom: clamp(0.8rem, 2vh, 1.2rem);
+            right: calc(56px + 18px + 12px);
+            width: clamp(40px, 5vw, 48px); height: clamp(40px, 5vw, 48px);
+            z-index: 15; background: var(--rose-deep); color: var(--cream);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 3px 3px 0 var(--ink); text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s; border: none;
+        }
+        .back-to-top:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+        @media (max-width: 480px) {
+            .back-to-top { bottom: calc(60px + 18px + env(safe-area-inset-bottom)); right: 18px; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .info-layout { grid-template-columns: 1fr; }
+            .juknis-layout { grid-template-columns: 1fr; }
+            .lomba-list { flex-direction: row; flex-wrap: wrap; max-height: none; overflow: visible; gap: 0.4rem; }
+            .lomba-item { flex: 1 1 180px; padding: 0.5rem 0.7rem; gap: 0.6rem; }
+            .lomba-item .ikon { width: 30px; height: 30px; border-radius: 8px; }
+            .lomba-item .ikon svg { width: 15px; height: 15px; }
+            .lomba-item .teks h3 { font-size: 0.8rem; }
+            .panel { max-height: none; overflow-y: visible; }
+        }
+        @media (max-width: 680px) {
+            .page-head { flex-direction: column; align-items: flex-start; }
+            .lomba-item { flex: 1 1 140px; }
+            .detail-head .ikon { width: 36px; height: 36px; }
+            .detail-head .ikon svg { width: 17px; height: 17px; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+            .waktu-box { min-width: 48px; padding: 0.5rem 0.3rem; }
+            .waktu-box span { font-size: clamp(1.3rem, 6vw, 1.8rem); }
+            .waktu-box small { font-size: 0.45rem; letter-spacing: 0.8px; }
+            .lomba-item { flex: 1 1 100%; }
+            .timeline { padding-left: 1rem; margin-left: 0.2rem; }
+            .tl-item::before { left: -1.44rem; width: 12px; height: 12px; }
+        }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar" role="banner">
+    <div class="brand">
+        <b>KKG PAI</b> <span class="sub">Kabupaten Bantul</span>
+    </div>
+    <nav aria-label="Navigasi utama">
+        <a href="#info">Waktu &amp; Tempat</a>
+        <a href="#petunjuk">Cabang Lomba</a>
+        <a href="#portal">Portal</a>
+        <a href="https://drive.google.com/uc?export=download&id=1YpU06CY3HQk5Ddj9buzMXlkU0kDRs349" target="_blank" rel="noopener" class="btn-cta">Unduh Juklak</a>
+    </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+    <div class="motif top" aria-hidden="true"></div>
+    <p class="kicker" id="heroKicker">Musabaqah Tilawatil Qur'an</p>
+    <h1 id="heroTitle">MTQ Pelajar SD</h1>
+    <p class="lokasi" id="heroLokasi">Kabupaten Bantul &middot; 2026</p>
+    <p class="tagline" id="heroTagline">
+        <span class="pil c1">Cinta</span> di Hati,
+        <span class="pil c2">Ukir Prestasi</span>,
+        Wujudkan Generasi <span class="pil c3">Qur'ani</span>
+    </p>
+
+    <div id="statusBanner" class="status-banner" role="status" aria-live="polite">
+        <span class="dot"></span>
+        <span id="statusBannerText">Memuat status…</span>
+    </div>
+
+    <div class="countdown" id="timer" role="timer" aria-label="Countdown menuju acara">
+        <div class="waktu-box"><span data-time="hari">--</span><small>Hari</small></div>
+        <div class="waktu-box"><span data-time="jam">--</span><small>Jam</small></div>
+        <div class="waktu-box"><span data-time="menit">--</span><small>Menit</small></div>
+        <div class="waktu-box"><span data-time="detik">--</span><small>Detik</small></div>
+    </div>
+
+    <div class="hero-cta">
+        <a href="#portal" class="scroll-cue">
+            Akses Portal
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+        </a>
+        <a href="#petunjuk" class="scroll-cue">
+            Cabang Lomba
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+        </a>
+    </div>
+    <div class="motif bottom" aria-hidden="true"></div>
+</section>
+
+<!-- ===== PORTAL AKSES ===== -->
+<section class="portal-section snap" id="portal">
+    <div class="portal-inner">
+        <div class="portal-head">
+            <span class="eyebrow">AKSES PORTAL</span>
+            <h2>Portal MTQ 2026</h2>
+            <p>Untuk ofisial, petugas, dan publik</p>
+        </div>
+
+        <!-- Group 1: Ofisial & Publik -->
+        <div class="portal-group-label">Untuk Ofisial &amp; Publik</div>
+        <div class="portal-grid">
+
+            <a href="./daftar.html" class="portal-card primary" id="btnDaftar">
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <line x1="20" y1="8" x2="20" y2="14"/>
+                        <line x1="23" y1="11" x2="17" y2="11"/>
+                    </svg>
+                </div>
+                <h3>Daftar Peserta</h3>
+                <p>Portal ofisial kapanewon untuk mendaftarkan 11 peserta cabang lomba.</p>
+                <span class="portal-btn">
+                    Masuk Portal
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+            </a>
+
+            <a href="./pemantauan.html" class="portal-card accent" id="btnPemantauan">
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </div>
+                <h3>Pemantauan Live</h3>
+                <p>Papan informasi publik: status lomba, nomor undian, antrian tampil, countdown timer.</p>
+                <span class="portal-btn">
+                    Lihat Live
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+            </a>
+
+        </div>
+
+        <!-- Group 2: Khusus Petugas -->
+        <div class="portal-group-label">Khusus Petugas</div>
+        <div class="portal-grid">
+
+            <a href="./pewara.html" class="portal-card pewara staff" id="btnPewara">
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <h3>
+                    Portal Pewara
+                    <span class="lock-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        Token
+                    </span>
+                </h3>
+                <p>Input nilai juri, cetak BA &amp; daftar hadir, SIDANG per cabang.</p>
+                <span class="portal-btn">
+                    Masuk Pewara
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+            </a>
+
+            <a href="./admin.html" class="portal-card admin staff" id="btnAdmin">
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                </div>
+                <h3>
+                    Portal Admin
+                    <span class="lock-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        Token
+                    </span>
+                </h3>
+                <p>Kelola sekolah, ofisial, juri, cetak semua dokumen, klasemen, juara umum.</p>
+                <span class="portal-btn">
+                    Masuk Admin
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== INFO ===== -->
+<section class="page full snap" id="info">
+    <div class="page-inner">
+        <div class="page-head">
+            <div>
+                <h2>Waktu &amp; Tempat Pelaksanaan</h2>
+                <p>Jadwal puncak acara tingkat kabupaten, serta tahapan seleksi yang mengantarkan peserta sampai ke sana.</p>
+            </div>
+        </div>
+        <div class="info-layout">
+            <div class="info-card">
+                <div class="info-blok">
+                    <div class="info-blok-top">
+                        <span class="ikon-lg"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+                        <p class="label">Hari &amp; Tanggal</p>
+                    </div>
+                    <h3 id="infoTanggal">Rabu, 11 November 2026</h3>
+                </div>
+                <hr class="info-divider" />
+                <div class="info-blok">
+                    <div class="info-blok-top">
+                        <span class="ikon-lg"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
+                        <p class="label">Tempat</p>
+                    </div>
+                    <h3 id="infoTempat">SD Muhammadiyah Karangbendo</h3>
+                    <p class="sub" id="infoKapanewon">Kapanewon Banguntapan</p>
+                </div>
+            </div>
+            <div class="timeline-panel">
+                <p class="intro">Timeline kegiatan</p>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <p class="tl-bulan">September 2026</p>
+                        <p class="ket">Sosialisasi dan MTQ Tingkat Satuan Pendidikan &mdash; seleksi awal di masing-masing sekolah.</p>
+                    </div>
+                    <div class="tl-item">
+                        <p class="tl-bulan">Oktober 2026</p>
+                        <p class="ket">MTQ Tingkat Kapanewon &mdash; perwakilan tiap sekolah bertanding di tingkat kapanewon.</p>
+                    </div>
+                    <div class="tl-item puncak">
+                        <p class="tl-bulan">November 2026<span class="chip">Puncak acara</span></p>
+                        <p class="ket" id="timelinePuncak">MTQ Tingkat Kabupaten Bantul, di SD Muhammadiyah Karangbendo, Kapanewon Banguntapan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PETUNJUK ===== -->
+<section class="page" id="petunjuk">
+    <div class="page-inner">
+        <div class="page-head">
+            <div>
+                <h2>Cabang Lomba <span class="mega-chip" id="chipCabang">9 cabang</span></h2>
+            </div>
+        </div>
+        <div class="juknis-layout">
+            <div class="lomba-list" role="tablist" aria-label="Daftar cabang lomba" id="lombaList"></div>
+            <div class="panel" id="detailPanel"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-title">MTQ Pelajar SD Kabupaten Bantul 2026</div>
+        <p class="footer-desc">Cinta di Hati, Ukir Prestasi, Wujudkan Generasi Qur'ani</p>
+
+        <div class="footer-links">
+            <a href="./daftar.html" class="footer-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+                Daftar Peserta
+            </a>
+            <a href="./pemantauan.html" class="footer-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                Pemantauan
+            </a>
+            <a href="./pewara.html" class="footer-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
+                Pewara
+            </a>
+            <a href="./admin.html" class="footer-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33"/></svg>
+                Admin
+            </a>
+            <a href="https://drive.google.com/uc?export=download&id=1YpU06CY3HQk5Ddj9buzMXlkU0kDRs349" target="_blank" rel="noopener" class="footer-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Juklak
+            </a>
+        </div>
+
+        <div class="footer-copy">
+            © 2026 KKG PAI Kabupaten Bantul · MTQ Pelajar SD
+        </div>
+    </div>
+</footer>
+
+<!-- ===== BACK TO TOP ===== -->
+<a href="#hero" class="back-to-top" aria-label="Kembali ke atas">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4m0 0l-6 6m6-6l6 6"/></svg>
+</a>
+
+<!-- ===== FLOATING WHATSAPP ===== -->
+<a href="#" class="fab-wa" id="fabWA" aria-label="Hubungi Panitia" title="Hubungi Panitia via WhatsApp" hidden>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<script>
+'use strict';
+(() => {
+
+/* ============================================================
+ * KONFIGURASI
+ * ============================================================ */
+const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
+
+const STATE = { config: null, cabang: null, panggung: null, countdownTarget: null };
+
+const FALLBACK_CONFIG = {
+  nama_acara: "Musabaqah Tilawatil Qur'an Pelajar Sekolah Dasar Tingkat Kabupaten Bantul Tahun 2026",
+  tema: "Cinta di Hati, Ukir Prestasi, Wujudkan Generasi Qur'ani",
+  tanggal_lomba: '2026-11-11',
+  tanggal_teks: 'Rabu, 11 November 2026',
+  tempat_lomba: 'SD Muhammadiyah Karangbendo, Kapanewon Banguntapan',
+  kuota_per_kapanewon: '11',
+  deadline_pendaftaran: '2026-11-10T23:59:00+07:00',
+  pendaftaran_buka: 'true',
+  penilaian_buka: 'false',
+  contact_wa: '',
+  login_url: ''
+};
+
+const FALLBACK_CABANG = [
+  { key:'MTQ', kode:'MTQ', label:"MTQ (Musabaqah Tilawatil Qur'an)", slot:1, mode:'queue' },
+  { key:'MTtQ', kode:'MTTQ', label:"MTtQ (Musabaqah Tartil Qur'an)", slot:1, mode:'queue' },
+  { key:'MHQ', kode:'MHQ', label:"MHQ (Musabaqah Hifdzil Qur'an)", slot:1, mode:'queue' },
+  { key:'Puitisasi', kode:'MPI', label:'MPI (Musabaqah Puitisasi Islami)', slot:1, mode:'queue' },
+  { key:'MAz', kode:'MAZ', label:'MAz (Musabaqah Azan)', slot:1, mode:'queue', gender:'L' },
+  { key:'LPP', kode:'LPP', label:'LPP (Lomba Pidato PAI)', slot:1, mode:'queue' },
+  { key:'LCP', kode:'LCP', label:'LCP (Lomba Cerdas Cermat PAI)', slot:3, mode:'phase', team:true },
+  { key:'Lukis', kode:'LMI', label:'LMI (Lomba Melukis Islami)', slot:1, mode:'timer', durasi:10800 },
+  { key:'Menyanyi', kode:'LMYI', label:'LMyI (Lomba Menyanyi Islami)', slot:1, mode:'queue' }
+];
+
+/* ============================================================
+ * API
+ * ============================================================ */
+async function api(action, payload) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action }, payload || {}))
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+ * CONFIG LOADER
+ * ============================================================ */
+async function loadConfig() {
+  try {
+    const res = await api('config');
+    if (res.status === 'success') {
+      STATE.config = Object.assign({}, FALLBACK_CONFIG, res.config || {});
+      STATE.cabang = res.cabang && res.cabang.length ? res.cabang : FALLBACK_CABANG;
+    } else throw new Error('bad_response');
+  } catch (e) {
+    console.warn('[config] fallback:', e);
+    STATE.config = FALLBACK_CONFIG;
+    STATE.cabang = FALLBACK_CABANG;
+  }
+  renderDynamicFromConfig();
+}
+
+function renderDynamicFromConfig() {
+  const c = STATE.config;
+  const targetDate = String(c.tanggal_lomba || '2026-11-11');
+  STATE.countdownTarget = new Date(targetDate + 'T00:00:00+07:00').getTime();
+
+  const kicker = $('#heroKicker');
+  if (kicker) {
+    const nama = String(c.nama_acara || '');
+    const match = nama.match(/Musabaqah[^,]*/i);
+    kicker.textContent = match ? match[0].replace(/\s+Tingkat.*$/i, '').trim() : "Musabaqah Tilawatil Qur'an";
+  }
+  const heroTitle = $('#heroTitle');
+  if (heroTitle) {
+    const m = String(c.nama_acara || '').match(/Pelajar\s+Sekolah\s+Dasar/i);
+    heroTitle.textContent = m ? 'MTQ Pelajar SD' : 'MTQ Pelajar';
+  }
+  const heroLokasi = $('#heroLokasi');
+  if (heroLokasi) {
+    const m = String(c.nama_acara || '').match(/Kabupaten\s+\w+\s+Tahun\s+(\d{4})/i);
+    heroLokasi.textContent = m ? `Kabupaten Bantul · ${m[1]}` : 'Kabupaten Bantul · 2026';
+  }
+  const tagline = $('#heroTagline');
+  if (tagline && c.tema) {
+    const parts = c.tema.split(/[,.]/).map(s => s.trim()).filter(Boolean);
+    if (parts.length >= 3) {
+      tagline.innerHTML = `
+        <span class="pil c1">${esc(parts[0].split(' ')[0])}</span> ${esc(parts[0].split(' ').slice(1).join(' ') || 'di Hati')},
+        <span class="pil c2">${esc(parts[1])}</span>,
+        ${esc(parts.slice(2).join(', '))}
+      `;
+    }
+  }
+
+  const infoTanggal = $('#infoTanggal');
+  if (infoTanggal) infoTanggal.textContent = c.tanggal_teks || 'Rabu, 11 November 2026';
+  const infoTempat = $('#infoTempat');
+  if (infoTempat) {
+    const t = String(c.tempat_lomba || 'SD Muhammadiyah Karangbendo').split(',')[0].trim();
+    infoTempat.textContent = t;
+  }
+  const infoKapanewon = $('#infoKapanewon');
+  if (infoKapanewon) {
+    const t = String(c.tempat_lomba || '');
+    const m = t.match(/Kapanewon\s+\w+/);
+    infoKapanewon.textContent = m ? m[0] : 'Kapanewon Banguntapan';
+  }
+  const timelinePuncak = $('#timelinePuncak');
+  if (timelinePuncak) {
+    timelinePuncak.textContent = `${c.nama_acara || 'MTQ Tingkat Kabupaten Bantul'}, di ${c.tempat_lomba || 'SD Muhammadiyah Karangbendo'}.`;
+  }
+
+  const chip = $('#chipCabang');
+  if (chip) chip.textContent = `${STATE.cabang.length} cabang`;
+
+  updateStatusBanner();
+  updatePortalButtons();
+
+  if (c.contact_wa) {
+    const fab = $('#fabWA');
+    if (fab) {
+      const waNum = String(c.contact_wa).replace(/[^0-9]/g, '');
+      const norm = waNum.startsWith('0') ? '62' + waNum.slice(1) : waNum;
+      const msg = 'Assalamu\'alaikum, saya butuh bantuan terkait MTQ Pelajar SD Bantul 2026.';
+      fab.href = `https://wa.me/${norm}?text=${encodeURIComponent(msg)}`;
+      fab.target = '_blank';
+      fab.rel = 'noopener';
+      fab.hidden = false;
+    }
+  }
+}
+
+function updateStatusBanner() {
+  const banner = $('#statusBanner');
+  const text = $('#statusBannerText');
+  if (!banner || !text) return;
+
+  const c = STATE.config || {};
+  const open = String(c.pendaftaran_buka).toLowerCase() === 'true';
+  const deadline = c.deadline_pendaftaran ? new Date(c.deadline_pendaftaran) : null;
+  const now = Date.now();
+
+  banner.classList.remove('open', 'closed', 'show');
+
+  if (!open) { banner.classList.add('show', 'closed'); text.textContent = 'Pendaftaran Ditutup'; return; }
+  if (deadline && now > deadline.getTime()) { banner.classList.add('show', 'closed'); text.textContent = 'Pendaftaran Ditutup'; return; }
+
+  banner.classList.add('show', 'open');
+  if (deadline) {
+    const days = Math.ceil((deadline.getTime() - now) / 86400000);
+    text.textContent = days <= 3
+      ? `Pendaftaran Dibuka — Tutup ${days} hari lagi`
+      : `Pendaftaran Dibuka — Tutup ${deadline.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  } else text.textContent = 'Pendaftaran Dibuka';
+}
+
+function updatePortalButtons() {
+  const c = STATE.config || {};
+  const open = String(c.pendaftaran_buka).toLowerCase() === 'true';
+  const deadline = c.deadline_pendaftaran ? new Date(c.deadline_pendaftaran) : null;
+  const closed = !open || (deadline && Date.now() > deadline.getTime());
+
+  const btnDaftar = $('#btnDaftar');
+  if (btnDaftar && closed) {
+    btnDaftar.classList.add('disabled');
+    btnDaftar.href = '#';
+    const btnText = btnDaftar.querySelector('.portal-btn');
+    if (btnText) { btnText.innerHTML = 'Pendaftaran Ditutup'; btnText.style.background = 'rgba(255,255,255,.5)'; }
+  }
+  // Pewara & Admin tetap aktif (butuh token, tidak terpengaruh pendaftaran)
+}
+
+/* ============================================================
+ * COUNTDOWN
+ * ============================================================ */
+let countdownInterval = null;
+function startCountdown() {
+  if (!STATE.countdownTarget) return;
+  const el = {
+    hari: $('[data-time="hari"]'), jam: $('[data-time="jam"]'),
+    menit: $('[data-time="menit"]'), detik: $('[data-time="detik"]'),
+    wrap: $('#timer')
+  };
+  if (!el.hari) return;
+  const pad = n => String(Math.max(0, n)).padStart(2, '0');
+
+  function tick() {
+    const diff = STATE.countdownTarget - Date.now();
+    if (diff <= 0) {
+      if (el.wrap) el.wrap.innerHTML = '<h2 style="font-family:\'Fraunces\',serif;font-size:clamp(1.2rem,2.8vw,2rem);color:var(--rose-deep);">Acara MTQ telah dimulai!</h2>';
+      if (countdownInterval) clearInterval(countdownInterval);
+      return;
+    }
+    el.hari.textContent = pad(Math.floor(diff / 864e5));
+    el.jam.textContent = pad(Math.floor((diff % 864e5) / 36e5));
+    el.menit.textContent = pad(Math.floor((diff % 36e5) / 6e4));
+    el.detik.textContent = pad(Math.floor((diff % 6e4) / 1e3));
+  }
+  tick();
+  if (countdownInterval) clearInterval(countdownInterval);
+  countdownInterval = setInterval(tick, 1000);
+}
+
+/* ============================================================
+ * PANGGUNG STATUS
+ * ============================================================ */
+async function pollPanggung() {
+  try {
+    const res = await api('publik_panggung');
+    if (res.status === 'success') {
+      STATE.panggung = res.cabang || [];
+      renderCabangList();
+      renderDetailPanels();
+      updateCabangStatusDots();
+    }
+  } catch (e) { console.warn('[panggung] poll gagal:', e); }
+}
+
+function updateCabangStatusDots() {
+  if (!STATE.panggung) return;
+  const byKey = {};
+  STATE.panggung.forEach(c => { byKey[c.key] = c; });
+  $$('.lomba-item').forEach(btn => {
+    const p = byKey[btn.dataset.key];
+    if (!p) return;
+    const dot = btn.querySelector('.status-dot');
+    if (!dot) return;
+    dot.classList.remove('live', 'final');
+    if (p.status_lomba === 'berlangsung') dot.classList.add('live');
+    else if (p.status_lomba === 'selesai' || p.status_nilai === 'final') dot.classList.add('final');
+    const span = btn.querySelector('.teks span');
+    if (span) {
+      if (p.status_lomba === 'berlangsung' && p.mode === 'queue' && p.sekarang) span.textContent = `▶ ${p.sekarang.No_Undian}`;
+      else if (p.status_lomba === 'berlangsung' && p.mode === 'timer') {
+        const sisa = p.sisa_detik || 0;
+        const h = Math.floor(sisa / 3600), m = Math.floor((sisa % 3600) / 60);
+        span.textContent = `⏱ ${h}j ${m}m tersisa`;
+      }
+      else if (p.status_lomba === 'berlangsung' && p.mode === 'phase' && p.phase_label) span.textContent = `▶ ${p.phase_label}`;
+      else if (p.status_lomba === 'selesai') span.textContent = '✓ Selesai';
+      else if (p.status_nilai === 'final') span.textContent = '🏆 Final';
+    }
+  });
+}
+
+/* ============================================================
+ * CABANG — ICONS + DETAILS
+ * ============================================================ */
+const CABANG_ICONS = {
+  MTQ: '<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0V5z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0V5z"/><path d="M12 9c1-.4 2-.4 3 0M12 13c1-.4 2-.4 3 0"/>',
+  MTtQ: '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L20 20"/>',
+  MHQ: '<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M9 8.5L11 15M15 8.5L13 15"/>',
+  Puitisasi: '<path d="M4 20l3-1 11-11-2-2L5 17l-1 3z"/><path d="M14 6l4 4"/>',
+  MAz: '<path d="M12 2l1.8 2.6h-3.6L12 2z"/><rect x="9.5" y="4.6" width="5" height="13.4" rx="0.5"/><path d="M9.5 18h5v3h-5z"/>',
+  LPP: '<rect x="9" y="3" width="6" height="10" rx="3"/><path d="M6 11a6 6 0 0012 0"/><path d="M12 17v4M9 21h6"/>',
+  Lukis: '<path d="M12 3a9 9 0 100 18c1.4 0 2-.9 2-1.9s-.5-1.4-.5-2.4S14.4 15 15.3 15h1.9a4 4 0 004-4c0-4.4-4-8-9.2-8z"/><circle cx="8.4" cy="10.6" r="1"/><circle cx="12" cy="8.6" r="1"/><circle cx="15.4" cy="10.6" r="1"/>',
+  LCP: '<path d="M9 18h6M10 21h4M12 3a6 6 0 00-3 11.2c.6.4 1 1.1 1 1.8h4c0-.7.4-1.4 1-1.8A6 6 0 0012 3z"/>',
+  Menyanyi: '<path d="M9 18V5l10-2v13"/><circle cx="7" cy="18" r="2.2"/><circle cx="17" cy="16" r="2.2"/>'
+};
+
+const CABANG_DETAILS = {
+  MTQ: {
+    judul: "Musabaqah Tilawatil Qur'an (MTQ)", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Musabaqah Tilawatil Qur'an adalah lomba membaca Al Qur'an dengan bacaan mujawwad dan murattal, yaitu bacaan Al Qur'an yang mengandung nilai ilmu membaca, seni baca, dan adab membaca menurut pedoman yang telah dilakukan.",
+    ketentuan: [
+      "Peserta lomba membaca ayat dengan durasi maksimal 7 menit",
+      "Peserta memilih salah satu maqro': QS. al-Baqarah 21; QS. al-Baqarah 189; QS. Ali Imran 31; QS. Ali Imran 144; QS. Ali Imran 189",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia.",
+      "Nomor urut diinformasikan via WA Grup Koordinator MTQ.",
+      "Peserta mulai/berhenti membaca saat diberi tanda oleh dewan juri (lampu/bel)."
+    ],
+    penilaian: [{ k: "Bidang Tajwid", v: 30 }, { k: "Bidang Fashohah", v: 30 }, { k: "Bidang Lagu dan Adab", v: 40 }]
+  },
+  MTtQ: {
+    judul: "Musabaqah Tartil Qur'an (MTtQ)", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Musabaqah Tartil Qur'an adalah jenis lomba menekankan segi bacaan secara tartil, yaitu bacaan benar dengan irama dan suara yang baik yang tidak lepas dari ilmu Tajwid.",
+    ketentuan: [
+      "Peserta membaca ayat dengan durasi maksimal 7 menit",
+      "Peserta membaca dengan maqro' dari Juz 1 s.d. Juz 3 yang ditentukan dewan juri saat perlombaan.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia.",
+      "Nomor urut diinformasikan via WA Grup Koordinator MTQ.",
+      "Peserta mulai/berhenti membaca saat diberi tanda oleh dewan juri."
+    ],
+    penilaian: [{ k: "Bidang Tajwid", v: 40 }, { k: "Bidang Adab dan Fashohah", v: 30 }, { k: "Bidang Irama", v: 30 }]
+  },
+  MHQ: {
+    judul: "Musabaqah Hifdzil Qur'an (MHQ)", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Musabaqah Hifdzil Qur'an adalah lomba menghafal Al-Qur'an dengan hafalan yang mengandung aspek ketepatan dan kelancaran hafalan serta ilmu dan adab membaca.",
+    ketentuan: [
+      "Maqro' hafalan dari Juz Amma, QS 90 s.d. QS 114 (Al-Balad s.d. An-Naas)",
+      "Setiap peserta diuji dengan tiga teknik berurutan: Menghafal surah utuh; Menyambung ayat; Menyebutkan nama surah",
+      "Setiap peserta mendapat total 5 pertanyaan yang mencakup ketiga teknik.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia.",
+      "Nomor urut diinformasikan via WA Grup Koordinator MTQ."
+    ],
+    penilaian: [{ k: "Bidang Tahfidz", v: "30–50" }, { k: "Bidang Tajwid", v: "15–25" }, { k: "Bidang Fashohah dan Adab", v: "15–25" }]
+  },
+  Puitisasi: {
+    judul: "Musabaqah Puitisasi Saritilawah", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Musabaqah Puitisasi Saritilawah adalah jenis lomba membaca terjemahan/saritilawah Al-Qur'an dengan gaya puitisasi tanpa mengubah kata-kata terjemahan Kementerian Agama.",
+    ketentuan: [
+      "Saritilawah dari terjemahan Al Qur'an Kementerian Agama (terlampir).",
+      "Peserta memilih satu surah: al-Fatihah; al-Ma'un; Al-Qadr; Al-Kafirun",
+      "Durasi maksimal 10 menit. Dewan juri tidak menilai dari membaca atau menghafal.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia.",
+      "Nomor urut diinformasikan via WA Grup Koordinator MTQ."
+    ],
+    penilaian: [{ k: "Penghayatan dan Retorika", v: 40 }, { k: "Vokal dan Intonasi", v: 30 }, { k: "Artikulasi", v: 30 }],
+    lampiran: true
+  },
+  MAz: {
+    judul: "Musabaqah Adzan (MAz)", peserta: "1 peserta (putra)",
+    deskripsi: "Musabaqah Azan bertujuan meningkatkan dan mengembangkan seni azan dan ikamah serta doa setelah azan.",
+    ketentuan: [
+      "Peserta mengumandangkan azan (bukan azan subuh) dilanjutkan doa setelah azan diakhiri dengan ikamah.",
+      "Waktu azan, doa, dan ikamah menyesuaikan masing-masing peserta.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia.",
+      "Nomor urut diinformasikan via WA Grup Koordinator MTQ."
+    ],
+    penilaian: [{ k: "Bidang Fashahah dan Adab", v: 50 }, { k: "Bidang Vokal dan Kejernihan Suara", v: 30 }, { k: "Bidang Lagu dan Variasi", v: 20 }]
+  },
+  LPP: {
+    judul: "Lomba Pidato PAI (LPP)", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Lomba Pidato PAI adalah cabang lomba keterampilan dan seni menyampaikan pesan nilai-nilai Agama Islam secara lisan tanpa membaca teks.",
+    ketentuan: [
+      "Tema pidato dari Panca Cinta: Cinta Allah & Rasul; Cinta Ilmu; Cinta Lingkungan; Cinta Diri & Sesama; Cinta Tanah Air",
+      "Peserta menyerahkan teks pidato 3 eksemplar pada hari lomba.",
+      "Pidato bahasa Indonesia, tanpa teks/kartu catatan, durasi 5-7 menit.",
+      "Humor boleh, tidak SARA/vulgar/berlebihan.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia."
+    ],
+    penilaian: [{ k: "Kesesuaian Isi dan Tema", v: 40 }, { k: "Retorika dan Ekspresi Mimik", v: 40 }, { k: "Gaya Bahasa dan Vokal", v: 20 }]
+  },
+  Lukis: {
+    judul: "Lomba Melukis Islami", peserta: "1 peserta (putra/putri)",
+    deskripsi: "Lomba Melukis Islami yaitu melukis tentang keadaan yang menggambarkan suasana yang memuat kegiatan islami atau mencerminkan budaya islam.",
+    ketentuan: [
+      "Lomba bersifat individual, tanpa bantuan siapapun.",
+      "Peserta tidak mengikuti upacara pembukaan, langsung ke ruang lomba.",
+      "Kertas A3 dari panitia, tanpa tanda nama (nomor peserta sebagai identitas).",
+      "Peralatan melukis dibawa sendiri (crayon pastel).",
+      "Waktu lomba 3 jam (180 menit).",
+      "Tema Panca Cinta (salah satu atau kombinasi)."
+    ],
+    penilaian: [{ k: "Kesesuaian dengan Tema", v: "5–15" }, { k: "Artistik dan Imajinasi", v: "30–50" }, { k: "Pemilihan Warna", v: "10–25" }, { k: "Kebersihan dan Kehalusan", v: "5–10" }]
+  },
+  LCP: {
+    judul: "Lomba Cerdas Cermat PAI (LCP)", peserta: "Tim 3 peserta",
+    deskripsi: "Lomba Cerdas Cermat PAI (LCP) adalah lomba yang menekankan pada penguasaan wawasan dan pengetahuan PAI melalui keterampilan menjawab pertanyaan cepat, tepat dan terampil.",
+    ketentuan: [
+      "Tim terdiri atas 3 murid (putra/putri/campuran).",
+      "Materi: Kelas IV–VI sesuai CP 020/2026 & TP SK Kakanwil 522/2026 + Pengetahuan Umum Islami.",
+      "Babak Penyisihan: 25 soal PG, semua kapanewon. Benar 100, salah 0. 5 terbaik ke final. Tie → soal tambahan tertulis.",
+      "Final Wajib Timing: 7 soal/regu, 2 menit. Bisa PAS. Benar 100, salah 0.",
+      "Final Wajib Lempar Rebut: 7 soal/regu, 5 detik. Wajib: benar 100, salah 0. Merebut: benar 100, salah -50.",
+      "Final Rebutan: 10 soal, dibaca sekali. Benar 100, salah -100. Jawaban harus lengkap."
+    ],
+    penilaian: [{ k: "Penyisihan (25 soal)", v: "100/soal" }, { k: "Final Wajib Timing", v: "100/soal" }, { k: "Final Wajib Lempar Rebut", v: "±100/soal" }, { k: "Final Rebutan", v: "±100/soal" }]
+  },
+  Menyanyi: {
+    judul: "Lomba Menyanyi Islami", peserta: "1 peserta (solo)",
+    deskripsi: "Lomba Menyanyi Islami adalah cabang lomba yang mengapresiasi seni vokal dengan nuansa Islami.",
+    ketentuan: [
+      "Peserta menyanyi perorangan.",
+      "Pilihan lagu: Sepohon Kayu (Ustad Jefri); Alhamdulillah (Opick); Kisah Sang Rasul (Aishwa Nahla); Rindu Madinah (Nissa Sabyan)",
+      "Durasi maksimal 5–7 menit (termasuk intro dan outro).",
+      "Musik pengiring instrumental MP3 (tanpa backing vocal), diunggah saat pendaftaran.",
+      "Busana sopan, menutup aurat, mencerminkan nilai Islami.",
+      "Peserta tampil bergantian sesuai nomor urut dari panitia."
+    ],
+    penilaian: [{ k: "Vokal (nada, intonasi, kejelasan, pernafasan)", v: 40 }, { k: "Penghayatan dan Ekspresi", v: 30 }, { k: "Penampilan (busana, percaya diri, adab)", v: 20 }, { k: "Kesesuaian tempo dan irama", v: 10 }]
+  }
+};
+
+const SARITILAWAH = [
+  { judul: 'Q.S. al-Fatihah', ayat: [
+    'Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang.',
+    'Segala puji bagi Allah, Tuhan semesta alam.',
+    'Yang Maha Pengasih lagi Maha Penyayang,',
+    'Pemilik hari Pembalasan.',
+    'Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami memohon pertolongan.',
+    'Bimbinglah kami ke jalan yang lurus,',
+    '(yaitu) jalan orang-orang yang telah Engkau beri nikmat, bukan (jalan) mereka yang dimurkai dan bukan (pula jalan) orang-orang yang sesat.'
+  ]},
+  { judul: "Q.S. al-Ma'un", ayat: [
+    'Tahukah kamu (orang) yang mendustakan agama?',
+    'Itulah orang yang menghardik anak yatim,',
+    'dan tidak menganjurkan untuk memberi makan orang miskin.',
+    'Celakalah orang-orang yang melaksanakan salat,',
+    '(yaitu) yang lalai terhadap salatnya,',
+    'yang berbuat riya,',
+    'dan enggan (memberi) bantuan.'
+  ]},
+  { judul: 'Q.S. Al-Qadr', ayat: [
+    "Sesungguhnya Kami telah menurunkannya (Al-Qur'an) pada malam Qadar.",
+    'Tahukah kamu apakah malam kemuliaan itu?',
+    'Malam kemuliaan itu lebih baik dari seribu bulan.',
+    'Pada malam itu turun para malaikat dan Ruh (Jibril) dengan izin Tuhannya untuk mengatur segala urusan.',
+    'Sejahteralah (malam itu) sampai terbit fajar.'
+  ]},
+  { judul: 'Q.S. Al-Kafirun', ayat: [
+    'Katakanlah: "Hai orang-orang kafir,',
+    'Aku tidak akan menyembah apa yang kamu sembah.',
+    'Dan kamu bukan penyembah Tuhan yang aku sembah.',
+    'Dan aku tidak pernah menjadi penyembah apa yang kamu sembah,',
+    'Dan kamu tidak pernah (pula) menjadi penyembah Tuhan yang aku sembah.',
+    'Untukmu agamamu, dan untukkulah, agamaku."'
+  ]}
+];
+
+function renderCabangList() {
+  const list = $('#lombaList');
+  if (!list) return;
+  const cabang = STATE.cabang || FALLBACK_CABANG;
+  list.innerHTML = cabang.map((c, i) => {
+    const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
+    return `
+      <button class="lomba-item" role="tab" aria-selected="${i===0}" data-target="d-${esc(c.key)}" data-key="${esc(c.key)}">
+        <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
+        <span class="teks"><h3>${i+1}. ${esc(shortLabel(c.label))}</h3><span>${esc(subtitleFor(c))}</span></span>
+        <span class="status-dot"></span>
+      </button>
+    `;
+  }).join('');
+  bindTabs();
+}
+
+function shortLabel(label) {
+  const m = String(label).match(/\(([^)]+)\)\s*$/);
+  if (m && m[1].length < 25) return m[1];
+  const first = String(label).split(/[()]/)[0].trim();
+  return first.length > 40 ? first.slice(0, 40) + '…' : first;
+}
+
+function subtitleFor(c) {
+  if (c.team) return 'Tim 3 peserta';
+  if (c.gender === 'L') return '1 peserta (putra)';
+  return '1 peserta (putra/putri)';
+}
+
+function renderDetailPanels() {
+  const panel = $('#detailPanel');
+  if (!panel) return;
+  const cabang = STATE.cabang || FALLBACK_CABANG;
+  const currentActive = panel.querySelector('.detail.active')?.id || `d-${cabang[0]?.key}`;
+  panel.innerHTML = cabang.map((c, i) => {
+    const d = CABANG_DETAILS[c.key] || {};
+    const icon = CABANG_ICONS[c.key] || CABANG_ICONS.MTQ;
+    const ket = d.ketentuan || [];
+    const pen = d.penilaian || [];
+    let lampiranHtml = '';
+    if (d.lampiran) {
+      lampiranHtml = `
+        <details class="mini-toggle">
+          <summary>Lihat naskah saritilawah (4 pilihan surah)</summary>
+          <div class="lampiran-isi">
+            ${SARITILAWAH.map(s => `<h5>${esc(s.judul)}</h5><ol>${s.ayat.map(a => `<li>${esc(a)}</li>`).join('')}</ol>`).join('')}
+          </div>
+        </details>`;
+    }
+    return `
+      <div class="detail ${('d-'+c.key) === currentActive ? 'active' : ''}" id="d-${esc(c.key)}" role="tabpanel">
+        <div class="detail-head">
+          <span class="ikon"><svg viewBox="0 0 24 24">${icon}</svg></span>
+          <div><h3>${esc(d.judul || c.label)}</h3><span>${esc(d.peserta || subtitleFor(c))}</span></div>
+        </div>
+        <div class="detail-body">
+          <p>${esc(d.deskripsi || '')}</p>
+          <p class="label-title">Ketentuan Khusus</p>
+          <ol>${ket.map(k => `<li>${esc(k)}</li>`).join('')}</ol>
+          <p class="label-title">Penilaian</p>
+          <div class="tabel-scroll">
+            <table class="tabel-nilai">
+              <thead><tr><th>Kriteria Penilaian</th><th class="num">Nilai</th></tr></thead>
+              <tbody>
+                ${pen.map(p => `<tr><td>${esc(p.k)}</td><td class="num">${esc(String(p.v))}</td></tr>`).join('')}
+                ${pen.length ? '<tr class="total"><td>Jumlah</td><td class="num">100</td></tr>' : ''}
+              </tbody>
+            </table>
+          </div>
+          ${lampiranHtml}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function bindTabs() {
+  const tabs = $$('.lomba-item');
+  const panels = $$('.detail');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      panels.forEach(p => p.classList.remove('active'));
+      const target = document.getElementById(tab.dataset.target);
+      if (target) target.classList.add('active');
+      if (window.innerWidth < 900) {
+        const panel = $('.panel');
+        if (panel) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+/* ============================================================
+ * BOOT
+ * ============================================================ */
+async function boot() {
+  await loadConfig();
+  renderCabangList();
+  renderDetailPanels();
+  startCountdown();
+  pollPanggung();
+  setInterval(pollPanggung, 30000);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot, { once: true });
+} else {
+  boot();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    pollPanggung();
+    updateStatusBanner();
+    updatePortalButtons();
+  }
+});
+
+})();
+</script>
+
+</body>
+</html>
