@@ -12,1050 +12,1048 @@
 
 <style>
 /* ============================================================
- * §1 DESIGN TOKENS & RESET
+ * §1 DESIGN TOKENS
  * ============================================================ */
 :root {
-  --cream: #FFF5E4;
-  --cream-2: #FBEDD9;
-  --blush: #FAC3C1;
-  --rose: #FAA4BD;
-  --rose-deep: #533B4D;
-  --accent-pink: #F599C6;
-  --hijau: #2F6F53;
-  --hijau-l: #D8F0E2;
-  --gold: #D9A441;
-  --gold-l: #FEF3C7;
-  --ink: #3E4C63;
-  --ink-l: #6B7A8F;
+  --cream: #FFF9F0;
+  --cream-dark: #F2E9DB;
+  --rose-deep: #4A2E3F;
+  --rose-primary: #9E5F7B;
+  --rose-light: #F3D5E0;
+  --accent: #E5989B;
+  --hijau: #2A9D8F;
+  --hijau-light: #E8F6F4;
+  --hijau-border: #A3D9D3;
+  --gold: #E9C46A;
+  --gold-light: #FEF5E7;
+  --ink: #2D3748;
+  --ink-light: #718096;
+  --bg: #F9F9F9;
   --surface: #FFFFFF;
-  --border: #E8DDD4;
-  --danger: #C53030;
-  --danger-l: #FEE2E2;
+  --border: #E2E8F0;
+  --danger: #E53E3E;
+  --danger-light: #FFF5F5;
 
-  --shadow-s: 0 1px 2px rgba(83,59,77,.06);
-  --shadow-m: 0 4px 12px -4px rgba(83,59,77,.12);
-  --r: 16px;
-  --r-s: 10px;
-  --t: .18s cubic-bezier(.4,0,.2,1);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  
+  --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --max-w: 1100px;
 }
 
+/* ============================================================
+ * §2 RESET & BASE
+ * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  background: linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
-  color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased;
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
   min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column;
 }
-h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; }
+h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; color: var(--rose-deep); }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 input, select, textarea { font-family: inherit; font-size: 16px; }
+img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--rose-light); outline-offset: 2px; border-radius: 4px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.spinner { display: inline-block; width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin .8s linear infinite; flex-shrink: 0; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ============================================================
- * §2 APP SHELL & APPBAR
- * ============================================================ */
-#app { width: 100%; max-width: 800px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
-.screen { display: none; flex: 1; padding: 1rem; padding-bottom: calc(2rem + env(safe-area-inset-bottom)); }
-.screen.active { display: flex; flex-direction: column; animation: fadeUp .25s ease; }
-
-.appbar {
-  position: sticky; top: 0; z-index: 30;
-  background: var(--rose-deep); color: var(--cream);
-  padding: .75rem 1rem; padding-top: calc(.75rem + env(safe-area-inset-top));
-  display: flex; align-items: center; gap: .6rem;
-  border-bottom: 3px solid var(--accent-pink);
-  box-shadow: 0 2px 12px rgba(83,59,77,.25);
+.spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+  border-top-color: #fff; animation: spin 0.8s linear infinite;
 }
-.appbar-back { padding: .4rem; border-radius: 8px; transition: var(--t); flex-shrink: 0; display: flex; }
-.appbar-back:hover { background: rgba(255,255,255,.1); }
-.appbar-back svg { width: 20px; height: 20px; }
-.appbar-title { flex: 1; font-weight: 700; font-size: 1rem; line-height: 1.2; }
-.appbar-title small { display: block; font-size: .7rem; opacity: .75; font-weight: 500; }
-.appbar-btn { padding: .45rem .7rem; border-radius: 8px; font-size: .78rem; font-weight: 700; background: rgba(255,255,255,.12); display: flex; align-items: center; gap: .3rem; }
-.appbar-btn:hover { background: rgba(255,255,255,.22); }
-.appbar-btn svg { width: 14px; height: 14px; }
 
 /* ============================================================
- * §3 COMMON UI (Card, Btn, Form)
+ * §3 APP SHELL
  * ============================================================ */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow-s); padding: 1.2rem; margin-bottom: 1rem; }
-
-.btn { display: inline-flex; justify-content: center; align-items: center; gap: .45rem; padding: .8rem 1.1rem; border-radius: var(--r-s); font-size: .92rem; font-weight: 700; transition: var(--t); min-height: 46px; width: 100%; text-align: center; }
-.btn:active:not(:disabled) { transform: scale(.98); }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn-primary { background: var(--rose-deep); color: var(--cream); box-shadow: 3px 3px 0 rgba(83,59,77,.15); }
-.btn-primary:hover { background: #6a4a60; }
-.btn-success { background: var(--hijau); color: var(--cream); box-shadow: 3px 3px 0 rgba(47,111,83,.2); }
-.btn-success:hover { background: #257045; }
-.btn-accent { background: var(--accent-pink); color: var(--rose-deep); box-shadow: 3px 3px 0 rgba(245,153,198,.4); }
-.btn-accent:hover { background: #f285bb; }
-.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
-.btn-ghost:hover { background: var(--cream); border-color: var(--rose); }
-.btn-danger { background: var(--danger-l); color: var(--danger); }
-.btn-sm { padding: .4rem .8rem; font-size: .75rem; min-height: 34px; width: auto; }
-
-.form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: .35rem; }
-.form-group label { font-size: .75rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-l); }
-.form-group label .req { color: var(--danger); }
-.form-input { width: 100%; padding: .75rem .85rem; border: 1.5px solid var(--border); border-radius: var(--r-s); font-size: 16px; font-weight: 500; color: var(--ink); background: var(--surface); transition: var(--t); outline: none; }
-.form-input:focus { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.1); }
-.form-input.invalid { border-color: var(--danger); background: var(--danger-l); }
-.radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.radio-btn { padding: .65rem; border: 1.5px solid var(--border); border-radius: var(--r-s); font-size: .9rem; font-weight: 700; text-align: center; background: var(--surface); color: var(--ink); cursor: pointer; transition: var(--t); }
-.radio-btn.active { border-color: var(--rose-deep); background: var(--rose-deep); color: var(--cream); }
+#app { width: 100%; max-width: var(--max-w); margin: 0 auto; flex: 1; display: flex; flex-direction: column; padding: 1rem; padding-top: 0; }
+.screen { display: none; width: 100%; animation: fadeIn 0.4s ease; }
+.screen.active { display: block; }
 
 /* ============================================================
- * §4 DASHBOARD (LIST CABANG)
+ * §4 UI COMPONENTS
  * ============================================================ */
-.quota-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 1.2rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-s); }
-.quota-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
-.quota-row h3 { font-size: 1rem; color: var(--rose-deep); font-family: 'Plus Jakarta Sans'; }
-.quota-val { font-weight: 800; font-size: 1rem; color: var(--rose-deep); }
-.quota-bar { height: 8px; background: var(--cream); border-radius: 4px; overflow: hidden; }
-.quota-bar-fill { height: 100%; background: var(--accent-pink); border-radius: 4px; transition: width .35s; }
-.quota-bar-fill.warn { background: var(--gold); }
-.quota-bar-fill.full { background: var(--danger); }
+.btn {
+  display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.25rem; border-radius: var(--r-md); font-size: 0.95rem; font-weight: 700;
+  transition: var(--trans); border: none; cursor: pointer;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--rose-deep); color: #fff; box-shadow: 0 4px 12px rgba(74,46,63,0.2); }
+.btn-primary:hover:not(:disabled) { background: var(--rose-primary); transform: translateY(-1px); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover:not(:disabled) { background: #d88588; transform: translateY(-1px); }
+.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
+.btn-danger { background: var(--danger-light); color: var(--danger); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: var(--r-sm); }
 
-.section-title { font-size: 1rem; font-weight: 800; color: var(--rose-deep); margin: 1.5rem 0 .75rem; font-family: 'Plus Jakarta Sans'; display: flex; align-items: center; gap: .5rem; }
-.cabang-list { display: flex; flex-direction: column; gap: .75rem; }
-
-.cabang-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem; display: flex; align-items: flex-start; gap: 1rem; transition: var(--t); }
-.cabang-item.empty { border-style: dashed; }
-.cabang-item.filled { border-left: 4px solid var(--hijau); }
-.cabang-item.disabled { opacity: .6; background: var(--cream); }
-
-.cabang-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--blush); color: var(--rose-deep); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .8rem; flex-shrink: 0; }
-.cabang-info { flex: 1; min-width: 0; }
-.cabang-info h4 { font-size: 1rem; font-family: 'Plus Jakarta Sans'; font-weight: 800; color: var(--ink); margin-bottom: .2rem; }
-.cabang-info p { font-size: .8rem; color: var(--ink-l); margin: 0; line-height: 1.4; }
-.cabang-info .badge { display: inline-flex; align-items: center; gap: .2rem; padding: .2rem .5rem; border-radius: 4px; font-size: .65rem; font-weight: 800; margin-top: .4rem; margin-right: .3rem; }
-.badge.warn { background: var(--gold-l); color: #92400e; }
-.badge.ok { background: var(--hijau-l); color: var(--hijau); }
-
-.cabang-actions { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
-.cabang-actions .btn { padding: .4rem .6rem; min-height: 34px; font-size: .75rem; white-space: nowrap; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--ink-light); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group label span { color: var(--danger); }
+.form-control {
+  width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--r-md);
+  font-size: 0.95rem; background: var(--surface); color: var(--ink); transition: var(--trans); font-weight: 500;
+}
+.form-control:focus { outline: none; border-color: var(--rose-primary); box-shadow: 0 0 0 4px var(--rose-light); }
 
 /* ============================================================
- * §5 CUSTOM SEARCHABLE PICKER (SEKOLAH)
+ * §5 DASHBOARD (BRANCH GRID)
  * ============================================================ */
-.picker-container { position: relative; }
-.picker-trigger { width: 100%; padding: .75rem .85rem; border: 1.5px solid var(--border); border-radius: var(--r-s); background: var(--surface); font-size: 15px; font-weight: 500; color: var(--ink); text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--t); }
-.picker-trigger:hover { border-color: var(--rose-deep); }
-.picker-trigger.active { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.1); }
-.picker-trigger .placeholder { color: var(--ink-l); }
-.picker-trigger svg { width: 16px; height: 16px; color: var(--ink-l); transition: transform .2s; }
-.picker-trigger.active svg { transform: rotate(180deg); }
+.appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; margin: 0 -1rem 1.5rem -1rem; }
+.appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+.appbar-brand svg { width: 24px; height: 24px; color: var(--accent); }
 
-.picker-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-s); box-shadow: 0 10px 25px -5px rgba(0,0,0,.15); z-index: 50; display: none; flex-direction: column; max-height: 300px; overflow: hidden; }
-.picker-dropdown.show { display: flex; }
-.picker-search-wrap { padding: .6rem; border-bottom: 1px solid var(--border); position: relative; background: var(--surface); }
-.picker-search-wrap svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--ink-l); }
-.picker-search { width: 100%; padding: .55rem .55rem .55rem 2rem; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; background: var(--cream); }
-.picker-list { overflow-y: auto; flex: 1; padding: .4rem; -webkit-overflow-scrolling: touch; }
-.picker-group-label { font-size: .65rem; font-weight: 800; text-transform: uppercase; color: var(--ink-l); padding: .4rem .6rem .2rem; letter-spacing: .05em; position: sticky; top: 0; background: var(--surface); }
-.picker-option { padding: .65rem .6rem; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: background .1s; }
-.picker-option:hover { background: var(--cream); }
-.picker-option.selected { background: var(--blush); color: var(--rose-deep); font-weight: 700; }
-.picker-option.manual-option { color: var(--gold); font-weight: 700; border-top: 1px dashed var(--border); margin-top: .4rem; border-radius: 0 0 6px 6px; }
-.picker-option.manual-option:hover { background: var(--gold-l); }
+.dash-header-area { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.profile-info h2 { font-size: 1.5rem; margin: 0; color: var(--rose-deep); }
+.profile-info p { margin: 0; color: var(--ink-light); font-size: 0.9rem; }
+
+.quota-widget { background: var(--surface); border-radius: var(--r-lg); padding: 1rem 1.5rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm); min-width: 250px; }
+.quota-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--ink-light); }
+.quota-header span:last-child { color: var(--rose-deep); }
+.progress-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+
+/* Grid 9 Cabang */
+.branch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+@media (max-width: 600px) { .branch-grid { grid-template-columns: 1fr; } }
+
+.branch-card { background: var(--surface); border-radius: var(--r-lg); border: 2px dashed var(--border); padding: 1.25rem; transition: var(--trans); cursor: pointer; display: flex; flex-direction: column; justify-content: center; min-height: 120px; position: relative; }
+.branch-card:hover { border-color: var(--rose-primary); background: var(--rose-light); transform: translateY(-2px); }
+
+.branch-card.filled { border: 1.5px solid var(--hijau-border); background: var(--surface); cursor: default; box-shadow: var(--shadow-md); }
+.branch-card.filled:hover { transform: none; border-color: var(--hijau); background: var(--surface); }
+
+.branch-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+.branch-code { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rose-primary); }
+.branch-card.filled .branch-code { color: var(--hijau); background: var(--hijau-light); padding: 0.1rem 0.5rem; border-radius: 4px; }
+
+.branch-name { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 0.25rem; }
+
+.branch-card.empty { align-items: center; text-align: center; justify-content: center; }
+.branch-card.empty .branch-head, .branch-card.empty .branch-name { display: none; }
+.branch-card.empty .empty-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; color: var(--ink-light); transition: var(--trans); }
+.branch-card.empty:hover .empty-icon { background: var(--rose-primary); color: #fff; }
+.branch-card.empty .empty-text { font-weight: 700; color: var(--ink-light); font-size: 0.9rem; }
+.branch-card.empty:hover .empty-text { color: var(--rose-primary); }
+
+.filled-body { display: flex; align-items: center; gap: 1rem; }
+.filled-avatar { width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--hijau-light); color: var(--hijau); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; }
+.filled-info { flex: 1; }
+.filled-info h4 { margin: 0 0 0.2rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; color: var(--ink); }
+.filled-actions { margin-top: 1rem; display: flex; gap: 0.5rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+
+/* Upload Area di Dashboard */
+.upload-area { display: none; padding-top: 1rem; margin-top: 1rem; border-top: 1px dashed var(--border); }
+.upload-area.active { display: block; animation: fadeIn 0.3s ease; }
+.upload-box { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1.5px dashed var(--border); border-radius: var(--r-sm); background: var(--bg); cursor: pointer; transition: var(--trans); margin-bottom: 0.5rem; }
+.upload-box.done { border: 1px solid var(--hijau); background: var(--hijau-light); cursor: default; }
+.upload-icon { width: 32px; height: 32px; border-radius: 6px; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--ink-light); }
+.upload-box.done .upload-icon { background: var(--hijau); color: #fff; }
+.upload-text { flex: 1; font-size: 0.85rem; font-weight: 600; }
+.upload-text small { display: block; font-size: 0.7rem; color: var(--ink-light); font-weight: 400; }
 
 /* ============================================================
- * §6 FORM LAYOUT & UPLOAD BOX
+ * §6 FULL SCREEN FORM
  * ============================================================ */
-.member-group { border: 1px solid var(--border); border-radius: var(--r-s); padding: 1.2rem; margin-bottom: 1rem; background: var(--cream); position: relative; margin-top: 1rem; }
-.member-label { position: absolute; top: -.6rem; left: 1rem; background: var(--surface); color: var(--rose-deep); font-size: .7rem; font-weight: 800; padding: .1rem .6rem; border-radius: 4px; border: 1px solid var(--border); text-transform: uppercase; letter-spacing: .05em; }
+.full-form { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 100; overflow-y: auto; display: none; }
+.full-form.active { display: block; }
+.form-topbar { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.btn-back { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--ink); }
+.form-topbar h2 { font-size: 1.1rem; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-.upload-box { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px dashed var(--border); border-radius: var(--r-s); background: var(--surface); cursor: pointer; transition: var(--t); margin-bottom: .75rem; }
-.upload-box:hover { border-color: var(--rose-deep); background: var(--cream); }
-.upload-box.has-file { border-style: solid; border-color: var(--hijau); background: var(--hijau-l); cursor: default; }
-.upload-box.uploading { border-color: var(--rose-deep); background: var(--blush); cursor: wait; }
-.upload-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--cream); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.upload-box.has-file .upload-icon { background: var(--hijau); }
-.upload-icon svg { width: 20px; height: 20px; color: var(--rose-deep); }
-.upload-box.has-file .upload-icon svg { color: var(--cream); }
-.upload-info { flex: 1; }
-.upload-title { font-size: .9rem; font-weight: 800; color: var(--ink); margin-bottom: .2rem; }
-.upload-sub { font-size: .75rem; color: var(--ink-l); }
-.upload-box.has-file .upload-title { color: var(--hijau); }
+.form-content { max-width: 700px; margin: 0 auto; padding: 1.5rem; padding-bottom: 100px; }
+.form-section { background: var(--surface); border-radius: var(--r-lg); padding: 1.5rem; border: 1px solid var(--border); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); }
+.form-section-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rose-deep); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+
+.member-block { background: var(--bg); border-radius: var(--r-md); padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+.member-title { font-size: 0.85rem; font-weight: 800; color: var(--rose-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.member-title span { background: var(--rose-primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+
+.radio-pills { display: flex; gap: 0.75rem; }
+.radio-pill { flex: 1; padding: 0.6rem; border: 1.5px solid var(--border); border-radius: var(--r-md); text-align: center; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: var(--trans); background: var(--surface); color: var(--ink-light); }
+.radio-pill.selected { background: var(--rose-primary); border-color: var(--rose-primary); color: #fff; }
+
+.search-select { position: relative; }
+.search-trigger { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--r-md); background: var(--surface); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.search-trigger.active { border-color: var(--rose-primary); box-shadow: 0 0 0 4px var(--rose-light); }
+.search-dropdown { position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border); z-index: 50; display: none; flex-direction: column; max-height: 250px; overflow: hidden; }
+.search-dropdown.active { display: flex; }
+.search-input-wrap { padding: 0.75rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+.search-input-wrap input { width: 100%; border: none; background: var(--surface); padding: 0.5rem 1rem; border-radius: var(--r-sm); border: 1px solid var(--border); outline: none; }
+.search-results { overflow-y: auto; padding: 0.5rem; }
+.opt-group { font-size: 0.7rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; margin: 0.5rem 0.5rem 0.25rem; }
+.opt-item { padding: 0.6rem 0.75rem; border-radius: var(--r-sm); cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+.opt-item:hover { background: var(--bg); }
+.opt-item.selected { background: var(--rose-light); color: var(--rose-deep); font-weight: 700; }
+.opt-manual { color: var(--gold); font-weight: 700; border-top: 1px dashed var(--border); margin-top: 0.5rem; }
+
+/* Upload di dalam Form */
+.form-upload-box { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px dashed var(--border); border-radius: var(--r-md); background: var(--bg); cursor: pointer; transition: var(--trans); margin-bottom: 0.75rem; }
+.form-upload-box:hover { border-color: var(--rose-primary); background: var(--rose-light); }
+.form-upload-box.selected { border: 1.5px solid var(--hijau); background: var(--hijau-light); }
+.form-upload-icon { width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--ink-light); }
+.form-upload-box.selected .form-upload-icon { background: var(--hijau); color: #fff; }
+.form-upload-text { flex: 1; font-size: 0.9rem; font-weight: 600; }
+.form-upload-text small { display: block; font-size: 0.75rem; color: var(--ink-light); font-weight: 400; margin-top: 0.2rem; }
+.form-upload-box.selected .form-upload-text small { color: var(--hijau); font-weight: 600; }
+
+.fab-save { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); width: calc(100% - 3rem); max-width: 640px; padding: 1rem; border-radius: var(--r-md); background: var(--rose-deep); color: #fff; font-size: 1rem; font-weight: 800; text-align: center; box-shadow: var(--shadow-lg); z-index: 50; border: none; cursor: pointer; }
+.fab-save:hover { background: var(--rose-primary); }
 
 /* Toast */
-.toast-wrap { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 200; width: calc(100% - 32px); max-width: 400px; display: flex; flex-direction: column; gap: .5rem; pointer-events: none; }
-.toast { display: flex; align-items: center; gap: .5rem; padding: .8rem 1rem; border-radius: var(--r-s); color: #fff; font-size: .85rem; font-weight: 600; box-shadow: var(--shadow-m); animation: fadeUp .3s; }
-.toast.success { background: var(--hijau); }
+.toast-container { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+.toast { background: var(--ink); color: #fff; padding: 0.75rem 1.25rem; border-radius: 99px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-md); animation: fadeIn 0.3s ease; }
 .toast.error { background: var(--danger); }
-.toast.info { background: var(--rose-deep); }
+.toast.success { background: var(--hijau); }
 
-/* ============================================================
- * §7 RESPONSIVE (DESKTOP)
- * ============================================================ */
-@media (min-width: 768px) {
-  .cabang-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-grid .full-width { grid-column: span 2; }
-}
+/* Auth Page */
+.auth-container { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 900px; margin: 0 auto; padding-top: 2rem; }
+@media (min-width: 800px) { .auth-container { grid-template-columns: 1fr 1fr; align-items: start; } }
+.guide-box { background: linear-gradient(135deg, var(--rose-deep) 0%, var(--rose-primary) 100%); color: #fff; border-radius: var(--r-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-lg); max-width: 900px; margin: 2rem auto; }
+.guide-box h3 { color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; margin-bottom: 0.75rem; }
+.guide-box ol { margin-left: 1.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
+.auth-card { background: var(--surface); border-radius: var(--r-lg); padding: 2rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.auth-card h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.auth-card p.desc { font-size: 0.85rem; color: var(--ink-light); margin-bottom: 1.5rem; }
+.link-btn { font-size: 0.85rem; font-weight: 700; color: var(--rose-primary); }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <header class="appbar" id="appbar" style="display:none">
-    <button class="appbar-back" id="btnBack" aria-label="Kembali" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    </button>
-    <div class="appbar-title">
-      <span id="appbarTitleText">MTQ 2026</span>
-      <small id="appbarTitleSub">Pendaftaran Ofisial</small>
+  <!-- DASHBOARD VIEW -->
+  <div id="view-dashboard" class="screen">
+    <header class="appbar">
+      <div class="appbar-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
+        MTQ Ofisial
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Keluar</button>
+    </header>
+
+    <div class="dash-header-area">
+      <div class="profile-info">
+        <h2 id="dashKapanewon">Kapanewon</h2>
+        <p>Ofisial: <span id="dashNama">Nama</span></p>
+      </div>
+      <div class="quota-widget">
+        <div class="quota-header">
+          <span>Kuota Terpakai</span>
+          <span id="dashKuotaText">0/11 slot</span>
+        </div>
+        <div class="progress-bg">
+          <div class="progress-fill" id="dashProgress" style="width: 0%"></div>
+        </div>
+      </div>
     </div>
-    <button class="appbar-btn" id="btnLogout" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-      Keluar
-    </button>
-  </header>
-  <main id="main"></main>
+
+    <div class="branch-grid" id="branchGrid"></div>
+  </div>
+
+  <!-- AUTH VIEW -->
+  <div id="view-auth" class="screen">
+    <div class="guide-box">
+      <h3>Cara Mendapatkan Token</h3>
+      <ol>
+        <li>Isi formulir <b>Daftar Baru</b> (form kanan).</li>
+        <li>Cek kotak masuk / folder Spam email Anda.</li>
+        <li>Salin <b>Token Akses</b> (8 karakter) dari email.</li>
+        <li>Kembali ke sini, dan masuk melalui form <b>Login</b> (form kiri).</li>
+      </ol>
+    </div>
+
+    <div class="auth-container">
+      <!-- Login -->
+      <div class="auth-card">
+        <h2>Login</h2>
+        <p class="desc">Masukkan token yang dikirim ke email Anda.</p>
+        <div class="form-group">
+          <label>Token Akses</label>
+          <input type="text" id="loginToken" class="form-control" placeholder="XXXXXXXX" maxlength="8" style="text-align:center;letter-spacing:0.2em;font-weight:800;font-size:1.2rem;text-transform:uppercase;">
+        </div>
+        <button class="btn btn-primary btn-block" id="btnLogin">Masuk</button>
+        <div style="text-align:center;margin-top:1rem;">
+          <button class="link-btn" id="btnLupaToken">Lupa Token?</button>
+        </div>
+      </div>
+
+      <!-- Register -->
+      <div class="auth-card">
+        <h2>Daftar Baru</h2>
+        <p class="desc">Belum punya token? Daftarkan kapanewon Anda di sini.</p>
+        
+        <div class="form-group">
+          <label>Kapanewon <span>*</span></label>
+          <select id="regKapanewon" class="form-control"><option value="">Memuat data...</option></select>
+        </div>
+        <div class="form-group">
+          <label>Nama Lengkap Ofisial <span>*</span></label>
+          <input type="text" id="regNama" class="form-control" placeholder="Nama Anda">
+        </div>
+        <div class="form-group">
+          <label>Asal Sekolah <span>*</span></label>
+          <div id="regSekolahContainer"></div>
+        </div>
+        <div class="form-group">
+          <label>Email Aktif <span>*</span></label>
+          <input type="email" id="regEmail" class="form-control" placeholder="nama@email.com">
+        </div>
+        <div class="form-group">
+          <label>Nomor WhatsApp <span>*</span></label>
+          <input type="tel" id="regWA" class="form-control" placeholder="08xxxxxxxxxx">
+        </div>
+        <button class="btn btn-accent btn-block" id="btnRegister">Daftar & Kirim Token</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="toast-wrap" id="toastWrap"></div>
+<!-- FORM VIEW -->
+<div id="view-form" class="full-form">
+  <div class="form-topbar">
+    <button class="btn-back" id="btnCloseForm">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <h2 id="formTitle">Tambah Peserta</h2>
+  </div>
+
+  <div class="form-content">
+    <div class="form-section">
+      <div class="form-section-title">Data Utama</div>
+      <div class="form-group">
+        <label>Cabang Lomba <span>*</span></label>
+        <input type="text" id="formCabangDisplay" class="form-control" disabled style="background:var(--bg); font-weight:700; color:var(--rose-primary);">
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>Asal Sekolah <span>*</span></label>
+        <div id="formSekolahContainer"></div>
+      </div>
+    </div>
+
+    <div id="formMembersArea"></div>
+
+    <!-- SECTION UPLOAD -->
+    <div class="form-section">
+      <div class="form-section-title">Unggah Akta Kelahiran</div>
+      <div id="formUploadsArea"></div>
+    </div>
+  </div>
+
+  <button class="fab-save" id="btnSaveData">Simpan Data & Unggah</button>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
 'use strict';
 (() => {
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
+  const LS_TOKEN = 'mtq_token';
+  const LS_OFISIAL = 'mtq_ofisial';
+  const KAPANEWON_LIST = ['Bambanglipuro','Banguntapan','Bantul','Dlingo','Imogiri','Jetis','Kasihan','Kretek','Pajangan','Pandak','Piyungan','Pleret','Pundong','Sanden','Sedayu','Sewon','Srandakan'];
 
-/* ============================================================
- * KONFIGURASI & STATE
- * ============================================================ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
-const LS_TOKEN = 'mtq_ofisial_token';
-const LS_OFISIAL = 'mtq_ofisial_data';
+  const State = {
+    token: lsGet(LS_TOKEN), ofisial: lsGet(LS_OFISIAL),
+    config: {}, cabang: [], sekolah: [], peserta: [],
+    kuota: 11, slotTerpakai: 0, cabangMap: {},
+    form: null, formId: null
+  };
 
-const KAPANEWON_LIST = ['Bambanglipuro','Banguntapan','Bantul','Dlingo','Imogiri','Jetis','Kasihan','Kretek','Pajangan','Pandak','Piyungan','Pleret','Pundong','Sanden','Sedayu','Sewon','Srandakan'];
-const FALLBACK_CABANG = [
-  { key:'MTQ', kode:'MTQ', label:"MTQ (Tilawah)", slot:1, team:false },
-  { key:'MTtQ', kode:'MTTQ', label:"MTtQ (Tartil)", slot:1, team:false },
-  { key:'MHQ', kode:'MHQ', label:"MHQ (Hifdzil)", slot:1, team:false },
-  { key:'Puitisasi', kode:'MPI', label:'MPI (Puitisasi)', slot:1, team:false },
-  { key:'MAz', kode:'MAZ', label:'MAz (Adzan)', slot:1, team:false, gender:'L' },
-  { key:'LPP', kode:'LPP', label:'LPP (Pidato)', slot:1, team:false },
-  { key:'LCP', kode:'LCP', label:'LCP (Cerdas Cermat)', slot:3, team:true },
-  { key:'Lukis', kode:'LMI', label:'LMI (Melukis)', slot:1, team:false },
-  { key:'Menyanyi', kode:'LMYI', label:'LMyI (Menyanyi)', slot:1, team:false }
-];
+  // UTILS
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch {} }
 
-const State = {
-  token: null, ofisial: null, config: {}, cabang: [], sekolah: [], peserta: [],
-  kuota: 11, slotTerpakai: 0, cabangMap: {}, currentForm: null, regSekolah: []
-};
-
-/* ============================================================
- * UTIL
- * ============================================================ */
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
-const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
-const lsDel = k => { try { localStorage.removeItem(k); } catch {} };
-
-async function api(action, payload = {}) {
-  const body = Object.assign({ action }, payload);
-  if (State.token && !body.token && action !== 'register_ofisial' && action !== 'resend_token') body.token = State.token;
-  const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return await res.json();
-}
-
-function toast(msg, type = 'success') {
-  const wrap = $('#toastWrap');
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.innerHTML = `<span>${esc(msg)}</span>`;
-  wrap.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
-}
-
-/* ============================================================
- * NAVIGASI SCREEN & APPBAR
- * ============================================================ */
-function setAppbar(opts = {}) {
-  const bar = $('#appbar');
-  if (!opts.show) { bar.style.display = 'none'; return; }
-  bar.style.display = 'flex';
-  $('#btnBack').hidden = !opts.back;
-  $('#btnLogout').hidden = !opts.logout;
-  $('#appbarTitleText').textContent = opts.title || 'MTQ 2026';
-  $('#appbarTitleSub').textContent = opts.sub || 'Pendaftaran Ofisial';
-}
-
-function showScreen(name, renderFn) {
-  $('#main').innerHTML = '';
-  const screen = document.createElement('div');
-  screen.className = 'screen active';
-  screen.id = 'screen-' + name;
-  $('#main').appendChild(screen);
-  renderFn(screen);
-}
-
-/* ============================================================
- * BOOT & SESSION
- * ============================================================ */
-async function boot() {
-  try {
-    const res = await api('config');
-    if (res.status === 'success') {
-      State.config = res.config || {};
-      State.cabang = (res.cabang && res.cabang.length) ? res.cabang : FALLBACK_CABANG;
-    } else throw new Error('bad');
-  } catch (e) {
-    State.config = { kuota_per_kapanewon: '11', pendaftaran_buka: 'true', wajib_akta: 'true' };
-    State.cabang = FALLBACK_CABANG;
+  function toast(msg, type = 'info') {
+    const wrap = $('#toastContainer');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    wrap.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
   }
-  State.cabangMap = {};
-  State.cabang.forEach(c => { State.cabangMap[c.key] = c; });
-  State.kuota = parseInt(State.config.kuota_per_kapanewon, 10) || 11;
 
-  const token = lsGet(LS_TOKEN);
-  const ofisial = lsGet(LS_OFISIAL);
-  
-  if (token && ofisial) {
-    State.token = token; State.ofisial = ofisial;
-    showScreen('loading', s => { s.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-l)">Memuat data...</div>'; });
+  async function api(action, payload = {}) {
+    const body = { action, token: State.token, ...payload };
+    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+    return await res.json();
+  }
+
+  function showView(id) {
+    $$('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // BOOT
+  async function boot() {
     try {
-      const list = await api('list_peserta');
-      if (list.status === 'success') {
-        State.ofisial = list.ofisial || ofisial;
-        State.peserta = list.peserta || [];
-        State.slotTerpakai = list.slot_terpakai || 0;
-        
-        const sek = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
-        if (sek.status === 'success') State.sekolah = sek.sekolah || [];
-        
-        renderDashboard();
-        return;
-      }
-    } catch (e) {}
-    lsDel(LS_TOKEN); lsDel(LS_OFISIAL);
-  }
-  renderLanding();
-}
-
-/* ============================================================
- * SCREEN: LANDING
- * ============================================================ */
-function renderLanding() {
-  setAppbar({ show: false });
-  showScreen('landing', s => {
-    const isOpen = String(State.config.pendaftaran_buka).toLowerCase() === 'true';
-    s.innerHTML = `
-      <div style="text-align:center;padding:3rem 1rem;">
-        <div style="width:80px;height:80px;margin:0 auto 1.5rem;background:var(--rose-deep);border-radius:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px -5px rgba(83,59,77,.4);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="40" height="40"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
-        <h1 style="font-size:1.8rem;font-weight:900;color:var(--rose-deep);margin-bottom:.5rem;">Pendaftaran Ofisial</h1>
-        <p style="color:var(--ink-l);margin-bottom:2rem;">MTQ Pelajar SD Kabupaten Bantul 2026</p>
-        
-        ${!isOpen ? `<div style="background:var(--gold-l);border:1px solid var(--gold);padding:.8rem;border-radius:8px;margin-bottom:1.5rem;font-size:.85rem;color:#92400e;font-weight:700;">⚠ Pendaftaran Belum Dibuka / Sudah Ditutup</div>` : ''}
-
-        <div style="display:flex;flex-direction:column;gap:.75rem;max-width:300px;margin:0 auto;">
-          <button class="btn btn-primary" id="btnGoLogin">Masuk (Punya Token)</button>
-          <button class="btn btn-accent" id="btnGoRegister" ${!isOpen?'disabled':''}>Daftar Ofisial Baru</button>
-        </div>
-        <div style="margin-top:1.5rem;"><a href="index.html" style="font-size:.8rem;color:var(--ink-l);">← Beranda</a></div>
-      </div>
-    `;
-    $('#btnGoLogin').onclick = renderLogin;
-    $('#btnGoRegister').onclick = renderRegister;
-  });
-}
-
-/* ============================================================
- * SCREEN: LOGIN
- * ============================================================ */
-function renderLogin() {
-  setAppbar({ show: true, back: true, title: 'Login Ofisial', sub: 'Masukkan token email' });
-  $('#btnBack').onclick = renderLanding;
-  showScreen('login', s => {
-    s.innerHTML = `
-      <div class="card" style="max-width:400px;margin:2rem auto;">
-        <div class="form-group">
-          <label>Token Akses <span class="req">*</span></label>
-          <input type="text" class="form-input" id="inpToken" placeholder="XXXXXXXX" maxlength="8" style="text-align:center;font-size:1.3rem;letter-spacing:.2em;font-weight:800;text-transform:uppercase;" autocomplete="off" />
-        </div>
-        <button class="btn btn-primary" id="btnDoLogin">Masuk</button>
-        <div style="text-align:center;margin-top:1rem;">
-          <button class="btn btn-ghost btn-sm" id="btnForgot">Lupa Token?</button>
-        </div>
-      </div>
-    `;
-    const inp = $('#inpToken');
-    inp.focus();
-    inp.addEventListener('input', () => { inp.value = inp.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8); });
-    inp.addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
-    $('#btnDoLogin').onclick = doLogin;
-    $('#btnForgot').onclick = renderForgot;
-  });
-}
-
-async function doLogin() {
-  const token = $('#inpToken').value.trim().toUpperCase();
-  if (token.length !== 8) return toast('Token harus 8 karakter.', 'error');
-  const btn = $('#btnDoLogin'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-  try {
-    const res = await api('login_ofisial', { token });
-    if (res.error) throw new Error(res.message);
-    lsSet(LS_TOKEN, token); lsSet(LS_OFISIAL, res.ofisial);
-    State.token = token; State.ofisial = res.ofisial;
-    boot(); // Reload with session
-  } catch (e) {
-    toast(e.message || 'Login gagal.', 'error');
-    btn.disabled = false; btn.textContent = 'Masuk';
-  }
-}
-
-function renderForgot() {
-  setAppbar({ show: true, back: true, title: 'Lupa Token', sub: 'Kirim ulang via email' });
-  $('#btnBack').onclick = renderLogin;
-  showScreen('forgot', s => {
-    s.innerHTML = `
-      <div class="card" style="max-width:400px;margin:2rem auto;">
-        <div class="form-group">
-          <label>Email Terdaftar <span class="req">*</span></label>
-          <input type="email" class="form-input" id="inpEmail" placeholder="nama@email.com" autocomplete="email" />
-        </div>
-        <button class="btn btn-primary" id="btnResend">Kirim Ulang Token</button>
-      </div>
-    `;
-    $('#btnResend').onclick = async (e) => {
-      const email = $('#inpEmail').value.trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Format email salah.', 'error');
-      const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-      try {
-        const res = await api('resend_token', { payload: { Email: email } });
-        toast('Jika email terdaftar, token telah dikirim.', 'success');
-        setTimeout(renderLogin, 2000);
-      } catch (err) {
-        toast('Gagal kirim.', 'error'); btn.disabled = false; btn.textContent = 'Kirim Ulang Token';
-      }
-    };
-  });
-}
-
-/* ============================================================
- * SCREEN: REGISTER OFISIAL BARU
- * ============================================================ */
-async function renderRegister() {
-  setAppbar({ show: true, back: true, title: 'Daftar Ofisial', sub: 'Formulir pendaftaran' });
-  $('#btnBack').onclick = renderLanding;
-  showScreen('register', s => {
-    s.innerHTML = `
-      <div class="card" style="max-width:500px;margin:0 auto;">
-        <div class="form-group">
-          <label>Kapanewon <span class="req">*</span></label>
-          <select class="form-input" id="regKapanewon"><option value="">— Pilih Kapanewon —</option></select>
-        </div>
-        <div class="form-group">
-          <label>Nama Lengkap <span class="req">*</span></label>
-          <input type="text" class="form-input" id="regNama" placeholder="Nama Anda" />
-        </div>
-        <div class="form-group">
-          <label>Asal Sekolah <span class="req">*</span></label>
-          <div id="regPickerContainer"></div>
-        </div>
-        <div class="form-group">
-          <label>Email <span class="req">*</span></label>
-          <input type="email" class="form-input" id="regEmail" placeholder="nama@email.com" autocomplete="email" />
-        </div>
-        <div class="form-group">
-          <label>No. WhatsApp <span class="req">*</span></label>
-          <input type="tel" class="form-input" id="regWA" placeholder="08xxxxxxxxxx" inputmode="numeric" maxlength="15" />
-        </div>
-        <button class="btn btn-primary" id="btnSubmitReg" style="margin-top:1rem;">Daftar & Kirim Token</button>
-      </div>
-    `;
-    
-    const selKap = $('#regKapanewon');
-    const pickerWrap = $('#regPickerContainer');
-    let regSekolahVal = '';
-    let regIsManual = false;
-
-    // Load Kapanewon
-    api('kapanewon_status').then(res => {
+      const res = await api('config');
       if (res.status === 'success') {
-        selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + KAPANEWON_LIST.map(k => {
-          const terisi = res.kapanewon.find(x => x.nama === k)?.terisi;
-          return `<option value="${k}" ${terisi?'disabled':''}>${k} ${terisi?'(Sudah ada ofisial)':''}</option>`;
-        }).join('');
+        State.config = res.config || {};
+        State.cabang = res.cabang || [];
+        State.cabangMap = {};
+        State.cabang.forEach(c => State.cabangMap[c.key] = c);
+        State.kuota = parseInt(State.config.kuota_per_kapanewon, 10) || 11;
       }
+    } catch (e) { console.warn('Config error', e); }
+
+    if (State.token && State.ofisial) {
+      await loadData();
+      showView('view-dashboard');
+      renderDashboard();
+    } else {
+      showView('view-auth');
+      initAuth();
+    }
+  }
+
+  async function loadData() {
+    try {
+      const res = await api('list_peserta');
+      if (res.status === 'success') {
+        State.ofisial = res.ofisial;
+        State.peserta = res.peserta || [];
+        State.slotTerpakai = res.slot_terpakai || 0;
+        lsSet(LS_OFISIAL, State.ofisial);
+
+        const sch = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
+        if (sch.status === 'success') State.sekolah = sch.sekolah || [];
+      }
+    } catch (e) {
+      if (e.message === 'Unauthorized') {
+        lsDel(LS_TOKEN); lsDel(LS_OFISIAL); location.reload();
+      }
+    }
+  }
+
+  // AUTH
+  function initAuth() {
+    $('#loginToken').addEventListener('input', e => e.target.value = e.target.value.toUpperCase());
+    $('#btnLogin').onclick = async () => {
+      const tok = $('#loginToken').value.trim();
+      if (tok.length !== 8) return toast('Token harus 8 karakter', 'error');
+      const btn = $('#btnLogin'); btn.disabled = true; btn.innerHTML = 'Memeriksa...';
+      try {
+        const res = await api('login_ofisial', { token: tok });
+        if (res.status === 'success') {
+          State.token = tok; State.ofisial = res.ofisial;
+          lsSet(LS_TOKEN, tok); lsSet(LS_OFISIAL, res.ofisial);
+          await loadData(); showView('view-dashboard'); renderDashboard();
+        } else {
+          toast(res.message || 'Token salah', 'error'); btn.disabled = false; btn.innerHTML = 'Masuk';
+        }
+      } catch (e) { toast('Gagal koneksi', 'error'); btn.disabled = false; btn.innerHTML = 'Masuk'; }
+    };
+
+    $('#btnLupaToken').onclick = () => {
+      const email = prompt('Masukkan email terdaftar untuk menerima ulang token:');
+      if (!email) return;
+      api('resend_token', { payload: { Email: email } })
+        .then(res => toast(res.message || 'Token dikirim ulang.', 'success'))
+        .catch(() => toast('Gagal mengirim ulang.', 'error'));
+    };
+
+    const selKap = $('#regKapanewon');
+    const inpNama = $('#regNama');
+    const inpEmail = $('#regEmail');
+    const inpWA = $('#regWA');
+    const btnReg = $('#btnRegister');
+    const wrapSekolah = $('#regSekolahContainer');
+    
+    let selectedSekolah = '';
+
+    api('kapanewon_status').then(res => {
+      if (res.status === 'success' && res.kapanewon) {
+        const taken = new Set(res.kapanewon.filter(k => k.terisi).map(k => k.nama));
+        selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + 
+          res.kapanewon.map(k => `<option value="${k.nama}" ${k.terisi?'disabled':''}>${k.nama} ${k.terisi?'(Sudah ada)':''}</option>`).join('');
+      } else throw new Error();
+    }).catch(() => {
+      selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + 
+        KAPANEWON_LIST.map(k => `<option value="${k}">${k}</option>`).join('');
     });
 
-    // Saat Kapanewon berubah, load sekolah
+    inpWA.oninput = e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15); };
+
     selKap.onchange = async (e) => {
       const kap = e.target.value;
-      pickerWrap.innerHTML = '<div style="padding:.5rem;font-size:.8rem;color:var(--ink-l)">Memuat sekolah...</div>';
-      if (!kap) { pickerWrap.innerHTML = ''; return; }
-      
+      selectedSekolah = '';
+      if (!kap) {
+        wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Pilih Kapanewon dulu" disabled>`;
+        return;
+      }
+      wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Memuat sekolah..." disabled>`;
       try {
         const res = await api('sekolah_list', { kapanewon: kap });
-        State.regSekolah = res.sekolah || [];
-        renderPickerUI(pickerWrap, State.regSekolah, (val, isMan) => {
-          regSekolahVal = val; regIsManual = isMan;
+        const list = res.status === 'success' ? res.sekolah : [];
+        renderSearchSelect(wrapSekolah, list, '', (val, isManual) => {
+          selectedSekolah = val;
         });
       } catch (err) {
-        pickerWrap.innerHTML = '<div style="color:var(--danger)">Gagal memuat sekolah. Isi manual.</div>';
+        wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Gagal memuat sekolah" disabled>`;
       }
     };
 
-    $('#regWA').oninput = e => { e.target.value = e.target.value.replace(/\D/g,'').slice(0,15); };
-
-    $('#btnSubmitReg').onclick = async (e) => {
-      const payload = {
-        Kapanewon: selKap.value,
-        Nama_Ofisial: $('#regNama').value.trim(),
-        Sekolah: regSekolahVal,
-        Email: $('#regEmail').value.trim().toLowerCase(),
-        WA: $('#regWA').value.trim()
-      };
-      if (!payload.Kapanewon || !payload.Nama_Ofisial || !payload.Sekolah || !payload.Email || !payload.WA) {
-        return toast('Lengkapi semua data wajib.', 'error');
-      }
-      const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-      try {
-        const res = await api('register_ofisial', { payload });
-        if (res.error) throw new Error(res.message || 'Gagal mendaftar.');
-        toast('Berhasil! Cek email Anda untuk token.', 'success');
-        setTimeout(renderLogin, 3000);
-      } catch (err) {
-        toast(err.message, 'error'); btn.disabled = false; btn.textContent = 'Daftar & Kirim Token';
-      }
-    };
-  });
-}
-
-// Fungsi pembuat UI Picker (Reusable untuk form daftar & form peserta)
-function renderPickerUI(wrap, list, onSelect) {
-  const currentVal = '';
-  const isManual = false;
-  
-  if (!list || list.length === 0) {
-    wrap.innerHTML = `
-      <div style="background:var(--gold-l);padding:1rem;border-radius:8px;border:1px solid var(--gold);">
-        <p style="font-size:.75rem;font-weight:800;color:#92400e;margin-bottom:.5rem;">⚠ Belum ada data sekolah. Isi manual:</p>
-        <input type="text" class="form-input" id="inpManual" placeholder="NAMA SEKOLAH..." style="text-transform:uppercase;">
-      </div>
-    `;
-    $('#inpManual').oninput = e => {
-      e.target.value = e.target.value.toUpperCase();
-      onSelect(e.target.value, true);
-    };
-    return;
-  }
-
-  const negeri = list.filter(s => /negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama));
-  const swasta = list.filter(s => !(/negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama)));
-
-  wrap.innerHTML = `
-    <div class="picker-container">
-      <button type="button" class="picker-trigger" id="pTrigger">
-        <span class="placeholder">Pilih Sekolah...</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="picker-dropdown" id="pDropdown">
-        <div class="picker-search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" class="picker-search" id="pSearch" placeholder="Cari sekolah..." autocomplete="off">
-        </div>
-        <div class="picker-list" id="pList">
-          <div class="picker-group-label">SD Negeri</div>
-          <div class="picker-group" data-g="n">
-            ${negeri.map(s => `<div class="picker-option" data-v="${esc(s.Nama)}" data-s="${esc(s.Nama.toUpperCase())}">${esc(s.Nama)}</div>`).join('')}
-          </div>
-          <div class="picker-group-label">SD / MI Swasta</div>
-          <div class="picker-group" data-g="s">
-            ${swasta.map(s => `<div class="picker-option" data-v="${esc(s.Nama)}" data-s="${esc(s.Nama.toUpperCase())}">${esc(s.Nama)}</div>`).join('')}
-          </div>
-          <div class="picker-option manual-option" data-v="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>
-        </div>
-      </div>
-    </div>
-    <div id="manualWrap" style="display:none;margin-top:.5rem;">
-      <div style="background:var(--gold-l);padding:.8rem;border-radius:8px;border:1px solid var(--gold);">
-        <p style="font-size:.75rem;font-weight:800;color:#92400e;margin-bottom:.4rem;">Ketik Nama Sekolah:</p>
-        <input type="text" class="form-input" id="inpManual" placeholder="NAMA SEKOLAH..." style="text-transform:uppercase;">
-      </div>
-    </div>
-  `;
-
-  const trigger = $('#pTrigger'), dropdown = $('#pDropdown'), search = $('#pSearch');
-  const manualWrap = $('#manualWrap'), inpManual = $('#inpManual');
-
-  trigger.onclick = (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle('show');
-    trigger.classList.toggle('active');
-    if (dropdown.classList.contains('show')) {
-      search.value = ''; filterList(''); setTimeout(() => search.focus(), 100);
-    }
-  };
-
-  document.addEventListener('click', (e) => {
-    if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
-      dropdown.classList.remove('show'); trigger.classList.remove('active');
-    }
-  });
-
-  search.oninput = (e) => filterList(e.target.value);
-
-  function filterList(q) {
-    q = q.toUpperCase();
-    dropdown.querySelectorAll('.picker-group').forEach(g => {
-      let has = false;
-      g.querySelectorAll('.picker-option').forEach(o => {
-        if (!q || o.dataset.s.includes(q)) { o.style.display = 'flex'; has = true; }
-        else { o.style.display = 'none'; }
-      });
-      g.style.display = has ? 'block' : 'none';
-      g.previousElementSibling.style.display = has ? 'block' : 'none';
-    });
-  }
-
-  dropdown.querySelectorAll('.picker-option').forEach(o => {
-    o.onclick = () => {
-      const v = o.dataset.v;
-      if (v === '__manual__') {
-        manualWrap.style.display = 'block'; inpManual.value = ''; inpManual.focus();
-        trigger.querySelector('span').innerHTML = '<span class="placeholder">Isi manual di bawah...</span>';
-        onSelect('', true);
-      } else {
-        manualWrap.style.display = 'none';
-        trigger.querySelector('span').textContent = v;
-        trigger.querySelector('span').classList.remove('placeholder');
-        onSelect(v, false);
-      }
-      dropdown.querySelectorAll('.picker-option').forEach(x => x.classList.remove('selected'));
-      if (v !== '__manual__') o.classList.add('selected');
-      dropdown.classList.remove('show'); trigger.classList.remove('active');
-    };
-  });
-
-  if (inpManual) {
-    inpManual.oninput = (e) => {
-      e.target.value = e.target.value.toUpperCase();
-      onSelect(e.target.value, true);
-    };
-  }
-}
-
-
-/* ============================================================
- * SCREEN: DASHBOARD (LIST CABANG)
- * ============================================================ */
-function renderDashboard() {
-  setAppbar({ show: true, title: State.ofisial.Kapanewon, sub: 'Dashboard Ofisial', logout: true });
-  $('#btnLogout').onclick = () => { if(confirm('Keluar?')) { lsDel(LS_TOKEN); lsDel(LS_OFISIAL); location.reload(); } };
-
-  showScreen('dashboard', s => {
-    const used = State.slotTerpakai;
-    const pct = Math.min(100, Math.round((used / State.kuota) * 100));
-    const fillClass = used >= State.kuota ? 'full' : (used >= State.kuota - 2 ? 'warn' : '');
-    
-    const pMap = {};
-    State.peserta.forEach(p => { pMap[p.Cabang] = p; });
-
-    s.innerHTML = `
-      <div class="quota-card">
-        <div class="quota-row">
-          <h3>Kuota Peserta</h3>
-          <span class="quota-val">${used} / ${State.kuota} slot</span>
-        </div>
-        <div class="quota-bar"><div class="quota-bar-fill ${fillClass}" style="width:${pct}%"></div></div>
-      </div>
-
-      <div class="section-title">Daftar Cabang Lomba</div>
-      <div class="cabang-list">
-        ${State.cabang.map(c => renderCabangCard(c, pMap[c.key])).join('')}
-      </div>
+    btnReg.onclick = async () => {
+      if (!selKap.value) return toast('Pilih Kapanewon', 'error');
+      if (!inpNama.value.trim()) return toast('Isi Nama Lengkap', 'error');
+      if (!selectedSekolah) return toast('Pilih Asal Sekolah', 'error');
+      if (!inpEmail.value.includes('@')) return toast('Isi Email dengan benar', 'error');
+      if (inpWA.value.length < 10) return toast('Isi No WhatsApp dengan benar', 'error');
       
-      <div style="height:2rem;"></div>
-      ${State.peserta.length > 0 ? `
-        <button class="btn btn-success" id="btnFinal" ${State.peserta.some(p => !p.berkas_lengkap) ? 'disabled' : ''}>
-          ${State.peserta.some(p => !p.berkas_lengkap) ? 'Lengkapi Akta Sebelum Submit' : 'Kunci & Submit Final'}
-        </button>
-      ` : ''}
-    `;
-
-    $$('[data-action="add"]').forEach(b => b.onclick = () => renderForm(b.dataset.cabang));
-    $$('[data-action="edit"]').forEach(b => b.onclick = () => renderForm(b.dataset.cabang, pMap[b.dataset.cabang]));
-    $$('[data-action="upload"]').forEach(b => b.onclick = () => renderUpload(b.dataset.cabang, pMap[b.dataset.cabang]));
-    $$('[data-action="delete"]').forEach(b => b.onclick = () => doDelete(pMap[b.dataset.cabang]));
-    
-    const btnFinal = $('#btnFinal');
-    if (btnFinal && !btnFinal.disabled) btnFinal.onclick = doSubmitFinal;
-  });
-}
-
-function renderCabangCard(cab, p) {
-  const isLCP = cab.key === 'LCP';
-  if (!p) {
-    return `
-      <div class="cabang-item empty">
-        <div class="cabang-icon">${cab.kode}</div>
-        <div class="cabang-info">
-          <h4>${esc(cab.label)}</h4>
-          <p>Belum ada peserta terdaftar.</p>
-        </div>
-        <div class="cabang-actions">
-          <button class="btn btn-primary" data-action="add" data-cabang="${cab.key}">Isi Data</button>
-        </div>
-      </div>
-    `;
-  }
-  
-  const isComplete = p.berkas_lengkap;
-  return `
-    <div class="cabang-item filled">
-      <div class="cabang-icon">${cab.kode}</div>
-      <div class="cabang-info">
-        <h4>${esc(p.Nama_Lengkap)} ${isLCP ? '(Tim)' : ''}</h4>
-        <p>${esc(p.Asal_Sekolah)}</p>
-        <div>
-          ${isComplete ? `<span class="badge ok">✓ Berkas Lengkap</span>` : `<span class="badge warn">⚠ Akta Belum Lengkap</span>`}
-        </div>
-      </div>
-      <div class="cabang-actions">
-        ${!isComplete ? `<button class="btn btn-primary" data-action="upload" data-cabang="${cab.key}">Upload Akta</button>` : ''}
-        <button class="btn btn-ghost" data-action="edit" data-cabang="${cab.key}">Edit</button>
-        <button class="btn btn-danger" data-action="delete" data-cabang="${cab.key}">Hapus</button>
-      </div>
-    </div>
-  `;
-}
-
-/* ============================================================
- * SCREEN: FORM PESERTA
- * ============================================================ */
-function renderForm(cabangKey, existingPeserta = null) {
-  const cab = State.cabangMap[cabangKey];
-  if (!cab) return;
-  
-  const isEdit = !!existingPeserta;
-  State.currentForm = {
-    cabang: cabangKey,
-    id: existingPeserta ? existingPeserta.ID : null,
-    asalSekolah: existingPeserta ? existingPeserta.Asal_Sekolah : '',
-    isManual: existingPeserta ? String(existingPeserta.Catatan||'').includes('Sekolah manual') : false,
-    members: cab.team
-      ? [0,1,2].map(i => {
-          return {
-            nama: existingPeserta ? (i === 0 ? existingPeserta.Nama_Lengkap : existingPeserta[`Anggota_${i+1}`]) || '' : '',
-            jk: existingPeserta ? (i === 0 ? existingPeserta.Jenis_Kelamin : existingPeserta[`JK_${i+1}`]) || '' : '',
-            nisn: existingPeserta ? (i === 0 ? existingPeserta.NISN : existingPeserta[`NISN_${i+1}`]) || '' : '',
-            tl: existingPeserta ? (i === 0 ? existingPeserta.Tempat_Lahir : existingPeserta[`Tempat_Lahir_${i+1}`]) || '' : '',
-            tgl: existingPeserta ? (i === 0 ? existingPeserta.Tanggal_Lahir : existingPeserta[`Tanggal_Lahir_${i+1}`]) || '' : '',
-            kelas: existingPeserta ? (i === 0 ? existingPeserta.Kelas : existingPeserta[`Kelas_${i+1}`]) || '' : ''
-          };
-        })
-      : [{
-          nama: existingPeserta ? existingPeserta.Nama_Lengkap : '',
-          jk: existingPeserta ? existingPeserta.Jenis_Kelamin : '',
-          nisn: existingPeserta ? existingPeserta.NISN : '',
-          tl: existingPeserta ? existingPeserta.Tempat_Lahir : '',
-          tgl: existingPeserta ? existingPeserta.Tanggal_Lahir : '',
-          kelas: existingPeserta ? existingPeserta.Kelas : ''
-        }]
-  };
-
-  setAppbar({ show: true, back: true, title: isEdit ? 'Edit Peserta' : 'Tambah Peserta', sub: cab.kode });
-  $('#btnBack').onclick = renderDashboard;
-
-  showScreen('form', s => {
-    const mArr = State.currentForm.members;
-    s.innerHTML = `
-      <div class="card">
-        <div class="form-group">
-          <label>Asal Sekolah <span class="req">*</span></label>
-          <div id="pickerContainer"></div>
-        </div>
-      </div>
-
-      <div class="form-grid">
-        ${mArr.map((m, i) => renderMemberInputs(m, i, cab.team)).join('')}
-      </div>
-
-      <button class="btn btn-primary" id="btnSave" style="margin-top:1rem;">Simpan Data ${cab.kode}</button>
-    `;
-
-    renderPickerUI($('#pickerContainer'), State.sekolah, (val, isMan) => {
-      State.currentForm.asalSekolah = val;
-      State.currentForm.isManual = isMan;
-    });
-    
-    // Prefill picker trigger if edit
-    if (State.currentForm.asalSekolah && !State.currentForm.isManual) {
-      const trig = $('#pTrigger');
-      if (trig) {
-        trig.querySelector('span').textContent = State.currentForm.asalSekolah;
-        trig.querySelector('span').classList.remove('placeholder');
-        $('#pDropdown').querySelectorAll('.picker-option').forEach(o => {
-          if (o.dataset.v === State.currentForm.asalSekolah) o.classList.add('selected');
+      btnReg.disabled = true; btnReg.innerHTML = 'Memproses...';
+      try {
+        const res = await api('register_ofisial', {
+          payload: { Kapanewon: selKap.value, Nama_Ofisial: inpNama.value.trim(), Sekolah: selectedSekolah, Email: inpEmail.value.trim().toLowerCase(), WA: inpWA.value.trim() }
         });
+        if (res.error) {
+          toast(res.message, 'error');
+        } else {
+          toast('Pendaftaran berhasil!', 'success');
+          alert(`Pendaftaran berhasil!\n\nToken akses telah dikirim ke email: ${inpEmail.value.trim()}\n\nSilakan cek kotak masuk atau folder Spam Anda.`);
+          inpNama.value = ''; inpEmail.value = ''; inpWA.value = ''; selKap.value = '';
+          wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Pilih Kapanewon dulu" disabled>`;
+          selectedSekolah = '';
+        }
+      } catch (err) { toast('Gagal mendaftar', 'error'); }
+      btnReg.disabled = false; btnReg.innerHTML = 'Daftar & Kirim Token';
+    };
+  }
+
+  // DASHBOARD
+  function renderDashboard() {
+    $('#dashKapanewon').textContent = State.ofisial.Kapanewon;
+    $('#dashNama').textContent = State.ofisial.Nama;
+    
+    const pct = Math.min(100, Math.round((State.slotTerpakai / State.kuota) * 100));
+    $('#dashKuotaText').textContent = `${State.slotTerpakai} / ${State.kuota} slot`;
+    $('#dashProgress').style.width = pct + '%';
+    $('#dashProgress').style.background = State.slotTerpakai >= State.kuota ? 'var(--danger)' : 'var(--hijau)';
+
+    const grid = $('#branchGrid');
+    grid.innerHTML = State.cabang.map(c => {
+      const p = State.peserta.find(x => x.Cabang === c.key);
+      
+      if (p) {
+        // TAMPILAN TERISI (HIJAU)
+        const isTeam = !!c.team;
+        const needAkta = isTeam ? 3 : 1;
+        const hasAkta = [p.has_akta1, p.has_akta2, p.has_akta3].filter(Boolean).length;
+        const isComplete = p.berkas_lengkap;
+        
+        let badgeBerkas = isComplete 
+          ? `<span style="font-size:0.7rem; font-weight:800; color:var(--hijau); background:var(--hijau-light); padding:0.2rem 0.5rem; border-radius:4px;">✓ Berkas Lengkap</span>` 
+          : `<span style="font-size:0.7rem; font-weight:800; color:var(--gold); background:var(--gold-light); padding:0.2rem 0.5rem; border-radius:4px;">⚠ Akta ${hasAkta}/${needAkta}</span>`;
+
+        const files = isTeam ? [
+          { key: 'akta1', label: 'Akta Ketua', has: p.has_akta1 },
+          { key: 'akta2', label: 'Akta Anggota 2', has: p.has_akta2 },
+          { key: 'akta3', label: 'Akta Anggota 3', has: p.has_akta3 }
+        ] : [
+          { key: 'akta1', label: 'Akta Kelahiran', has: p.has_akta1 }
+        ];
+
+        let uploadHtml = files.map(f => `
+          <div class="upload-box ${f.has ? 'done' : ''}" id="box-${p.ID}-${f.key}">
+            <div class="upload-icon">
+              ${f.has ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
+                     : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
+            </div>
+            <div class="upload-text">
+              ${f.label}
+              <small>${f.has ? 'Tersimpan' : 'Klik upload'}</small>
+            </div>
+            <input type="file" accept="image/jpeg,image/png,application/pdf" style="display:none;" class="file-input" data-id="${p.ID}" data-jenis="${f.key}">
+          </div>
+        `).join('');
+
+        return `
+          <div class="branch-card filled">
+            <div class="branch-head">
+              <span class="branch-code">${esc(c.kode)}</span>
+              ${badgeBerkas}
+            </div>
+            <div class="filled-body">
+              <div class="filled-avatar">${esc(p.Nama_Lengkap.charAt(0))}</div>
+              <div class="filled-info">
+                <h4>${esc(p.Nama_Lengkap)}</h4>
+                <p style="font-size:0.75rem; color:var(--ink-light); margin:0;">${esc(p.Asal_Sekolah)}</p>
+              </div>
+            </div>
+            ${p.Status === 'menunggu' ? `
+            <div class="filled-actions">
+              <button class="btn btn-ghost btn-sm btn-expand" data-id="${p.ID}" style="flex:1;">Kelola Berkas</button>
+              <button class="btn btn-ghost btn-sm btn-edit" data-id="${p.ID}" style="color:var(--ink-light);">Edit</button>
+              <button class="btn btn-danger btn-sm btn-del" data-id="${p.ID}">Hapus</button>
+            </div>
+            <div class="upload-area" id="upload-${p.ID}">
+              ${uploadHtml}
+            </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        // TAMPILAN KOSONG
+        const canAdd = State.slotTerpakai + c.slot <= State.kuota;
+        return `
+          <div class="branch-card empty ${canAdd ? 'clickable' : 'disabled'}" data-key="${esc(c.key)}" ${!canAdd ? 'style="opacity:0.5;cursor:not-allowed;"' : ''}>
+            <div class="empty-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <div class="empty-text">Daftarkan ${esc(c.kode)}</div>
+            <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.2rem;">
+              ${c.team ? 'Tim 3 Siswa (3 slot)' : '1 Siswa (1 slot)'}
+            </div>
+          </div>
+        `;
+      }
+    }).join('');
+
+    $$('.branch-card.empty.clickable').forEach(card => {
+      card.onclick = () => openForm(card.dataset.key);
+    });
+
+    $$('.btn-expand').forEach(b => b.onclick = () => {
+      const area = document.getElementById('upload-' + b.dataset.id);
+      area.classList.toggle('active');
+    });
+    $$('.btn-edit').forEach(b => b.onclick = () => {
+      const p = State.peserta.find(x => x.ID === b.dataset.id);
+      if(p) openForm(p.Cabang, p.ID);
+    });
+    $$('.btn-del').forEach(b => b.onclick = () => deletePeserta(b.dataset.id));
+    
+    bindUploads();
+  }
+
+  function bindUploads() {
+    $$('.upload-box').forEach(box => {
+      if (box.classList.contains('done')) return;
+      const input = box.querySelector('.file-input');
+      box.onclick = () => input.click();
+      input.onchange = (e) => handleUpload(e.target.files[0], input.dataset.jenis, input.dataset.id, box, input);
+    });
+  }
+
+  async function handleUpload(file, jenis, id, boxEl, inputEl) {
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) return toast('Maksimal 3 MB', 'error');
+
+    const oldHTML = boxEl.innerHTML;
+    boxEl.innerHTML = '<div class="upload-text" style="color:var(--rose-primary);">Mengunggah...</div>';
+
+    try {
+      let finalFile = file;
+      if(file.type.startsWith('image/')) finalFile = await compressImage(file);
+      const base64 = await fileToBase64(finalFile);
+      
+      const res = await api('upload_berkas', { 
+        peserta_id: id, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
+      });
+      
+      if (res.error) throw new Error(res.message);
+      
+      toast('Berhasil diunggah', 'success');
+      await loadData();
+      renderDashboard();
+      
+      setTimeout(() => {
+        const newSec = document.getElementById('upload-'+id);
+        if(newSec) newSec.classList.add('active');
+      }, 100);
+      
+    } catch (e) {
+      toast(e.message || 'Gagal upload', 'error');
+      boxEl.innerHTML = oldHTML;
+    }
+  }
+
+  // FORM ADD/EDIT
+  function openForm(cabangKey, id = null) {
+    const isEdit = !!id;
+    let p = {};
+    if (isEdit) p = State.peserta.find(x => x.ID === id);
+    
+    State.formId = id;
+    State.form = {
+      mode: isEdit ? 'edit' : 'add',
+      cabang: cabangKey,
+      asalSekolah: isEdit ? p.Asal_Sekolah : '',
+      sekolahManual: isEdit ? String(p.Catatan).includes('Sekolah manual') : false,
+      members: isEdit ? [] : [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }],
+      files: {}, // Menyimpan file yang akan diupload
+      existingFiles: isEdit ? { akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3 } : {}
+    };
+
+    if (isEdit) {
+      const cab = State.cabangMap[p.Cabang];
+      if (cab && cab.team) {
+        State.form.members = [
+          { nama: p.Nama_Lengkap||'', jk: p.Jenis_Kelamin||'', nisn: p.NISN||'', tl: p.Tempat_Lahir||'', tgl: p.Tanggal_Lahir||'', kelas: p.Kelas||'' },
+          { nama: p.Anggota_2||'', jk: p.JK_2||'', nisn: p.NISN_2||'', tl: p.Tempat_Lahir_2||'', tgl: p.Tanggal_Lahir_2||'', kelas: p.Kelas_2||'' },
+          { nama: p.Anggota_3||'', jk: p.JK_3||'', nisn: p.NISN_3||'', tl: p.Tempat_Lahir_3||'', tgl: p.Tanggal_Lahir_3||'', kelas: p.Kelas_3||'' }
+        ];
+      } else {
+        State.form.members = [{ nama: p.Nama_Lengkap||'', jk: p.Jenis_Kelamin||'', nisn: p.NISN||'', tl: p.Tempat_Lahir||'', tgl: p.Tanggal_Lahir||'', kelas: p.Kelas||'' }];
+      }
+    } else {
+      const cab = State.cabangMap[cabangKey];
+      if (cab && cab.team) {
+        State.form.members = [{ nama:'',jk:'',nisn:'',tl:'',tgl:'',kelas:'' }, { nama:'',jk:'',nisn:'',tl:'',tgl:'',kelas:'' }, { nama:'',jk:'',nisn:'',tl:'',tgl:'',kelas:'' }];
       }
     }
 
-    bindInputs();
+    const view = $('#view-form');
+    view.classList.add('active');
+    document.body.style.overflow = 'hidden';
 
-    $('#btnSave').onclick = () => {
-      const payload = validateForm(cab);
-      if (payload) doSave(cab, payload);
+    const cab = State.cabangMap[cabangKey];
+    $('#formTitle').textContent = isEdit ? 'Edit Peserta' : 'Tambah Peserta';
+    $('#formCabangDisplay').value = cab ? cab.label : cabangKey;
+
+    renderSearchSelect($('#formSekolahContainer'), State.sekolah, State.form.asalSekolah, (val, isManual) => {
+      State.form.asalSekolah = val;
+      State.form.sekolahManual = isManual;
+    });
+
+    renderFormMembers();
+    renderFormUploads();
+
+    $('#btnCloseForm').onclick = () => {
+      view.classList.remove('active');
+      document.body.style.overflow = '';
     };
-  });
-}
+    $('#btnSaveData').onclick = saveData;
+  }
 
-function renderMemberInputs(m, i, isTeam) {
-  const label = isTeam ? `Anggota ${i+1}` : 'Data Peserta';
-  const width = isTeam ? 'full-width' : '';
-  return `
-    <div class="member-group ${width}">
-      <div class="member-label">${label}</div>
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Nama Lengkap <span class="req">*</span></label>
-          <input type="text" class="form-input f-nama" data-i="${i}" value="${esc(m.nama)}" placeholder="NAMA LENGKAP" style="text-transform:uppercase;">
+  function renderFormMembers() {
+    const box = $('#formMembersArea');
+    const isTeam = State.form.members.length > 1;
+    
+    box.innerHTML = State.form.members.map((m, i) => `
+      <div class="member-block">
+        <div class="member-title">
+          <span>${i+1}</span> ${isTeam ? 'Data Anggota' : 'Data Peserta'}
         </div>
         <div class="form-group">
-          <label>Jenis Kelamin <span class="req">*</span></label>
-          <div class="radio-group">
-            <button type="button" class="radio-btn f-jk ${m.jk === 'L' ? 'active' : ''}" data-i="${i}" data-val="L">Putra</button>
-            <button type="button" class="radio-btn f-jk ${m.jk === 'P' ? 'active' : ''}" data-i="${i}" data-val="P">Putri</button>
+          <label>Nama Lengkap <span>*</span></label>
+          <!-- PLACEHOLDER DIUBAH MENJADI SESUAI AKTA KELAHIRAN -->
+          <input type="text" class="form-control m-nama" data-i="${i}" value="${esc(m.nama)}" placeholder="Sesuai Akta Kelahiran" style="text-transform:uppercase;">
+        </div>
+        <div class="form-group">
+          <label>Jenis Kelamin <span>*</span></label>
+          <div class="radio-pills">
+            <div class="radio-pill ${m.jk==='L'?'selected':''}" data-i="${i}" data-jk="L">Laki-laki</div>
+            <div class="radio-pill ${m.jk==='P'?'selected':''}" data-i="${i}" data-jk="P">Perempuan</div>
           </div>
         </div>
         <div class="form-group">
-          <label>NISN <span class="req">*</span></label>
-          <input type="text" class="form-input f-nisn" data-i="${i}" value="${esc(m.nisn)}" placeholder="10 digit" inputmode="numeric" maxlength="10">
+          <label>NISN <span>*</span></label>
+          <input type="tel" class="form-control m-nisn" data-i="${i}" value="${esc(m.nisn)}" maxlength="10" placeholder="10 Digit Angka">
         </div>
         <div class="form-group">
-          <label>Tempat Lahir <span class="req">*</span></label>
-          <input type="text" class="form-input f-tl" data-i="${i}" value="${esc(m.tl)}" placeholder="Contoh: Bantul">
+          <label>Tempat Lahir <span>*</span></label>
+          <input type="text" class="form-control m-tl" data-i="${i}" value="${esc(m.tl)}" placeholder="Contoh: Bantul">
         </div>
         <div class="form-group">
-          <label>Tanggal Lahir <span class="req">*</span></label>
-          <input type="date" class="form-input f-tgl" data-i="${i}" value="${esc(m.tgl)}" min="2008-01-01" max="2021-12-31">
+          <label>Tanggal Lahir <span>*</span></label>
+          <input type="date" class="form-control m-tgl" data-i="${i}" value="${esc(m.tgl)}" min="2008-01-01" max="2021-12-31">
         </div>
-        <div class="form-group">
-          <label>Kelas <span class="req">*</span></label>
-          <select class="form-input f-kelas" data-i="${i}">
-            <option value="">— Pilih —</option>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Kelas <span>*</span></label>
+          <select class="form-control m-kelas" data-i="${i}">
+            <option value="">— Pilih Kelas —</option>
             ${[1,2,3,4,5,6].map(k => `<option value="${k}" ${String(m.kelas)===String(k)?'selected':''}>Kelas ${k}</option>`).join('')}
           </select>
         </div>
       </div>
-    </div>
-  `;
-}
+    `).join('');
 
-function bindInputs() {
-  $$('.f-nama').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.toUpperCase(); State.currentForm.members[e.target.dataset.i].nama = e.target.value; });
-  $$('.f-nisn').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0,10); State.currentForm.members[e.target.dataset.i].nisn = e.target.value; });
-  $$('.f-tl').forEach(inp => inp.oninput = e => { State.currentForm.members[e.target.dataset.i].tl = e.target.value; });
-  $$('.f-tgl').forEach(inp => inp.onchange = e => { State.currentForm.members[e.target.dataset.i].tgl = e.target.value; });
-  $$('.f-kelas').forEach(inp => inp.onchange = e => { State.currentForm.members[e.target.dataset.i].kelas = e.target.value; });
-  $$('.f-jk').forEach(btn => btn.onclick = () => {
-    const i = btn.dataset.i;
-    State.currentForm.members[i].jk = btn.dataset.val;
-    $$(`.f-jk[data-i="${i}"]`).forEach(b => b.classList.toggle('active', b === btn));
-  });
-}
-
-function validateForm(cab) {
-  const f = State.currentForm;
-  if (!f.asalSekolah || f.asalSekolah.length < 3) { toast('Asal sekolah wajib diisi.', 'error'); return null; }
-  
-  for (let i=0; i<f.members.length; i++) {
-    const m = f.members[i];
-    const lbl = cab.team ? `Anggota ${i+1}` : 'Peserta';
-    if (!m.nama || m.nama.length < 3) { toast(`${lbl}: Nama minimal 3 karakter.`, 'error'); return null; }
-    if (!['L','P'].includes(m.jk)) { toast(`${lbl}: Pilih jenis kelamin.`, 'error'); return null; }
-    if (!/^\d{10}$/.test(m.nisn)) { toast(`${lbl}: NISN harus 10 digit.`, 'error'); return null; }
-    if (!m.tl || m.tl.length < 3) { toast(`${lbl}: Tempat lahir wajib.`, 'error'); return null; }
-    if (!m.tgl) { toast(`${lbl}: Tanggal lahir wajib.`, 'error'); return null; }
-    if (!m.kelas) { toast(`${lbl}: Kelas wajib.`, 'error'); return null; }
+    $$('.m-nama').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.toUpperCase(); State.form.members[e.target.dataset.i].nama = e.target.value; });
+    $$('.m-nisn').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.replace(/\D/g,''); State.form.members[e.target.dataset.i].nisn = e.target.value; });
+    $$('.m-tl').forEach(inp => inp.oninput = e => { State.form.members[e.target.dataset.i].tl = e.target.value; });
+    $$('.m-tgl').forEach(inp => inp.onchange = e => { State.form.members[e.target.dataset.i].tgl = e.target.value; });
+    $$('.m-kelas').forEach(inp => inp.onchange = e => { State.form.members[e.target.dataset.i].kelas = e.target.value; });
+    $$('.radio-pill').forEach(btn => btn.onclick = () => {
+      const i = btn.dataset.i;
+      State.form.members[i].jk = btn.dataset.jk;
+      const group = btn.parentNode;
+      group.querySelectorAll('.radio-pill').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
   }
 
-  if (cab.team) {
-    const nisns = f.members.map(m => m.nisn);
-    if (new Set(nisns).size !== 3) { toast('NISN anggota harus berbeda.', 'error'); return null; }
-  }
-  if (cab.gender === 'L' && f.members[0].jk !== 'L') { toast('Cabang Adzan hanya untuk putra.', 'error'); return null; }
+  // RENDER UPLOAD BOXES DI DALAM FORM
+  function renderFormUploads() {
+    const isTeam = State.form.members.length > 1;
+    const requiredFiles = isTeam ? [
+      { key: 'akta1', label: 'Akta Ketua' },
+      { key: 'akta2', label: 'Akta Anggota 2' },
+      { key: 'akta3', label: 'Akta Anggota 3' }
+    ] : [
+      { key: 'akta1', label: 'Akta Kelahiran' }
+    ];
 
-  const p = {
-    Cabang: cab.key,
-    Asal_Sekolah: f.asalSekolah,
-    Sekolah_Manual: f.isManual,
-    Nama_Lengkap: f.members[0].nama,
-    Jenis_Kelamin: f.members[0].jk,
-    NISN: f.members[0].nisn,
-    Tempat_Lahir: f.members[0].tl,
-    Tanggal_Lahir: f.members[0].tgl,
-    Kelas: f.members[0].kelas
-  };
-  if (cab.team) {
-    p.Anggota_2 = f.members[1].nama; p.JK_2 = f.members[1].jk; p.NISN_2 = f.members[1].nisn; p.Tempat_Lahir_2 = f.members[1].tl; p.Tanggal_Lahir_2 = f.members[1].tgl; p.Kelas_2 = f.members[1].kelas;
-    p.Anggota_3 = f.members[2].nama; p.JK_3 = f.members[2].jk; p.NISN_3 = f.members[2].nisn; p.Tempat_Lahir_3 = f.members[2].tl; p.Tanggal_Lahir_3 = f.members[2].tgl; p.Kelas_3 = f.members[2].kelas;
-  }
-  return p;
-}
+    let html = requiredFiles.map(f => {
+      const hasExisting = State.form.existingFiles && State.form.existingFiles[f.key];
+      const pendingFile = State.form.files && State.form.files[f.key];
+      
+      let statusText = 'Klik untuk pilih file (JPG/PDF)';
+      let isSelected = false;
+      
+      if (pendingFile) {
+        statusText = `Terpilih: ${pendingFile.name}`;
+        isSelected = true;
+      } else if (hasExisting) {
+        statusText = '✓ Sudah diunggah sebelumnya';
+        isSelected = true;
+      }
+      
+      return `
+        <div class="form-upload-box ${isSelected ? 'selected' : ''}" id="form-box-${f.key}">
+          <div class="form-upload-icon">
+            ${isSelected ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
+                       : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
+          </div>
+          <div class="form-upload-text">
+            ${f.label}
+            <small>${statusText}</small>
+          </div>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" style="display:none;" class="form-file-input" data-key="${f.key}">
+        </div>
+      `;
+    }).join('');
 
-async function doSave(cab, payload) {
-  const btn = $('#btnSave'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-  const isEdit = !!State.currentForm.id;
-  try {
-    const res = await api(isEdit ? 'update_peserta' : 'daftar_peserta', { id: State.currentForm.id, payload });
-    if (res.error) throw new Error(res.message || (res.messages && res.messages[0]));
-    
-    toast(isEdit ? 'Data diperbarui.' : 'Peserta terdaftar.', 'success');
-    
-    // Refresh
-    const list = await api('list_peserta');
-    State.peserta = list.peserta || [];
-    State.slotTerpakai = list.slot_terpakai || 0;
-    
-    // Jika tambah baru, langsung ke upload
-    if (!isEdit && res.id) {
-      const newP = State.peserta.find(p => p.ID === res.id);
-      renderUpload(cab.key, newP);
-    } else {
-      renderDashboard();
+    $('#formUploadsArea').innerHTML = html;
+
+    $$('.form-file-input').forEach(input => {
+      const box = input.closest('.form-upload-box');
+      box.onclick = () => input.click();
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 3 * 1024 * 1024) return toast('Maksimal 3 MB', 'error');
+        
+        if (!State.form.files) State.form.files = {};
+        State.form.files[input.dataset.key] = file;
+        renderFormUploads();
+      };
+    });
+  }
+
+  // REUSABLE SEARCH SELECT
+  function renderSearchSelect(container, list, currentVal, onSelect) {
+    if (!container) return;
+    if (list.length === 0) {
+      container.innerHTML = `<input type="text" class="form-control" id="manualInputTemp" placeholder="Ketik Nama Sekolah (Manual)" value="${esc(currentVal)}" style="text-transform:uppercase;border-color:var(--gold);"><small style="color:var(--gold);font-size:0.75rem;margin-top:0.25rem;display:block;">*Data belum tersedia. Ketik manual.</small>`;
+      const inp = container.querySelector('#manualInputTemp');
+      inp.oninput = (e) => { e.target.value = e.target.value.toUpperCase(); onSelect(e.target.value, true); };
+      if(currentVal) onSelect(currentVal, true);
+      return;
     }
-  } catch (e) {
-    toast(e.message, 'error'); btn.disabled = false; btn.textContent = 'Simpan Data';
-  }
-}
 
-/* ============================================================
- * SCREEN: UPLOAD AKTA
- * ============================================================ */
-function renderUpload(cabangKey, peserta) {
-  const cab = State.cabangMap[cabangKey];
-  setAppbar({ show: true, back: true, title: 'Upload Akta', sub: cab.kode });
-  $('#btnBack').onclick = renderDashboard;
-
-  showScreen('upload', s => {
-    s.innerHTML = `
-      <div class="card">
-        <h3 style="font-size:1.1rem;color:var(--rose-deep);margin-bottom:.2rem;">${esc(peserta.Nama_Lengkap)}</h3>
-        <p style="font-size:.85rem;color:var(--ink-l);margin-bottom:1.5rem;">Format JPG/PNG/PDF. Maks 2 MB.</p>
-        <div id="aktaContainer"></div>
+    container.innerHTML = `
+      <div class="search-select">
+        <div class="search-trigger ${currentVal ? '' : 'empty'}" id="pickerTrigger">
+          <span>${currentVal ? esc(currentVal) : 'Pilih Sekolah...'}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="search-dropdown" id="pickerDropdown">
+          <div class="search-input-wrap"><input type="text" id="pickerSearch" placeholder="Cari nama sekolah..." autocomplete="off"></div>
+          <div class="search-results" id="pickerList"></div>
+        </div>
       </div>
-      <button class="btn btn-primary" id="btnDone" style="margin-top:1rem;">Selesai & Kembali ke Dashboard</button>
+      <div id="pickerManualWrap" style="display:none;margin-top:0.75rem;"><input type="text" class="form-control" id="pickerManualInput" placeholder="Ketik Nama Sekolah..." style="text-transform:uppercase;border-color:var(--gold);"></div>
     `;
-    
-    const isTeam = cab.team;
-    const aktaKeys = isTeam ? ['akta1','akta2','akta3'] : ['akta1'];
-    
-    $('#aktaContainer').innerHTML = aktaKeys.map((k, i) => renderUploadBox(peserta, k, i)).join('');
-    
-    aktaKeys.forEach((k, i) => {
-      const box = $(`#box-${k}`);
-      if (!box) return;
-      const input = box.querySelector('input[type="file"]');
-      if (input) input.onchange = e => handleFile(e.target.files[0], k, peserta.ID, isTeam, i);
-    });
-    
-    $('#btnDone').onclick = renderDashboard;
-  });
-}
 
-function renderUploadBox(p, key, i) {
-  const isUploaded = p[`has_${key}`];
-  const label = key === 'akta1' ? (p.Cabang === 'LCP' ? 'Akta Ketua' : 'Akta Kelahiran') : `Akta Anggota ${i+1}`;
-  return `
-    <div class="upload-box ${isUploaded ? 'has-file' : ''}" id="box-${key}">
-      <div class="upload-icon">
-        ${isUploaded 
-          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`
-          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`}
-      </div>
-      <div class="upload-info">
-        <div class="upload-title">${label}</div>
-        <div class="upload-sub">${isUploaded ? 'Berkas tersimpan' : 'Klik untuk unggah'}</div>
-      </div>
-      ${!isUploaded ? `<input type="file" class="upload-btn" accept="image/jpeg,image/png,application/pdf" style="display:none;">` : ''}
-    </div>
-  `;
-}
+    const trigger = container.querySelector('#pickerTrigger');
+    const dropdown = container.querySelector('#pickerDropdown');
+    const searchInp = container.querySelector('#pickerSearch');
+    const listWrap = container.querySelector('#pickerList');
+    const manualWrap = container.querySelector('#pickerManualWrap');
+    const manualInp = container.querySelector('#pickerManualInput');
 
-async function handleFile(file, key, id, isTeam, i) {
-  if (!file) return;
-  if (file.size > 10*1024*1024) return toast('Maks 10MB', 'error');
-  const box = $(`#box-${key}`);
-  box.classList.add('uploading');
-  box.querySelector('.upload-sub').textContent = 'Mengunggah...';
-  
-  try {
-    const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(file); });
-    const res = await api('upload_berkas', {
-      peserta_id: id, jenis: key, file_base64: b64, mime_type: file.type, file_name: file.name
-    });
-    if (res.error) throw new Error(res.message);
-    
-    toast('Berhasil diunggah', 'success');
-    box.classList.remove('uploading');
-    box.classList.add('has-file');
-    box.querySelector('.upload-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
-    box.querySelector('.upload-sub').textContent = 'Berkas tersimpan';
-    const input = box.querySelector('input[type="file"]');
-    if (input) input.remove();
-    
-    const p = State.peserta.find(x => x.ID === id);
-    if (p) {
-      p[`has_${key}`] = true;
-      const need = isTeam ? 3 : 1;
-      let count = ['akta1','akta2','akta3'].filter(k => p[`has_${k}`]).length;
-      if (count >= need) p.berkas_lengkap = true;
+    function filterList(q = '') {
+      q = q.toUpperCase();
+      const fNegeri = list.filter(s => (/negeri/i.test(s.Status_Sekolah)||/negeri/i.test(s.Nama)) && s.Nama.toUpperCase().includes(q));
+      const fSwasta = list.filter(s => !(/negeri/i.test(s.Status_Sekolah)||/negeri/i.test(s.Nama)) && s.Nama.toUpperCase().includes(q));
+
+      let html = '';
+      if (fNegeri.length) html += `<div class="opt-group">SD Negeri</div>` + fNegeri.map(s => `<div class="opt-item ${s.Nama===currentVal?'selected':''}" data-val="${esc(s.Nama)}">${s.Nama===currentVal?'✓ ':''}${esc(s.Nama)}</div>`).join('');
+      if (fSwasta.length) html += `<div class="opt-group">SD / MI Swasta</div>` + fSwasta.map(s => `<div class="opt-item ${s.Nama===currentVal?'selected':''}" data-val="${esc(s.Nama)}">${s.Nama===currentVal?'✓ ':''}${esc(s.Nama)}</div>`).join('');
+      html += `<div class="opt-item opt-manual" data-val="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>`;
+      
+      listWrap.innerHTML = html;
+      listWrap.querySelectorAll('.opt-item').forEach(opt => {
+        opt.onclick = () => {
+          const v = opt.dataset.val;
+          if (v === '__manual__') {
+            manualWrap.style.display = 'block';
+            manualInp.value = ''; setTimeout(()=>manualInp.focus(), 50);
+            trigger.querySelector('span').textContent = 'Isi manual di bawah...';
+            currentVal = ''; onSelect('', true);
+          } else {
+            manualWrap.style.display = 'none';
+            trigger.querySelector('span').textContent = v;
+            currentVal = v; onSelect(v, false);
+          }
+          dropdown.classList.remove('active');
+        };
+      });
     }
-  } catch(e) {
-    toast(e.message, 'error');
-    box.classList.remove('uploading');
-    box.querySelector('.upload-sub').textContent = 'Gagal. Coba lagi.';
+
+    trigger.onclick = (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('active'); trigger.classList.toggle('active');
+      if (dropdown.classList.contains('active')) { searchInp.value = ''; filterList(); setTimeout(() => searchInp.focus(), 50); }
+    };
+    document.addEventListener('click', (e) => { if (!container.contains(e.target)) { dropdown.classList.remove('active'); trigger.classList.remove('active'); } });
+    searchInp.oninput = (e) => filterList(e.target.value);
+    manualInp.oninput = (e) => { e.target.value = e.target.value.toUpperCase(); onSelect(e.target.value, true); };
+    filterList();
   }
-}
 
-/* ============================================================
- * AKSI HAPUS & SUBMIT
- * ============================================================ */
-async function doDelete(p) {
-  if (!confirm(`Hapus data ${p.Nama_Lengkap}? Berkas akta juga akan terhapus.`)) return;
-  try {
-    const res = await api('hapus_peserta', { id: p.ID });
-    if (res.error) throw new Error(res.message);
-    toast('Peserta dihapus.', 'success');
-    boot();
-  } catch (e) { toast(e.message, 'error'); }
-}
+  // SAVE (Data + Upload)
+  async function saveData() {
+    const f = State.form;
+    if (!f.asalSekolah || f.asalSekolah.length < 3) return toast('Asal sekolah wajib diisi', 'error');
 
-async function doSubmitFinal() {
-  if (!confirm('Kunci data peserta? Setelah dikunci tidak dapat diubah.')) return;
-  const btn = $('#btnFinal'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-  try {
-    const res = await api('submit_final_ofisial');
-    if (res.error) throw new Error(res.message);
-    toast('Data berhasil dikunci.', 'success');
-    boot();
-  } catch (e) {
-    toast(e.message, 'error');
-    btn.disabled = false; btn.textContent = 'Kunci & Submit Final';
+    const isTeam = State.cabangMap[f.cabang].team;
+    const payload = {
+      Cabang: f.cabang, Asal_Sekolah: f.asalSekolah, Sekolah_Manual: f.sekolahManual,
+      Nama_Lengkap: f.members[0].nama, Jenis_Kelamin: f.members[0].jk, NISN: f.members[0].nisn,
+      Tempat_Lahir: f.members[0].tl, Tanggal_Lahir: f.members[0].tgl, Kelas: f.members[0].kelas
+    };
+    
+    if (isTeam) {
+      payload.Anggota_2 = f.members[1].nama; payload.JK_2 = f.members[1].jk; payload.NISN_2 = f.members[1].nisn;
+      payload.Tempat_Lahir_2 = f.members[1].tl; payload.Tanggal_Lahir_2 = f.members[1].tgl; payload.Kelas_2 = f.members[1].kelas;
+      payload.Anggota_3 = f.members[2].nama; payload.JK_3 = f.members[2].jk; payload.NISN_3 = f.members[2].nisn;
+      payload.Tempat_Lahir_3 = f.members[2].tl; payload.Tanggal_Lahir_3 = f.members[2].tgl; payload.Kelas_3 = f.members[2].kelas;
+    }
+
+    for (let i=0; i<f.members.length; i++) {
+      const m = f.members[i];
+      if (!m.nama || !m.jk || m.nisn.length<10 || !m.tl || !m.tgl || !m.kelas) {
+        return toast(`Data anggota ${i+1} belum lengkap`, 'error');
+      }
+    }
+
+    const btn = $('#btnSaveData'); btn.disabled = true; btn.innerHTML = 'Menyimpan data...';
+
+    try {
+      const endpoint = f.mode === 'edit' ? 'update_peserta' : 'daftar_peserta';
+      const body = f.mode === 'edit' ? { id: State.formId, payload } : { payload };
+      
+      // 1. Simpan Data
+      const res = await api(endpoint, body);
+      if (res.error) throw new Error(res.messages ? res.messages[0] : res.message);
+      
+      const pId = f.mode === 'edit' ? State.formId : res.id;
+
+      // 2. Upload File yang Dipilih
+      if (f.files && Object.keys(f.files).length > 0) {
+        const fileKeys = Object.keys(f.files);
+        for (let i = 0; i < fileKeys.length; i++) {
+          const jenis = fileKeys[i];
+          const file = f.files[jenis];
+          btn.innerHTML = `Mengunggah ${jenis.replace('akta','Akta ')} (${i+1}/${fileKeys.length})...`;
+          
+          let finalFile = file;
+          if(file.type.startsWith('image/')) finalFile = await compressImage(file);
+          const base64 = await fileToBase64(finalFile);
+          
+          const uploadRes = await api('upload_berkas', { 
+            peserta_id: pId, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
+          });
+          if (uploadRes.error) {
+            toast(`Gagal upload ${jenis}: ` + uploadRes.message, 'error');
+            // Lanjut ke file berikutnya atau stop? Kita log saja agar data utama tetap tersimpan
+          }
+        }
+      }
+
+      toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta ditambahkan', 'success');
+      await loadData();
+      
+      $('#view-form').classList.remove('active');
+      document.body.style.overflow = '';
+      renderDashboard();
+      
+    } catch (e) {
+      toast(e.message, 'error');
+      btn.disabled = false; btn.innerHTML = 'Simpan Data & Unggah';
+    }
   }
-}
 
-/* ============================================================
- * BOOTSTRAP
- * ============================================================ */
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-else boot();
+  async function deletePeserta(id) {
+    if (!confirm('Hapus peserta ini secara permanen?')) return;
+    try {
+      const res = await api('hapus_peserta', { id });
+      if (res.error) throw new Error(res.message);
+      toast('Peserta dihapus', 'success');
+      await loadData(); renderDashboard();
+    } catch (e) { toast(e.message, 'error'); }
+  }
 
+  // FILE UTILS
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, 1000 / img.width);
+        canvas.width = img.width * scale; canvas.height = img.height * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        let q = 0.75;
+        const tryCompress = () => {
+          canvas.toBlob(b => {
+            if (!b) return reject('Compress fail');
+            if (b.size > 500*1024 && q > 0.4) { q -= 0.1; tryCompress(); }
+            else resolve(new File([b], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+          }, 'image/jpeg', q);
+        };
+        tryCompress();
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result).split(',')[1]);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Start
+  boot();
 })();
 </script>
+
 </body>
 </html>
