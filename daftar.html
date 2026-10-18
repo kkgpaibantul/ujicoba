@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#533B4D" />
-<meta name="description" content="Pendaftaran Ofisial MTQ Pelajar SD Kabupaten Bantul 2026" />
 <title>Pendaftaran Ofisial — MTQ 2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,7 +12,7 @@
 
 <style>
 /* ============================================================
- * §1 DESIGN TOKENS
+ * §1 DESIGN TOKENS & RESET
  * ============================================================ */
 :root {
   --cream: #FFF5E4;
@@ -21,11 +20,8 @@
   --blush: #FAC3C1;
   --rose: #FAA4BD;
   --rose-deep: #533B4D;
-  --rose-deep-hover: #6a4a60;
   --accent-pink: #F599C6;
-  --accent-pink-hover: #f285bb;
   --hijau: #2F6F53;
-  --hijau-hover: #257045;
   --hijau-l: #D8F0E2;
   --gold: #D9A441;
   --gold-l: #FEF3C7;
@@ -33,949 +29,256 @@
   --ink-l: #6B7A8F;
   --surface: #FFFFFF;
   --border: #E8DDD4;
-  --border-2: #D8CBC0;
   --danger: #C53030;
   --danger-l: #FEE2E2;
 
   --shadow-s: 0 1px 2px rgba(83,59,77,.06);
   --shadow-m: 0 4px 12px -4px rgba(83,59,77,.12);
-  --shadow-l: 0 12px 32px -8px rgba(83,59,77,.2);
-
   --r: 16px;
   --r-s: 10px;
-  --r-xs: 8px;
   --t: .18s cubic-bezier(.4,0,.2,1);
-  --app-max-w: 720px;
 }
 
-/* ============================================================
- * §2 RESET & BASE
- * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background: linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
-  color: var(--ink);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
+  color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased;
   min-height: 100vh; min-height: 100dvh;
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
 }
-
 h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 input, select, textarea { font-family: inherit; font-size: 16px; }
-img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
-:focus-visible { outline: 3px solid var(--accent-pink); outline-offset: 2px; border-radius: 4px; }
-::selection { background: var(--accent-pink); color: var(--rose-deep); }
 
-/* ============================================================
- * §3 ANIMATIONS
- * ============================================================ */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes popIn { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
-@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
-@keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-.spinner {
-  display: inline-block; width: 16px; height: 16px;
-  border: 2.5px solid rgba(255,255,255,.3); border-radius: 50%;
-  border-top-color: #fff; animation: spin .8s linear infinite; flex-shrink: 0;
-}
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin .8s linear infinite; flex-shrink: 0; }
 
 /* ============================================================
- * §4 APP SHELL
+ * §2 APP SHELL & APPBAR
  * ============================================================ */
-#app {
-  width: 100%; max-width: var(--app-max-w); margin: 0 auto;
-  min-height: 100dvh; display: flex; flex-direction: column;
-}
-
-.screen {
-  display: none; flex: 1;
-  padding: 1rem;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-}
+#app { width: 100%; max-width: 800px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
+.screen { display: none; flex: 1; padding: 1rem; padding-bottom: calc(2rem + env(safe-area-inset-bottom)); }
 .screen.active { display: flex; flex-direction: column; animation: fadeUp .25s ease; }
 
-/* ============================================================
- * §5 APPBAR
- * ============================================================ */
 .appbar {
   position: sticky; top: 0; z-index: 30;
   background: var(--rose-deep); color: var(--cream);
-  padding: .7rem 1rem;
-  padding-top: calc(.7rem + env(safe-area-inset-top));
+  padding: .75rem 1rem; padding-top: calc(.75rem + env(safe-area-inset-top));
   display: flex; align-items: center; gap: .6rem;
   border-bottom: 3px solid var(--accent-pink);
   box-shadow: 0 2px 12px rgba(83,59,77,.25);
 }
-.appbar-back {
-  padding: .35rem; border-radius: 8px;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: var(--t); flex-shrink: 0;
-}
+.appbar-back { padding: .4rem; border-radius: 8px; transition: var(--t); flex-shrink: 0; display: flex; }
 .appbar-back:hover { background: rgba(255,255,255,.1); }
 .appbar-back svg { width: 20px; height: 20px; }
-.appbar-title { flex: 1; font-weight: 700; font-size: 1rem; }
-.appbar-title small { display: block; font-size: .68rem; opacity: .75; font-weight: 500; }
-.appbar-btn {
-  padding: .45rem .7rem; border-radius: 8px; font-size: .78rem;
-  font-weight: 700; transition: var(--t); flex-shrink: 0;
-  display: inline-flex; align-items: center; gap: .3rem;
-  background: rgba(255,255,255,.12);
-}
+.appbar-title { flex: 1; font-weight: 700; font-size: 1rem; line-height: 1.2; }
+.appbar-title small { display: block; font-size: .7rem; opacity: .75; font-weight: 500; }
+.appbar-btn { padding: .45rem .7rem; border-radius: 8px; font-size: .78rem; font-weight: 700; background: rgba(255,255,255,.12); display: flex; align-items: center; gap: .3rem; }
 .appbar-btn:hover { background: rgba(255,255,255,.22); }
 .appbar-btn svg { width: 14px; height: 14px; }
 
 /* ============================================================
- * §6 CARD
+ * §3 COMMON UI (Card, Btn, Form)
  * ============================================================ */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); box-shadow: var(--shadow-s);
-  padding: 1rem; margin-bottom: .75rem;
-}
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow-s); padding: 1.2rem; margin-bottom: 1rem; }
 
-/* ============================================================
- * §7 BUTTONS
- * ============================================================ */
-.btn {
-  display: inline-flex; justify-content: center; align-items: center;
-  gap: .45rem; padding: .8rem 1.1rem; border-radius: var(--r-s);
-  font-size: .92rem; font-weight: 700; transition: var(--t);
-  min-height: 46px; width: 100%; text-align: center;
-  border: none; cursor: pointer;
-}
+.btn { display: inline-flex; justify-content: center; align-items: center; gap: .45rem; padding: .8rem 1.1rem; border-radius: var(--r-s); font-size: .92rem; font-weight: 700; transition: var(--t); min-height: 46px; width: 100%; text-align: center; }
 .btn:active:not(:disabled) { transform: scale(.98); }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
 .btn-primary { background: var(--rose-deep); color: var(--cream); box-shadow: 3px 3px 0 rgba(83,59,77,.15); }
-.btn-primary:hover:not(:disabled) { background: var(--rose-deep-hover); }
-.btn-accent { background: var(--accent-pink); color: var(--rose-deep); box-shadow: 3px 3px 0 rgba(245,153,198,.4); }
-.btn-accent:hover:not(:disabled) { background: var(--accent-pink-hover); }
+.btn-primary:hover { background: #6a4a60; }
 .btn-success { background: var(--hijau); color: var(--cream); box-shadow: 3px 3px 0 rgba(47,111,83,.2); }
-.btn-success:hover:not(:disabled) { background: var(--hijau-hover); }
+.btn-success:hover { background: #257045; }
+.btn-accent { background: var(--accent-pink); color: var(--rose-deep); box-shadow: 3px 3px 0 rgba(245,153,198,.4); }
+.btn-accent:hover { background: #f285bb; }
 .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
-.btn-ghost:hover:not(:disabled) { background: var(--cream); border-color: var(--rose); }
+.btn-ghost:hover { background: var(--cream); border-color: var(--rose); }
 .btn-danger { background: var(--danger-l); color: var(--danger); }
-.btn-danger:hover:not(:disabled) { background: #fcc; }
-.btn-sm { padding: .45rem .8rem; font-size: .78rem; min-height: 36px; width: auto; }
+.btn-sm { padding: .4rem .8rem; font-size: .75rem; min-height: 34px; width: auto; }
 
-/* ============================================================
- * §8 FORM ELEMENTS
- * ============================================================ */
-.form-group { margin-bottom: .7rem; display: flex; flex-direction: column; gap: .3rem; }
-.form-group label {
-  font-size: .72rem; font-weight: 700; letter-spacing: .04em;
-  text-transform: uppercase; color: var(--ink-l);
-}
+.form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: .35rem; }
+.form-group label { font-size: .75rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-l); }
 .form-group label .req { color: var(--danger); }
-
-.form-input, .form-select {
-  width: 100%; padding: .7rem .85rem;
-  border: 1.5px solid var(--border); border-radius: var(--r-s);
-  font-size: 16px; background: var(--surface); outline: none;
-  font-weight: 500; color: var(--ink); transition: var(--t);
-  -webkit-appearance: none; appearance: none;
-}
-.form-input:focus, .form-select:focus {
-  border-color: var(--rose-deep);
-  box-shadow: 0 0 0 3px rgba(83,59,77,.1);
-}
-.form-input.invalid { border-color: var(--danger); background: var(--danger-l); animation: shake .3s; }
-.form-input:disabled, .form-select:disabled { opacity: .55; cursor: not-allowed; }
-
-.form-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7A8F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
-}
-
-.form-help { font-size: .7rem; color: var(--ink-l); margin-top: .15rem; line-height: 1.4; }
-
+.form-input { width: 100%; padding: .75rem .85rem; border: 1.5px solid var(--border); border-radius: var(--r-s); font-size: 16px; font-weight: 500; color: var(--ink); background: var(--surface); transition: var(--t); outline: none; }
+.form-input:focus { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.1); }
+.form-input.invalid { border-color: var(--danger); background: var(--danger-l); }
 .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.radio-btn {
-  padding: .65rem .5rem; border: 1.5px solid var(--border);
-  border-radius: var(--r-s); background: var(--surface);
-  font-size: .9rem; font-weight: 700; text-align: center;
-  cursor: pointer; transition: var(--t); color: var(--ink);
-  display: flex; align-items: center; justify-content: center;
-  gap: .35rem; min-height: 44px;
-}
-.radio-btn:hover { border-color: var(--rose); }
+.radio-btn { padding: .65rem; border: 1.5px solid var(--border); border-radius: var(--r-s); font-size: .9rem; font-weight: 700; text-align: center; background: var(--surface); color: var(--ink); cursor: pointer; transition: var(--t); }
 .radio-btn.active { border-color: var(--rose-deep); background: var(--rose-deep); color: var(--cream); }
 
 /* ============================================================
- * §9 LANDING
+ * §4 DASHBOARD (LIST CABANG)
  * ============================================================ */
-.landing-hero { text-align: center; padding: 2rem 0 1.5rem; }
-.landing-logo {
-  width: 88px; height: 88px; margin: 0 auto 1rem;
-  background: linear-gradient(135deg, var(--rose-deep), #7a5970);
-  border-radius: 22px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 12px 28px -8px rgba(83,59,77,.4);
-}
-.landing-logo svg { width: 44px; height: 44px; color: var(--accent-pink); }
-.landing-title {
-  font-size: clamp(1.35rem, 5vw, 1.7rem); font-weight: 900;
-  color: var(--rose-deep); margin: 0 0 .35rem;
-}
-.landing-sub { font-size: .9rem; color: var(--ink-l); max-width: 340px; margin: 0 auto; }
-.landing-actions {
-  display: flex; flex-direction: column; gap: .65rem;
-  max-width: 380px; margin: 1.5rem auto 0;
-}
-.landing-info {
-  background: rgba(255,255,255,.6); border: 1px dashed var(--accent-pink);
-  border-radius: var(--r-s); padding: 1rem; margin-top: 1.5rem;
-  text-align: left; max-width: 380px; margin-left: auto; margin-right: auto;
-}
-.landing-info h4 {
-  font-size: .8rem; font-weight: 800; color: var(--rose-deep);
-  margin: 0 0 .35rem; font-family: 'Plus Jakarta Sans', sans-serif;
-  display: flex; align-items: center; gap: .35rem;
-}
-.landing-info h4 svg { width: 16px; height: 16px; }
-.landing-info p { font-size: .78rem; color: var(--ink-l); line-height: 1.6; margin: 0; }
-
-/* ============================================================
- * §10 FORM SHELL (Login/Register/Forgot)
- * ============================================================ */
-.form-shell { max-width: 460px; margin: 0 auto; padding-top: .5rem; }
-.form-shell-head { text-align: center; margin-bottom: 1.25rem; }
-.form-shell-head h2 {
-  font-size: 1.3rem; font-weight: 900; color: var(--rose-deep);
-  margin: 0 0 .25rem;
-}
-.form-shell-head p { font-size: .85rem; color: var(--ink-l); margin: 0; }
-
-.token-input {
-  width: 100%; padding: .9rem 1rem; text-align: center;
-  border: 2px solid var(--border); border-radius: var(--r-s);
-  font-size: 1.3rem; font-weight: 800;
-  letter-spacing: .2em; font-family: 'Courier New', monospace;
-  background: var(--surface); outline: none; transition: var(--t);
-  text-transform: uppercase;
-}
-.token-input:focus { border-color: var(--rose-deep); box-shadow: 0 0 0 4px rgba(83,59,77,.1); }
-
-/* ============================================================
- * §11 DASHBOARD
- * ============================================================ */
-.dash-container { display: flex; flex-direction: column; }
-
-.dash-header {
-  background: linear-gradient(135deg, var(--rose-deep), #6a4a60);
-  color: var(--cream); border-radius: var(--r); padding: 1.1rem;
-  margin-bottom: .85rem; position: relative; overflow: hidden;
-}
-.dash-header::before {
-  content: ''; position: absolute; top: -50%; right: -20%;
-  width: 60%; height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 60%);
-  pointer-events: none;
-}
-.dash-header .ofisial-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: rgba(255,255,255,.15);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: .6rem;
-}
-.dash-header .ofisial-icon svg { width: 22px; height: 22px; color: var(--accent-pink); }
-.dash-header h2 { font-size: 1.15rem; font-weight: 800; color: var(--cream); margin: 0 0 .15rem; }
-.dash-header p { font-size: .78rem; opacity: .85; margin: 0; }
-
-/* Quota Card */
-.quota-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 1rem; margin-bottom: .85rem;
-  box-shadow: var(--shadow-s);
-}
-.quota-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: .6rem;
-}
-.quota-label { font-size: .78rem; font-weight: 700; color: var(--ink-l); }
-.quota-val { font-size: .95rem; font-weight: 800; color: var(--rose-deep); }
-.quota-val.full { color: var(--danger); }
-.quota-bar {
-  height: 8px; background: var(--cream); border-radius: 4px;
-  overflow: hidden;
-}
-.quota-bar-fill {
-  height: 100%; background: var(--accent-pink); border-radius: 4px;
-  transition: width .35s cubic-bezier(.4,0,.2,1);
-}
+.quota-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 1.2rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-s); }
+.quota-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.quota-row h3 { font-size: 1rem; color: var(--rose-deep); font-family: 'Plus Jakarta Sans'; }
+.quota-val { font-weight: 800; font-size: 1rem; color: var(--rose-deep); }
+.quota-bar { height: 8px; background: var(--cream); border-radius: 4px; overflow: hidden; }
+.quota-bar-fill { height: 100%; background: var(--accent-pink); border-radius: 4px; transition: width .35s; }
 .quota-bar-fill.warn { background: var(--gold); }
 .quota-bar-fill.full { background: var(--danger); }
-.quota-hint {
-  font-size: .7rem; color: var(--ink-l); margin-top: .5rem;
-  display: flex; align-items: center; gap: .3rem;
-}
-.quota-hint svg { width: 12px; height: 12px; flex-shrink: 0; }
 
-/* Sekolah Info Banner */
-.sekolah-info {
-  background: var(--hijau-l); border: 1px solid #A7D9BE;
-  border-radius: var(--r-s); padding: .75rem .9rem;
-  display: flex; align-items: center; gap: .6rem;
-  margin-bottom: .85rem; font-size: .82rem;
-}
-.sekolah-info svg { width: 20px; height: 20px; color: var(--hijau); flex-shrink: 0; }
-.sekolah-info .info-text { flex: 1; color: var(--hijau); font-weight: 600; line-height: 1.4; }
-.sekolah-info .info-text b { font-weight: 800; }
-.sekolah-info.warn { background: var(--gold-l); border-color: #FDE68A; }
-.sekolah-info.warn svg, .sekolah-info.warn .info-text { color: #92400e; }
+.section-title { font-size: 1rem; font-weight: 800; color: var(--rose-deep); margin: 1.5rem 0 .75rem; font-family: 'Plus Jakarta Sans'; display: flex; align-items: center; gap: .5rem; }
+.cabang-list { display: flex; flex-direction: column; gap: .75rem; }
 
-/* Section Title */
-.section-title {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: .5rem; margin: 1.1rem 0 .6rem;
-}
-.section-title h3 {
-  font-size: 1rem; font-weight: 800; color: var(--rose-deep);
-  margin: 0; display: flex; align-items: center; gap: .4rem;
-}
-.section-title h3 svg { width: 18px; height: 18px; }
-.section-title .count-badge {
-  background: var(--blush); color: var(--rose-deep);
-  font-size: .72rem; font-weight: 800;
-  padding: .15rem .5rem; border-radius: 999px;
-}
+.cabang-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem; display: flex; align-items: flex-start; gap: 1rem; transition: var(--t); }
+.cabang-item.empty { border-style: dashed; }
+.cabang-item.filled { border-left: 4px solid var(--hijau); }
+.cabang-item.disabled { opacity: .6; background: var(--cream); }
 
-/* Peserta List */
-.peserta-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); padding: .9rem;
-  margin-bottom: .6rem; display: flex; gap: .75rem; align-items: flex-start;
-  transition: var(--t);
-}
-.peserta-item:hover { border-color: var(--rose); box-shadow: var(--shadow-m); }
+.cabang-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--blush); color: var(--rose-deep); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .8rem; flex-shrink: 0; }
+.cabang-info { flex: 1; min-width: 0; }
+.cabang-info h4 { font-size: 1rem; font-family: 'Plus Jakarta Sans'; font-weight: 800; color: var(--ink); margin-bottom: .2rem; }
+.cabang-info p { font-size: .8rem; color: var(--ink-l); margin: 0; line-height: 1.4; }
+.cabang-info .badge { display: inline-flex; align-items: center; gap: .2rem; padding: .2rem .5rem; border-radius: 4px; font-size: .65rem; font-weight: 800; margin-top: .4rem; margin-right: .3rem; }
+.badge.warn { background: var(--gold-l); color: #92400e; }
+.badge.ok { background: var(--hijau-l); color: var(--hijau); }
 
-.peserta-icon {
-  width: 42px; height: 42px; border-radius: 10px;
-  background: var(--blush); color: var(--rose-deep);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: .78rem; flex-shrink: 0;
-  text-align: center; line-height: 1;
-}
-
-.peserta-info { flex: 1; min-width: 0; }
-.peserta-info h4 {
-  font-size: .95rem; font-weight: 800; color: var(--rose-deep);
-  margin: 0 0 .15rem; word-wrap: break-word;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-.peserta-info .sub { font-size: .76rem; color: var(--ink-l); margin: 0 0 .35rem; line-height: 1.4; }
-.peserta-info .sub b { color: var(--ink); font-weight: 700; }
-
-.peserta-badges { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .5rem; }
-.badge {
-  display: inline-flex; align-items: center; gap: .25rem;
-  padding: .18rem .5rem; border-radius: 999px;
-  font-size: .62rem; font-weight: 800; line-height: 1;
-  white-space: nowrap;
-}
-.badge svg { width: 10px; height: 10px; flex-shrink: 0; }
-.badge.berkas-ok { background: var(--hijau-l); color: var(--hijau); }
-.badge.berkas-empty { background: var(--gold-l); color: #92400e; }
-.badge.manual { background: var(--gold-l); color: #92400e; }
-.badge.status-menunggu { background: var(--gold-l); color: #92400e; }
-.badge.status-terkunci { background: #DBEAFE; color: #1E40AF; }
-.badge.status-diterima { background: var(--hijau-l); color: var(--hijau); }
-.badge.status-ditolak { background: var(--danger-l); color: var(--danger); }
-
-.peserta-actions { display: flex; gap: .3rem; margin-top: .3rem; flex-wrap: wrap; }
-
-/* Empty State */
-.empty-state {
-  text-align: center; padding: 2.5rem 1rem;
-  color: var(--ink-l); display: flex; flex-direction: column;
-  align-items: center; gap: .75rem;
-}
-.empty-state svg { width: 56px; height: 56px; stroke: var(--rose); }
-.empty-state p { font-size: .88rem; line-height: 1.5; max-width: 280px; margin: 0; }
+.cabang-actions { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
+.cabang-actions .btn { padding: .4rem .6rem; min-height: 34px; font-size: .75rem; white-space: nowrap; }
 
 /* ============================================================
- * §12 MODAL
+ * §5 CUSTOM SEARCHABLE PICKER (SEKOLAH)
  * ============================================================ */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(15,23,42,.55);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center;
-  padding: 1rem; opacity: 0; transition: opacity .2s;
-}
-.modal-overlay.show { display: flex; opacity: 1; }
+.picker-container { position: relative; }
+.picker-trigger { width: 100%; padding: .75rem .85rem; border: 1.5px solid var(--border); border-radius: var(--r-s); background: var(--surface); font-size: 15px; font-weight: 500; color: var(--ink); text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--t); }
+.picker-trigger:hover { border-color: var(--rose-deep); }
+.picker-trigger.active { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.1); }
+.picker-trigger .placeholder { color: var(--ink-l); }
+.picker-trigger svg { width: 16px; height: 16px; color: var(--ink-l); transition: transform .2s; }
+.picker-trigger.active svg { transform: rotate(180deg); }
 
-.modal {
-  background: var(--surface); border-radius: 20px;
-  box-shadow: var(--shadow-l);
-  width: 100%; max-width: 520px;
-  max-height: 92vh; max-height: 92dvh;
-  overflow: hidden; display: flex; flex-direction: column;
-  animation: popIn .25s cubic-bezier(.4,0,.2,1);
-}
-.modal.lg { max-width: 640px; }
-
-.modal-head {
-  padding: 1rem 1.2rem .75rem;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-start; gap: .6rem;
-}
-.modal-head-icon {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: var(--blush); color: var(--rose-deep);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.modal-head-icon svg { width: 20px; height: 20px; }
-.modal-head-text { flex: 1; min-width: 0; }
-.modal-head-text h3 {
-  font-size: 1.05rem; font-weight: 900; color: var(--rose-deep);
-  margin: 0 0 .15rem;
-}
-.modal-head-text p { font-size: .78rem; color: var(--ink-l); margin: 0; line-height: 1.4; }
-
-.modal-close {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink-l); flex-shrink: 0; transition: var(--t);
-}
-.modal-close:hover { background: var(--cream); color: var(--danger); }
-.modal-close svg { width: 18px; height: 18px; }
-
-.modal-body {
-  flex: 1; overflow-y: auto; padding: 1rem 1.2rem;
-  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
-}
-.modal-foot {
-  padding: .85rem 1.2rem;
-  padding-bottom: calc(.85rem + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--border);
-  display: flex; gap: .5rem;
-}
-.modal-foot .btn { flex: 1; }
+.picker-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-s); box-shadow: 0 10px 25px -5px rgba(0,0,0,.15); z-index: 50; display: none; flex-direction: column; max-height: 300px; overflow: hidden; }
+.picker-dropdown.show { display: flex; }
+.picker-search-wrap { padding: .6rem; border-bottom: 1px solid var(--border); position: relative; background: var(--surface); }
+.picker-search-wrap svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--ink-l); }
+.picker-search { width: 100%; padding: .55rem .55rem .55rem 2rem; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; background: var(--cream); }
+.picker-list { overflow-y: auto; flex: 1; padding: .4rem; -webkit-overflow-scrolling: touch; }
+.picker-group-label { font-size: .65rem; font-weight: 800; text-transform: uppercase; color: var(--ink-l); padding: .4rem .6rem .2rem; letter-spacing: .05em; position: sticky; top: 0; background: var(--surface); }
+.picker-option { padding: .65rem .6rem; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: background .1s; }
+.picker-option:hover { background: var(--cream); }
+.picker-option.selected { background: var(--blush); color: var(--rose-deep); font-weight: 700; }
+.picker-option.manual-option { color: var(--gold); font-weight: 700; border-top: 1px dashed var(--border); margin-top: .4rem; border-radius: 0 0 6px 6px; }
+.picker-option.manual-option:hover { background: var(--gold-l); }
 
 /* ============================================================
- * §13 CABANG PICKER
+ * §6 FORM LAYOUT & UPLOAD BOX
  * ============================================================ */
-.cabang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem; }
-.cabang-pick {
-  padding: .75rem .6rem; border: 1.5px solid var(--border);
-  border-radius: var(--r-s); background: var(--surface);
-  font-size: .82rem; font-weight: 700; color: var(--ink);
-  text-align: left; transition: var(--t);
-  display: flex; flex-direction: column; gap: .25rem;
-  cursor: pointer; position: relative;
-}
-.cabang-pick:hover:not(:disabled) { border-color: var(--rose-deep); background: var(--cream); }
-.cabang-pick:disabled { opacity: .4; cursor: not-allowed; background: var(--cream); }
-.cabang-pick .code {
-  font-size: .58rem; font-weight: 800; letter-spacing: .05em;
-  color: var(--rose-deep); text-transform: uppercase;
-  background: var(--blush); padding: .1rem .35rem;
-  border-radius: 4px; align-self: flex-start;
-}
-.cabang-pick .name { font-size: .8rem; line-height: 1.3; }
-.cabang-pick .meta { font-size: .65rem; font-weight: 600; color: var(--ink-l); display: flex; align-items: center; gap: .3rem; }
-.cabang-pick .slot-tag {
-  position: absolute; top: .4rem; right: .4rem;
-  font-size: .58rem; font-weight: 800;
-  background: var(--accent-pink); color: var(--rose-deep);
-  padding: .1rem .35rem; border-radius: 4px;
-}
+.member-group { border: 1px solid var(--border); border-radius: var(--r-s); padding: 1.2rem; margin-bottom: 1rem; background: var(--cream); position: relative; margin-top: 1rem; }
+.member-label { position: absolute; top: -.6rem; left: 1rem; background: var(--surface); color: var(--rose-deep); font-size: .7rem; font-weight: 800; padding: .1rem .6rem; border-radius: 4px; border: 1px solid var(--border); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ============================================================
- * §14 FORM MODAL (Member Groups)
- * ============================================================ */
-.member-group {
-  border: 1px solid var(--border); border-radius: var(--r-s);
-  padding: .85rem; margin-bottom: .65rem; background: var(--cream);
-  position: relative;
-}
-.member-group-label {
-  position: absolute; top: -.5rem; left: .75rem;
-  background: var(--surface); color: var(--rose-deep);
-  font-size: .65rem; font-weight: 800; padding: .1rem .5rem;
-  border-radius: 4px; letter-spacing: .05em; text-transform: uppercase;
-  border: 1px solid var(--border);
-}
-
-/* School picker */
-.school-picker-wrap {
-  border: 1px solid var(--border); border-radius: var(--r-s);
-  padding: .85rem; background: var(--cream); margin-bottom: .85rem;
-  position: relative;
-}
-.school-picker-wrap > .label-inline {
-  font-size: .72rem; font-weight: 700; letter-spacing: .04em;
-  text-transform: uppercase; color: var(--ink-l);
-  display: block; margin-bottom: .4rem;
-}
-.school-picker-wrap > .label-inline .req { color: var(--danger); }
-
-.school-search-wrap { position: relative; margin-bottom: .5rem; }
-.school-search-wrap svg {
-  position: absolute; left: .75rem; top: 50%; transform: translateY(-50%);
-  width: 16px; height: 16px; color: var(--ink-l); pointer-events: none;
-}
-.school-search {
-  width: 100%; padding: .65rem .85rem .65rem 2.4rem;
-  border: 1.5px solid var(--border); border-radius: var(--r-s);
-  font-size: .9rem; background: var(--surface); outline: none;
-  font-weight: 500; transition: var(--t);
-}
-.school-search:focus { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.08); }
-
-.school-select {
-  width: 100%; padding: .7rem .85rem;
-  border: 1.5px solid var(--border); border-radius: var(--r-s);
-  font-size: 16px; background: var(--surface); outline: none;
-  font-weight: 500; color: var(--ink); transition: var(--t);
-  -webkit-appearance: none; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7A8F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
-}
-.school-select:focus { border-color: var(--rose-deep); box-shadow: 0 0 0 3px rgba(83,59,77,.08); }
-
-.manual-input-wrap {
-  margin-top: .5rem; padding: .6rem .7rem;
-  background: var(--gold-l); border-left: 3px solid var(--gold);
-  border-radius: 6px;
-}
-.manual-input-wrap .warning-label {
-  font-size: .68rem; font-weight: 800; color: #92400e;
-  margin-bottom: .3rem; display: flex; align-items: center; gap: .3rem;
-}
-.manual-input-wrap .warning-label svg { width: 12px; height: 12px; }
-.manual-input-wrap input {
-  width: 100%; padding: .55rem .7rem;
-  border: 1.5px solid var(--gold); border-radius: 6px;
-  font-size: .88rem; background: var(--surface); outline: none;
-  font-weight: 500; text-transform: uppercase;
-}
-.manual-input-wrap input:focus { box-shadow: 0 0 0 3px rgba(217,164,65,.2); }
-
-.school-meta {
-  font-size: .68rem; color: var(--ink-l); margin-top: .4rem;
-  display: flex; align-items: center; gap: .35rem;
-}
-.school-meta svg { width: 12px; height: 12px; flex-shrink: 0; }
-.school-meta b { color: var(--rose-deep); font-weight: 800; }
-
-/* ============================================================
- * §15 UPLOAD BOX
- * ============================================================ */
-.upload-box {
-  display: flex; align-items: center; gap: .7rem;
-  padding: .8rem; border: 2px dashed var(--border);
-  border-radius: var(--r-s); background: var(--cream);
-  cursor: pointer; transition: var(--t); margin-bottom: .5rem;
-  min-height: 62px;
-}
-.upload-box:hover { border-color: var(--rose-deep); }
-.upload-box.has-file {
-  border-style: solid; border-color: var(--hijau);
-  background: var(--hijau-l); cursor: default;
-}
-.upload-box.uploading {
-  border-color: var(--rose-deep);
-  background: var(--blush); cursor: wait;
-}
-.upload-icon {
-  width: 34px; height: 34px; border-radius: 8px;
-  background: var(--surface); display: flex;
-  align-items: center; justify-content: center; flex-shrink: 0;
-}
-.upload-icon svg { width: 18px; height: 18px; color: var(--rose-deep); }
+.upload-box { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px dashed var(--border); border-radius: var(--r-s); background: var(--surface); cursor: pointer; transition: var(--t); margin-bottom: .75rem; }
+.upload-box:hover { border-color: var(--rose-deep); background: var(--cream); }
+.upload-box.has-file { border-style: solid; border-color: var(--hijau); background: var(--hijau-l); cursor: default; }
+.upload-box.uploading { border-color: var(--rose-deep); background: var(--blush); cursor: wait; }
+.upload-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--cream); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .upload-box.has-file .upload-icon { background: var(--hijau); }
+.upload-icon svg { width: 20px; height: 20px; color: var(--rose-deep); }
 .upload-box.has-file .upload-icon svg { color: var(--cream); }
-.upload-info { flex: 1; min-width: 0; }
-.upload-title {
-  font-size: .82rem; font-weight: 700; color: var(--ink);
-  margin-bottom: .1rem; line-height: 1.3;
-}
-.upload-title small {
-  font-size: .62rem; color: var(--danger); font-weight: 800;
-  margin-left: .15rem;
-}
-.upload-sub {
-  font-size: .68rem; color: var(--ink-l); line-height: 1.3;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.upload-box.has-file .upload-sub { color: var(--hijau); font-weight: 600; }
-.upload-action {
-  padding: .4rem; border-radius: 6px; color: var(--ink-l);
-  flex-shrink: 0; transition: var(--t);
-}
-.upload-action:hover { background: var(--surface); color: var(--danger); }
-.upload-action svg { width: 16px; height: 16px; }
+.upload-info { flex: 1; }
+.upload-title { font-size: .9rem; font-weight: 800; color: var(--ink); margin-bottom: .2rem; }
+.upload-sub { font-size: .75rem; color: var(--ink-l); }
+.upload-box.has-file .upload-title { color: var(--hijau); }
 
-/* ============================================================
- * §16 TOAST
- * ============================================================ */
-.toast-wrap {
-  position: fixed; top: 12px; top: calc(12px + env(safe-area-inset-top));
-  left: 50%; transform: translateX(-50%);
-  z-index: 200; width: calc(100% - 32px); max-width: 400px;
-  display: flex; flex-direction: column; gap: .5rem;
-  pointer-events: none;
-}
-.toast {
-  display: flex; align-items: flex-start; gap: .5rem;
-  padding: .75rem 1rem; border-radius: var(--r-s);
-  color: #fff; font-size: .85rem; font-weight: 500;
-  box-shadow: var(--shadow-m);
-  animation: slideDown .3s cubic-bezier(.175,.885,.32,1.275);
-  pointer-events: auto;
-}
+/* Toast */
+.toast-wrap { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 200; width: calc(100% - 32px); max-width: 400px; display: flex; flex-direction: column; gap: .5rem; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: .5rem; padding: .8rem 1rem; border-radius: var(--r-s); color: #fff; font-size: .85rem; font-weight: 600; box-shadow: var(--shadow-m); animation: fadeUp .3s; }
 .toast.success { background: var(--hijau); }
 .toast.error { background: var(--danger); }
 .toast.info { background: var(--rose-deep); }
-.toast svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: .05rem; }
-.toast.hide { animation: slideDown .3s ease-in reverse forwards; }
 
 /* ============================================================
- * §17 FLOATING WA
+ * §7 RESPONSIVE (DESKTOP)
  * ============================================================ */
-.fab-wa {
-  position: fixed; right: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom));
-  z-index: 90; width: 52px; height: 52px; border-radius: 50%;
-  background: #25D366; color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(37,211,102,.4);
-  transition: transform .18s; text-decoration: none;
-}
-.fab-wa:hover { transform: scale(1.08); }
-.fab-wa:active { transform: scale(.95); }
-.fab-wa svg { width: 26px; height: 26px; fill: currentColor; }
-.fab-wa[hidden] { display: none; }
-
-/* ============================================================
- * §18 SUCCESS/CONTACT SCREENS
- * ============================================================ */
-.contact-screen, .success-screen {
-  text-align: center; padding: 2rem 1rem;
-  max-width: 420px; margin: 0 auto;
-}
-.contact-icon, .success-icon {
-  width: 80px; height: 80px; margin: 0 auto 1.2rem;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-.contact-icon { background: var(--gold-l); }
-.contact-icon svg { width: 40px; height: 40px; color: var(--gold); }
-.success-icon { background: var(--hijau-l); }
-.success-icon svg { width: 40px; height: 40px; color: var(--hijau); }
-.contact-screen h2, .success-screen h2 {
-  font-size: 1.25rem; font-weight: 900; color: var(--rose-deep);
-  margin: 0 0 .5rem;
-}
-.contact-screen p, .success-screen p {
-  font-size: .88rem; color: var(--ink-l); line-height: 1.55;
-  margin: 0 0 1.5rem;
-}
-.contact-screen .wa-btn {
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: #25D366; color: #fff;
-  padding: .85rem 1.5rem; border-radius: var(--r-s);
-  font-size: .9rem; font-weight: 700;
-  box-shadow: 0 4px 12px rgba(37,211,102,.3);
-  transition: var(--t); text-decoration: none;
-}
-.contact-screen .wa-btn:hover { transform: translateY(-1px); }
-.contact-screen .wa-btn svg { width: 20px; height: 20px; fill: currentColor; }
-.success-screen .info-box {
-  background: var(--cream); border-left: 4px solid var(--gold);
-  border-radius: var(--r-s); padding: .75rem 1rem;
-  text-align: left; font-size: .82rem; color: var(--ink);
-  line-height: 1.55; margin-bottom: 1.2rem;
-}
-.success-screen .info-box b { color: var(--rose-deep); }
-
-/* ============================================================
- * §19 LOADING
- * ============================================================ */
-.loading-screen {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 1rem; padding: 3rem 1rem;
-  color: var(--ink-l);
-}
-.loading-spinner {
-  width: 36px; height: 36px;
-  border: 3px solid var(--blush); border-top-color: var(--rose-deep);
-  border-radius: 50%; animation: spin .8s linear infinite;
-}
-.loading-screen p { font-size: .85rem; font-weight: 600; }
-
-/* ============================================================
- * §20 UTILITY
- * ============================================================ */
-.hidden { display: none !important; }
-.mt-1 { margin-top: .5rem; }
-.mt-2 { margin-top: 1rem; }
-.text-center { text-align: center; }
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); border: 0;
-}
-
-/* ============================================================
- * §21 DESKTOP RESPONSIVE
- * ============================================================ */
-@media (min-width: 900px) {
-  :root { --app-max-w: 1100px; }
-  .screen { padding: 1.5rem 2rem; }
-
-  /* Form shell wider */
-  .form-shell { max-width: 720px; padding-top: 2rem; }
-  .form-shell-head h2 { font-size: 1.6rem; }
-  .form-shell-head p { font-size: .92rem; }
-
-  /* Landing: 2 col */
-  .landing-hero { padding: 3rem 0 2rem; }
-  .landing-logo { width: 110px; height: 110px; border-radius: 28px; }
-  .landing-logo svg { width: 56px; height: 56px; }
-  .landing-title { font-size: 2rem; }
-  .landing-sub { font-size: 1rem; max-width: 500px; }
-
-  .landing-actions {
-    max-width: 500px;
-    flex-direction: row;
-    gap: .75rem;
-    margin: 2rem auto 0;
-  }
-  .landing-actions .btn { flex: 1; }
-
-  .landing-info { max-width: 500px; padding: 1.2rem 1.4rem; }
-  .landing-info h4 { font-size: .88rem; }
-  .landing-info p { font-size: .82rem; }
-
-  /* Dashboard: 2 columns */
-  .dash-container {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-  .dash-sidebar { position: sticky; top: 1.5rem; }
-  .dash-main { min-width: 0; }
-
-  .dash-header { padding: 1.4rem; }
-  .dash-header h2 { font-size: 1.35rem; }
-  .dash-header p { font-size: .85rem; }
-
-  .quota-card { padding: 1.2rem; }
-  .quota-label { font-size: .82rem; }
-  .quota-val { font-size: 1.05rem; }
-
-  .section-title { margin-top: 0; }
-  .section-title h3 { font-size: 1.1rem; }
-
-  .peserta-item { padding: 1.1rem; gap: 1rem; }
-  .peserta-icon { width: 48px; height: 48px; font-size: .85rem; }
-  .peserta-info h4 { font-size: 1rem; }
-  .peserta-info .sub { font-size: .8rem; }
-
-  /* Modal wider */
-  .modal { max-width: 560px; }
-  .modal.lg { max-width: 780px; }
-
-  /* Cabang picker: 3 columns */
-  .cabang-grid { grid-template-columns: repeat(3, 1fr); }
-
-  /* Form members: grid 3 columns for LCP */
-  .member-group-wrap {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .75rem;
-    margin-bottom: .85rem;
-  }
-  .member-group-wrap .member-group { margin-bottom: 0; }
-
-  /* Success/contact screens wider */
-  .contact-screen, .success-screen { padding: 3rem 2rem; max-width: 520px; }
-  .contact-screen h2, .success-screen h2 { font-size: 1.5rem; }
-  .contact-screen p, .success-screen p { font-size: .95rem; }
-
-  /* Card padding wider */
-  .card { padding: 1.3rem; }
-}
-
-@media (min-width: 1200px) {
-  :root { --app-max-w: 1280px; }
-  .dash-container { grid-template-columns: 400px 1fr; }
+@media (min-width: 768px) {
+  .cabang-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-grid .full-width { grid-column: span 2; }
 }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <!-- Appbar -->
   <header class="appbar" id="appbar" style="display:none">
     <button class="appbar-back" id="btnBack" aria-label="Kembali" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </button>
     <div class="appbar-title">
       <span id="appbarTitleText">MTQ 2026</span>
       <small id="appbarTitleSub">Pendaftaran Ofisial</small>
     </div>
-    <button class="appbar-btn" id="btnLogout" aria-label="Keluar" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    <button class="appbar-btn" id="btnLogout" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
       Keluar
     </button>
   </header>
-
   <main id="main"></main>
 </div>
 
-<div id="modalRoot"></div>
-<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-
-<a href="#" class="fab-wa" id="fabWA" aria-label="Hubungi Panitia" title="Hubungi Panitia via WhatsApp" hidden>
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-  </svg>
-</a>
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 'use strict';
 (() => {
 
 /* ============================================================
- * §1 KONFIGURASI
+ * KONFIGURASI & STATE
  * ============================================================ */
 const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
 const LS_TOKEN = 'mtq_ofisial_token';
 const LS_OFISIAL = 'mtq_ofisial_data';
 
-const KAPANEWON_LIST = [
-  'Bambanglipuro','Banguntapan','Bantul','Dlingo','Imogiri','Jetis',
-  'Kasihan','Kretek','Pajangan','Pandak','Piyungan','Pleret','Pundong',
-  'Sanden','Sedayu','Sewon','Srandakan'
-];
-
+const KAPANEWON_LIST = ['Bambanglipuro','Banguntapan','Bantul','Dlingo','Imogiri','Jetis','Kasihan','Kretek','Pajangan','Pandak','Piyungan','Pleret','Pundong','Sanden','Sedayu','Sewon','Srandakan'];
 const FALLBACK_CABANG = [
-  { key:'MTQ', kode:'MTQ', label:"MTQ (Musabaqah Tilawatil Qur'an)", slot:1, team:false, gender:'' },
-  { key:'MTtQ', kode:'MTTQ', label:"MTtQ (Musabaqah Tartil Qur'an)", slot:1, team:false, gender:'' },
-  { key:'MHQ', kode:'MHQ', label:"MHQ (Musabaqah Hifdzil Qur'an)", slot:1, team:false, gender:'' },
-  { key:'Puitisasi', kode:'MPI', label:'MPI (Musabaqah Puitisasi Islami)', slot:1, team:false, gender:'' },
-  { key:'MAz', kode:'MAZ', label:'MAz (Musabaqah Azan)', slot:1, team:false, gender:'L' },
-  { key:'LPP', kode:'LPP', label:'LPP (Lomba Pidato PAI)', slot:1, team:false, gender:'' },
-  { key:'LCP', kode:'LCP', label:'LCP (Lomba Cerdas Cermat PAI)', slot:3, team:true, gender:'' },
-  { key:'Lukis', kode:'LMI', label:'LMI (Lomba Melukis Islami)', slot:1, team:false, gender:'' },
-  { key:'Menyanyi', kode:'LMYI', label:'LMyI (Lomba Menyanyi Islami)', slot:1, team:false, gender:'' }
+  { key:'MTQ', kode:'MTQ', label:"MTQ (Tilawah)", slot:1, team:false },
+  { key:'MTtQ', kode:'MTTQ', label:"MTtQ (Tartil)", slot:1, team:false },
+  { key:'MHQ', kode:'MHQ', label:"MHQ (Hifdzil)", slot:1, team:false },
+  { key:'Puitisasi', kode:'MPI', label:'MPI (Puitisasi)', slot:1, team:false },
+  { key:'MAz', kode:'MAZ', label:'MAz (Adzan)', slot:1, team:false, gender:'L' },
+  { key:'LPP', kode:'LPP', label:'LPP (Pidato)', slot:1, team:false },
+  { key:'LCP', kode:'LCP', label:'LCP (Cerdas Cermat)', slot:3, team:true },
+  { key:'Lukis', kode:'LMI', label:'LMI (Melukis)', slot:1, team:false },
+  { key:'Menyanyi', kode:'LMYI', label:'LMyI (Menyanyi)', slot:1, team:false }
 ];
 
-const FALLBACK_CONFIG = {
-  kuota_per_kapanewon: '11',
-  pendaftaran_buka: 'true',
-  wajib_akta: 'true',
-  contact_wa: ''
-};
-
-/* ============================================================
- * §2 STATE
- * ============================================================ */
 const State = {
-  token: null,
-  ofisial: null,
-  config: {},
-  cabang: [],
-  sekolah: [],
-  peserta: [],
-  kuota: 11,
-  slotTerpakai: 0,
-  cabangMap: {},
-  screen: 'boot',
-  form: null,
-  registerSekolahList: []  // for register form
+  token: null, ofisial: null, config: {}, cabang: [], sekolah: [], peserta: [],
+  kuota: 11, slotTerpakai: 0, cabangMap: {}, currentForm: null, regSekolah: []
 };
 
 /* ============================================================
- * §3 UTIL
+ * UTIL
  * ============================================================ */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
 const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
 const lsDel = k => { try { localStorage.removeItem(k); } catch {} };
 
-/* ============================================================
- * §4 API
- * ============================================================ */
 async function api(action, payload = {}) {
   const body = Object.assign({ action }, payload);
-  if (State.token && !body.token && action !== 'register_ofisial' && action !== 'resend_token') {
-    body.token = State.token;
-  }
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(body)
-  });
+  if (State.token && !body.token && action !== 'register_ofisial' && action !== 'resend_token') body.token = State.token;
+  const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return await res.json();
 }
 
-/* ============================================================
- * §5 TOAST
- * ============================================================ */
-const _toastRecent = new Map();
-function toast(msg, type = 'info', dur = 3500) {
-  const k = type + ':' + msg;
-  if (_toastRecent.has(k) && Date.now() - _toastRecent.get(k) < 2500) return;
-  _toastRecent.set(k, Date.now());
-  setTimeout(() => _toastRecent.delete(k), 2500);
-
+function toast(msg, type = 'success') {
   const wrap = $('#toastWrap');
   const el = document.createElement('div');
   el.className = 'toast ' + type;
-  const icons = {
-    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
-    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-  };
-  el.innerHTML = icons[type] + '<span>' + esc(msg) + '</span>';
+  el.innerHTML = `<span>${esc(msg)}</span>`;
   wrap.appendChild(el);
-  setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 300); }, dur);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
 }
 
 /* ============================================================
- * §6 SESSION
- * ============================================================ */
-function saveSession(token, ofisial) {
-  State.token = token; State.ofisial = ofisial;
-  lsSet(LS_TOKEN, token); lsSet(LS_OFISIAL, ofisial);
-}
-function clearSession() {
-  State.token = null; State.ofisial = null;
-  State.peserta = []; State.slotTerpakai = 0; State.sekolah = [];
-  lsDel(LS_TOKEN); lsDel(LS_OFISIAL);
-}
-function loadSession() {
-  const token = lsGet(LS_TOKEN);
-  const ofisial = lsGet(LS_OFISIAL);
-  if (token && ofisial) { State.token = token; State.ofisial = ofisial; return true; }
-  return false;
-}
-
-/* ============================================================
- * §7 APPBAR & SCREEN MANAGER
+ * NAVIGASI SCREEN & APPBAR
  * ============================================================ */
 function setAppbar(opts = {}) {
   const bar = $('#appbar');
@@ -988,1423 +291,771 @@ function setAppbar(opts = {}) {
 }
 
 function showScreen(name, renderFn) {
-  State.screen = name;
-  const main = $('#main');
-  main.innerHTML = '';
+  $('#main').innerHTML = '';
   const screen = document.createElement('div');
   screen.className = 'screen active';
   screen.id = 'screen-' + name;
-  main.appendChild(screen);
+  $('#main').appendChild(screen);
   renderFn(screen);
 }
 
-function showLoading(msg) {
-  setAppbar({ show: true, title: 'MTQ 2026', sub: 'Pendaftaran Ofisial' });
-  showScreen('loading', s => {
-    s.innerHTML = `<div class="loading-screen"><div class="loading-spinner"></div><p>${esc(msg || 'Memuat...')}</p></div>`;
-  });
-}
-
 /* ============================================================
- * §8 BOOT
+ * BOOT & SESSION
  * ============================================================ */
 async function boot() {
-  // Config
   try {
     const res = await api('config');
     if (res.status === 'success') {
       State.config = res.config || {};
       State.cabang = (res.cabang && res.cabang.length) ? res.cabang : FALLBACK_CABANG;
-    } else throw new Error('bad_response');
+    } else throw new Error('bad');
   } catch (e) {
-    console.warn('[config] fallback:', e);
-    State.config = FALLBACK_CONFIG;
+    State.config = { kuota_per_kapanewon: '11', pendaftaran_buka: 'true', wajib_akta: 'true' };
     State.cabang = FALLBACK_CABANG;
   }
   State.cabangMap = {};
   State.cabang.forEach(c => { State.cabangMap[c.key] = c; });
   State.kuota = parseInt(State.config.kuota_per_kapanewon, 10) || 11;
 
-  setupFabWA();
-
-  // Session
-  if (loadSession()) {
-    showLoading('Memeriksa sesi...');
+  const token = lsGet(LS_TOKEN);
+  const ofisial = lsGet(LS_OFISIAL);
+  
+  if (token && ofisial) {
+    State.token = token; State.ofisial = ofisial;
+    showScreen('loading', s => { s.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-l)">Memuat data...</div>'; });
     try {
-      const res = await api('list_peserta');
-      if (res.status === 'success') {
-        State.ofisial = res.ofisial || State.ofisial;
-        State.peserta = res.peserta || [];
-        State.slotTerpakai = res.slot_terpakai || 0;
-        await loadSekolah();
+      const list = await api('list_peserta');
+      if (list.status === 'success') {
+        State.ofisial = list.ofisial || ofisial;
+        State.peserta = list.peserta || [];
+        State.slotTerpakai = list.slot_terpakai || 0;
+        
+        const sek = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
+        if (sek.status === 'success') State.sekolah = sek.sekolah || [];
+        
         renderDashboard();
         return;
       }
-    } catch (e) { /* silent */ }
-    clearSession();
+    } catch (e) {}
+    lsDel(LS_TOKEN); lsDel(LS_OFISIAL);
   }
-  showLanding();
-}
-
-async function loadSekolah() {
-  State.sekolah = [];
-  if (!State.ofisial || !State.ofisial.Kapanewon) return;
-  try {
-    const res = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
-    if (res.status === 'success') State.sekolah = res.sekolah || [];
-  } catch (e) {
-    console.warn('[sekolah] load fail:', e);
-    State.sekolah = [];
-  }
-}
-
-function setupFabWA() {
-  const wa = State.config.contact_wa;
-  if (!wa) return;
-  const fab = $('#fabWA');
-  const num = String(wa).replace(/\D/g, '');
-  const norm = num.startsWith('0') ? '62' + num.slice(1) : num;
-  const msg = "Assalamu'alaikum, saya ofisial MTQ 2026 dan butuh bantuan.";
-  fab.href = `https://wa.me/${norm}?text=${encodeURIComponent(msg)}`;
-  fab.target = '_blank'; fab.rel = 'noopener';
-  fab.hidden = false;
-}
-
-function openWAPanitia(customMsg) {
-  const wa = State.config.contact_wa;
-  if (!wa) { toast('Nomor panitia belum diset.', 'error'); return; }
-  const num = String(wa).replace(/\D/g, '');
-  const norm = num.startsWith('0') ? '62' + num.slice(1) : num;
-  const msg = customMsg || "Assalamu'alaikum, saya butuh bantuan pendaftaran MTQ 2026.";
-  window.open(`https://wa.me/${norm}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
-}
-
-function isPendaftaranBuka() {
-  const c = State.config;
-  if (String(c.pendaftaran_buka).toLowerCase() !== 'true') return false;
-  if (!c.deadline_pendaftaran) return true;
-  try { return Date.now() <= new Date(c.deadline_pendaftaran).getTime(); } catch { return true; }
-}
-
-function shortLabel(label) {
-  const m = String(label).match(/\(([^)]+)\)\s*$/);
-  if (m && m[1].length < 25) return m[1];
-  const first = String(label).split(/[()]/)[0].trim();
-  return first.length > 40 ? first.slice(0, 40) + '…' : first;
-}
-
-function closeModal() {
-  $('#modalRoot').innerHTML = '';
-  State.form = null;
+  renderLanding();
 }
 
 /* ============================================================
- * §9 SCREEN: LANDING
+ * SCREEN: LANDING
  * ============================================================ */
-function showLanding() {
+function renderLanding() {
   setAppbar({ show: false });
   showScreen('landing', s => {
-    const open = isPendaftaranBuka();
+    const isOpen = String(State.config.pendaftaran_buka).toLowerCase() === 'true';
     s.innerHTML = `
-      <div class="landing-hero">
-        <div class="landing-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
+      <div style="text-align:center;padding:3rem 1rem;">
+        <div style="width:80px;height:80px;margin:0 auto 1.5rem;background:var(--rose-deep);border-radius:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px -5px rgba(83,59,77,.4);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="40" height="40"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
-        <h1 class="landing-title">Pendaftaran Ofisial</h1>
-        <p class="landing-sub">MTQ Pelajar SD Kabupaten Bantul 2026</p>
-      </div>
+        <h1 style="font-size:1.8rem;font-weight:900;color:var(--rose-deep);margin-bottom:.5rem;">Pendaftaran Ofisial</h1>
+        <p style="color:var(--ink-l);margin-bottom:2rem;">MTQ Pelajar SD Kabupaten Bantul 2026</p>
+        
+        ${!isOpen ? `<div style="background:var(--gold-l);border:1px solid var(--gold);padding:.8rem;border-radius:8px;margin-bottom:1.5rem;font-size:.85rem;color:#92400e;font-weight:700;">⚠ Pendaftaran Belum Dibuka / Sudah Ditutup</div>` : ''}
 
-      ${!open ? `
-        <div class="card" style="background:var(--gold-l); border-color:var(--gold); text-align:center; max-width:500px; margin:0 auto;">
-          <p style="font-size:.85rem; color:#92400e; margin:0; font-weight:700;">⚠ Pendaftaran belum dibuka / sudah ditutup.</p>
-        </div>` : ''}
-
-      <div class="landing-actions">
-        <button class="btn btn-primary" id="btnGoLogin">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-          Login Ofisial
-        </button>
-        <button class="btn btn-accent" id="btnGoRegister" ${!open ? 'disabled' : ''}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-          Daftar Ofisial Baru
-        </button>
-      </div>
-
-      <div class="landing-info">
-        <h4>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          Untuk Ofisial Kapanewon
-        </h4>
-        <p>Satu ofisial per kapanewon. Token akses dikirim melalui email. Jika lupa token, gunakan fitur <b>Lupa Token?</b> atau hubungi panitia.</p>
-      </div>
-
-      <div class="text-center mt-2" style="font-size:.72rem; color:var(--ink-l); padding-bottom:1rem;">
-        <a href="index.html" style="color:var(--rose-deep); font-weight:700;">← Kembali ke Beranda</a>
+        <div style="display:flex;flex-direction:column;gap:.75rem;max-width:300px;margin:0 auto;">
+          <button class="btn btn-primary" id="btnGoLogin">Masuk (Punya Token)</button>
+          <button class="btn btn-accent" id="btnGoRegister" ${!isOpen?'disabled':''}>Daftar Ofisial Baru</button>
+        </div>
+        <div style="margin-top:1.5rem;"><a href="index.html" style="font-size:.8rem;color:var(--ink-l);">← Beranda</a></div>
       </div>
     `;
-    $('#btnGoLogin').onclick = showLogin;
-    $('#btnGoRegister').onclick = showRegister;
+    $('#btnGoLogin').onclick = renderLogin;
+    $('#btnGoRegister').onclick = renderRegister;
   });
 }
 
 /* ============================================================
- * §10 SCREEN: LOGIN
+ * SCREEN: LOGIN
  * ============================================================ */
-function showLogin() {
-  setAppbar({ show: true, back: true, title: 'Login Ofisial', sub: 'Masukkan token' });
-  $('#btnBack').onclick = showLanding;
+function renderLogin() {
+  setAppbar({ show: true, back: true, title: 'Login Ofisial', sub: 'Masukkan token email' });
+  $('#btnBack').onclick = renderLanding;
   showScreen('login', s => {
     s.innerHTML = `
-      <div class="form-shell">
-        <div class="form-shell-head">
-          <h2>Login Ofisial</h2>
-          <p>Masukkan 8 karakter token dari email Anda</p>
+      <div class="card" style="max-width:400px;margin:2rem auto;">
+        <div class="form-group">
+          <label>Token Akses <span class="req">*</span></label>
+          <input type="text" class="form-input" id="inpToken" placeholder="XXXXXXXX" maxlength="8" style="text-align:center;font-size:1.3rem;letter-spacing:.2em;font-weight:800;text-transform:uppercase;" autocomplete="off" />
         </div>
-        <div class="card">
-          <div class="form-group">
-            <label>Token Akses <span class="req">*</span></label>
-            <input type="text" class="token-input" id="inpToken" placeholder="XXXXXXXX" maxlength="8"
-              autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" inputmode="text" />
-            <p class="form-help">Token berisi huruf dan angka. Tidak membedakan huruf besar/kecil.</p>
-          </div>
-          <button class="btn btn-primary" id="btnSubmitLogin" style="margin-top:.5rem;">Masuk</button>
-        </div>
-        <div class="text-center" style="margin-top:.5rem;">
-          <button class="btn btn-ghost btn-sm" id="btnForgot" style="min-height:36px;">Lupa Token?</button>
+        <button class="btn btn-primary" id="btnDoLogin">Masuk</button>
+        <div style="text-align:center;margin-top:1rem;">
+          <button class="btn btn-ghost btn-sm" id="btnForgot">Lupa Token?</button>
         </div>
       </div>
     `;
     const inp = $('#inpToken');
-    inp.addEventListener('input', () => {
-      inp.value = inp.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8);
-    });
+    inp.focus();
+    inp.addEventListener('input', () => { inp.value = inp.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8); });
     inp.addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
-    setTimeout(() => inp.focus(), 100);
-    $('#btnSubmitLogin').onclick = doLogin;
-    $('#btnForgot').onclick = showForgot;
+    $('#btnDoLogin').onclick = doLogin;
+    $('#btnForgot').onclick = renderForgot;
   });
 }
 
 async function doLogin() {
-  const inp = $('#inpToken');
-  const token = inp.value.trim().toUpperCase();
-  if (token.length !== 8) {
-    toast('Token harus 8 karakter.', 'error');
-    inp.classList.add('invalid');
-    setTimeout(() => inp.classList.remove('invalid'), 400);
-    return;
-  }
-  const btn = $('#btnSubmitLogin');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>Memeriksa...</span>';
+  const token = $('#inpToken').value.trim().toUpperCase();
+  if (token.length !== 8) return toast('Token harus 8 karakter.', 'error');
+  const btn = $('#btnDoLogin'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   try {
     const res = await api('login_ofisial', { token });
-    if (res.error) throw new Error(res.message || 'Token tidak valid.');
-    saveSession(token, res.ofisial);
-    toast('Berhasil masuk!', 'success');
-    const list = await api('list_peserta');
-    if (list.status === 'success') {
-      State.ofisial = list.ofisial || res.ofisial;
-      State.peserta = list.peserta || [];
-      State.slotTerpakai = list.slot_terpakai || 0;
-      await loadSekolah();
-      renderDashboard();
-    } else throw new Error('Gagal memuat data peserta.');
+    if (res.error) throw new Error(res.message);
+    lsSet(LS_TOKEN, token); lsSet(LS_OFISIAL, res.ofisial);
+    State.token = token; State.ofisial = res.ofisial;
+    boot(); // Reload with session
   } catch (e) {
     toast(e.message || 'Login gagal.', 'error');
-    btn.disabled = false; btn.innerHTML = orig;
-    inp.classList.add('invalid');
-    setTimeout(() => inp.classList.remove('invalid'), 400);
+    btn.disabled = false; btn.textContent = 'Masuk';
   }
 }
 
-/* ============================================================
- * §11 SCREEN: FORGOT TOKEN
- * ============================================================ */
-function showForgot() {
+function renderForgot() {
   setAppbar({ show: true, back: true, title: 'Lupa Token', sub: 'Kirim ulang via email' });
-  $('#btnBack').onclick = showLogin;
+  $('#btnBack').onclick = renderLogin;
   showScreen('forgot', s => {
     s.innerHTML = `
-      <div class="form-shell">
-        <div class="form-shell-head">
-          <h2>Lupa Token?</h2>
-          <p>Token akan dikirim ulang ke email terdaftar</p>
+      <div class="card" style="max-width:400px;margin:2rem auto;">
+        <div class="form-group">
+          <label>Email Terdaftar <span class="req">*</span></label>
+          <input type="email" class="form-input" id="inpEmail" placeholder="nama@email.com" autocomplete="email" />
         </div>
-        <div class="card">
-          <div class="form-group">
-            <label>Email Terdaftar <span class="req">*</span></label>
-            <input type="email" class="form-input" id="inpEmail" placeholder="nama@email.com" maxlength="100" autocomplete="email" />
-          </div>
-          <button class="btn btn-primary" id="btnSendResend" style="margin-top:.5rem;">Kirim Ulang Token</button>
-        </div>
+        <button class="btn btn-primary" id="btnResend">Kirim Ulang Token</button>
       </div>
     `;
-    $('#btnSendResend').onclick = async e => {
+    $('#btnResend').onclick = async (e) => {
       const email = $('#inpEmail').value.trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Format email tidak valid.', 'error'); return; }
-      const btn = e.currentTarget;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span><span>Mengirim...</span>';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Format email salah.', 'error');
+      const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
       try {
         const res = await api('resend_token', { payload: { Email: email } });
-        toast(res.message || 'Jika email terdaftar, token telah dikirim.', 'success');
-        setTimeout(showLogin, 2000);
-      } catch (e) {
-        toast(e.message || 'Gagal kirim.', 'error');
-        btn.disabled = false; btn.textContent = 'Kirim Ulang Token';
+        toast('Jika email terdaftar, token telah dikirim.', 'success');
+        setTimeout(renderLogin, 2000);
+      } catch (err) {
+        toast('Gagal kirim.', 'error'); btn.disabled = false; btn.textContent = 'Kirim Ulang Token';
       }
     };
   });
 }
 
 /* ============================================================
- * §12 SCREEN: REGISTER (with school dropdown)
+ * SCREEN: REGISTER OFISIAL BARU
  * ============================================================ */
-async function showRegister() {
+async function renderRegister() {
   setAppbar({ show: true, back: true, title: 'Daftar Ofisial', sub: 'Formulir pendaftaran' });
-  $('#btnBack').onclick = showLanding;
+  $('#btnBack').onclick = renderLanding;
   showScreen('register', s => {
     s.innerHTML = `
-      <div class="form-shell">
-        <div class="form-shell-head">
-          <h2>Daftar Ofisial Baru</h2>
-          <p>Satu ofisial per kapanewon</p>
+      <div class="card" style="max-width:500px;margin:0 auto;">
+        <div class="form-group">
+          <label>Kapanewon <span class="req">*</span></label>
+          <select class="form-input" id="regKapanewon"><option value="">— Pilih Kapanewon —</option></select>
         </div>
-        <div class="card">
-          <div class="form-group">
-            <label>Kapanewon <span class="req">*</span></label>
-            <select class="form-select" id="regKapanewon"><option value="">Memuat...</option></select>
-          </div>
-          <div class="form-group">
-            <label>Nama Lengkap <span class="req">*</span></label>
-            <input type="text" class="form-input" id="regNama" placeholder="Nama Anda" maxlength="80" autocomplete="name" />
-          </div>
-          <div class="form-group">
-            <label>Asal Sekolah <span class="req">*</span></label>
-            <select class="form-select" id="regSekolah" disabled>
-              <option value="">— Pilih Kapanewon dulu —</option>
-            </select>
-            <div id="regSekolahManualWrap" style="display:none; margin-top:.4rem;">
-              <div class="manual-input-wrap">
-                <div class="warning-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-                  Ketik nama sekolah manual
-                </div>
-                <input type="text" id="regSekolahManual" placeholder="NAMA SEKOLAH..." maxlength="80" style="text-transform:uppercase;" />
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Email <span class="req">*</span></label>
-            <input type="email" class="form-input" id="regEmail" placeholder="nama@email.com" maxlength="100" autocomplete="email" inputmode="email" />
-            <p class="form-help">Token akses akan dikirim ke email ini.</p>
-          </div>
-          <div class="form-group">
-            <label>Nomor WhatsApp <span class="req">*</span></label>
-            <input type="tel" class="form-input" id="regWA" placeholder="08xxxxxxxxxx" maxlength="15" autocomplete="tel" inputmode="numeric" />
-          </div>
-          <button class="btn btn-primary" id="btnSubmitRegister" style="margin-top:.5rem;">Daftar &amp; Kirim Token</button>
-          <p class="form-help text-center" style="margin-top:.6rem;">Dengan mendaftar, Anda menyetujui data digunakan untuk MTQ 2026.</p>
+        <div class="form-group">
+          <label>Nama Lengkap <span class="req">*</span></label>
+          <input type="text" class="form-input" id="regNama" placeholder="Nama Anda" />
         </div>
+        <div class="form-group">
+          <label>Asal Sekolah <span class="req">*</span></label>
+          <div id="regPickerContainer"></div>
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" class="form-input" id="regEmail" placeholder="nama@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>No. WhatsApp <span class="req">*</span></label>
+          <input type="tel" class="form-input" id="regWA" placeholder="08xxxxxxxxxx" inputmode="numeric" maxlength="15" />
+        </div>
+        <button class="btn btn-primary" id="btnSubmitReg" style="margin-top:1rem;">Daftar & Kirim Token</button>
       </div>
     `;
-    // Input restrictions
-    $('#regWA').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15); });
-    $('#regSekolahManual').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+    
+    const selKap = $('#regKapanewon');
+    const pickerWrap = $('#regPickerContainer');
+    let regSekolahVal = '';
+    let regIsManual = false;
 
-    loadKapanewonOptions();
-    bindRegisterSekolahLogic();
-    $('#btnSubmitRegister').onclick = doRegister;
-  });
-}
-
-async function loadKapanewonOptions() {
-  const sel = $('#regKapanewon');
-  if (!sel) return;
-  let taken = new Set();
-  try {
-    const res = await api('kapanewon_status');
-    if (res.status === 'success' && res.kapanewon) {
-      res.kapanewon.forEach(k => { if (k.terisi) taken.add(k.nama); });
-    }
-  } catch (e) { /* silent */ }
-  sel.innerHTML = '<option value="">— Pilih Kapanewon —</option>' +
-    KAPANEWON_LIST.map(k => {
-      const isTaken = taken.has(k);
-      return `<option value="${esc(k)}" ${isTaken ? 'disabled' : ''}>${esc(k)}${isTaken ? ' — sudah ada ofisial' : ''}</option>`;
-    }).join('');
-}
-
-/**
- * Saat kapanewon dipilih, load sekolah terkait.
- */
-function bindRegisterSekolahLogic() {
-  const selKapanewon = $('#regKapanewon');
-  const selSekolah = $('#regSekolah');
-  const wrapManual = $('#regSekolahManualWrap');
-  const inpManual = $('#regSekolahManual');
-  if (!selKapanewon || !selSekolah) return;
-
-  selKapanewon.addEventListener('change', async e => {
-    const kapanewon = e.target.value;
-    selSekolah.innerHTML = '<option value="">Memuat data sekolah...</option>';
-    selSekolah.disabled = true;
-    wrapManual.style.display = 'none';
-    inpManual.value = '';
-    State.registerSekolahList = [];
-
-    if (!kapanewon) {
-      selSekolah.innerHTML = '<option value="">— Pilih Kapanewon dulu —</option>';
-      return;
-    }
-
-    try {
-      const res = await api('sekolah_list', { kapanewon });
-      const list = (res.status === 'success' && res.sekolah) ? res.sekolah : [];
-      State.registerSekolahList = list;
-
-      if (list.length > 0) {
-        const negeri = list.filter(s => /negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama));
-        const swasta = list.filter(s => !(/negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama)));
-
-        let html = '<option value="">— Pilih Sekolah —</option>';
-        if (negeri.length) {
-          html += '<optgroup label="SD Negeri">' + negeri.map(s => `<option value="${esc(s.Nama)}">${esc(s.Nama)}</option>`).join('') + '</optgroup>';
-        }
-        if (swasta.length) {
-          html += '<optgroup label="SD/MI Swasta">' + swasta.map(s => `<option value="${esc(s.Nama)}">${esc(s.Nama)}</option>`).join('') + '</optgroup>';
-        }
-        html += `<option value="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</option>`;
-
-        selSekolah.innerHTML = html;
-        selSekolah.disabled = false;
-      } else {
-        selSekolah.innerHTML = '<option value="__manual__">⚠ Belum ada data sekolah. Isi manual.</option>';
-        selSekolah.disabled = false;
-        wrapManual.style.display = 'block';
-        inpManual.focus();
+    // Load Kapanewon
+    api('kapanewon_status').then(res => {
+      if (res.status === 'success') {
+        selKap.innerHTML = '<option value="">— Pilih Kapanewon —</option>' + KAPANEWON_LIST.map(k => {
+          const terisi = res.kapanewon.find(x => x.nama === k)?.terisi;
+          return `<option value="${k}" ${terisi?'disabled':''}>${k} ${terisi?'(Sudah ada ofisial)':''}</option>`;
+        }).join('');
       }
-    } catch (err) {
-      selSekolah.innerHTML = '<option value="__manual__">Gagal memuat. Isi manual.</option>';
-      selSekolah.disabled = false;
-      wrapManual.style.display = 'block';
-      inpManual.focus();
-    }
-  });
-
-  selSekolah.addEventListener('change', e => {
-    if (e.target.value === '__manual__') {
-      wrapManual.style.display = 'block';
-      inpManual.focus();
-    } else {
-      wrapManual.style.display = 'none';
-      inpManual.value = '';
-    }
-  });
-}
-
-async function doRegister() {
-  const kapanewon = $('#regKapanewon').value;
-  const nama = $('#regNama').value.trim();
-  const selSekolah = $('#regSekolah');
-  let sekolah = selSekolah.value;
-  if (sekolah === '__manual__') sekolah = $('#regSekolahManual').value.trim();
-  const email = $('#regEmail').value.trim().toLowerCase();
-  const wa = $('#regWA').value.trim();
-
-  const errs = [];
-  if (!kapanewon) errs.push('Pilih kapanewon.');
-  if (nama.length < 3) errs.push('Nama minimal 3 karakter.');
-  if (!sekolah || sekolah.length < 3) errs.push('Asal sekolah wajib (minimal 3 karakter).');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('Format email tidak valid.');
-  if (!/^08\d{8,13}$/.test(wa)) errs.push('Nomor WA tidak valid (10-15 digit, mulai 08).');
-  if (errs.length) { toast(errs[0], 'error'); return; }
-
-  const btn = $('#btnSubmitRegister');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>Memproses...</span>';
-  try {
-    const res = await api('register_ofisial', {
-      payload: { Kapanewon: kapanewon, Nama_Ofisial: nama, Sekolah: sekolah, Email: email, WA: wa }
     });
-    if (res.error) {
-      handleRegisterError(res, { kapanewon, nama, email });
-      btn.disabled = false; btn.innerHTML = orig;
-      return;
+
+    // Saat Kapanewon berubah, load sekolah
+    selKap.onchange = async (e) => {
+      const kap = e.target.value;
+      pickerWrap.innerHTML = '<div style="padding:.5rem;font-size:.8rem;color:var(--ink-l)">Memuat sekolah...</div>';
+      if (!kap) { pickerWrap.innerHTML = ''; return; }
+      
+      try {
+        const res = await api('sekolah_list', { kapanewon: kap });
+        State.regSekolah = res.sekolah || [];
+        renderPickerUI(pickerWrap, State.regSekolah, (val, isMan) => {
+          regSekolahVal = val; regIsManual = isMan;
+        });
+      } catch (err) {
+        pickerWrap.innerHTML = '<div style="color:var(--danger)">Gagal memuat sekolah. Isi manual.</div>';
+      }
+    };
+
+    $('#regWA').oninput = e => { e.target.value = e.target.value.replace(/\D/g,'').slice(0,15); };
+
+    $('#btnSubmitReg').onclick = async (e) => {
+      const payload = {
+        Kapanewon: selKap.value,
+        Nama_Ofisial: $('#regNama').value.trim(),
+        Sekolah: regSekolahVal,
+        Email: $('#regEmail').value.trim().toLowerCase(),
+        WA: $('#regWA').value.trim()
+      };
+      if (!payload.Kapanewon || !payload.Nama_Ofisial || !payload.Sekolah || !payload.Email || !payload.WA) {
+        return toast('Lengkapi semua data wajib.', 'error');
+      }
+      const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+      try {
+        const res = await api('register_ofisial', { payload });
+        if (res.error) throw new Error(res.message || 'Gagal mendaftar.');
+        toast('Berhasil! Cek email Anda untuk token.', 'success');
+        setTimeout(renderLogin, 3000);
+      } catch (err) {
+        toast(err.message, 'error'); btn.disabled = false; btn.textContent = 'Daftar & Kirim Token';
+      }
+    };
+  });
+}
+
+// Fungsi pembuat UI Picker (Reusable untuk form daftar & form peserta)
+function renderPickerUI(wrap, list, onSelect) {
+  const currentVal = '';
+  const isManual = false;
+  
+  if (!list || list.length === 0) {
+    wrap.innerHTML = `
+      <div style="background:var(--gold-l);padding:1rem;border-radius:8px;border:1px solid var(--gold);">
+        <p style="font-size:.75rem;font-weight:800;color:#92400e;margin-bottom:.5rem;">⚠ Belum ada data sekolah. Isi manual:</p>
+        <input type="text" class="form-input" id="inpManual" placeholder="NAMA SEKOLAH..." style="text-transform:uppercase;">
+      </div>
+    `;
+    $('#inpManual').oninput = e => {
+      e.target.value = e.target.value.toUpperCase();
+      onSelect(e.target.value, true);
+    };
+    return;
+  }
+
+  const negeri = list.filter(s => /negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama));
+  const swasta = list.filter(s => !(/negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama)));
+
+  wrap.innerHTML = `
+    <div class="picker-container">
+      <button type="button" class="picker-trigger" id="pTrigger">
+        <span class="placeholder">Pilih Sekolah...</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="picker-dropdown" id="pDropdown">
+        <div class="picker-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="picker-search" id="pSearch" placeholder="Cari sekolah..." autocomplete="off">
+        </div>
+        <div class="picker-list" id="pList">
+          <div class="picker-group-label">SD Negeri</div>
+          <div class="picker-group" data-g="n">
+            ${negeri.map(s => `<div class="picker-option" data-v="${esc(s.Nama)}" data-s="${esc(s.Nama.toUpperCase())}">${esc(s.Nama)}</div>`).join('')}
+          </div>
+          <div class="picker-group-label">SD / MI Swasta</div>
+          <div class="picker-group" data-g="s">
+            ${swasta.map(s => `<div class="picker-option" data-v="${esc(s.Nama)}" data-s="${esc(s.Nama.toUpperCase())}">${esc(s.Nama)}</div>`).join('')}
+          </div>
+          <div class="picker-option manual-option" data-v="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>
+        </div>
+      </div>
+    </div>
+    <div id="manualWrap" style="display:none;margin-top:.5rem;">
+      <div style="background:var(--gold-l);padding:.8rem;border-radius:8px;border:1px solid var(--gold);">
+        <p style="font-size:.75rem;font-weight:800;color:#92400e;margin-bottom:.4rem;">Ketik Nama Sekolah:</p>
+        <input type="text" class="form-input" id="inpManual" placeholder="NAMA SEKOLAH..." style="text-transform:uppercase;">
+      </div>
+    </div>
+  `;
+
+  const trigger = $('#pTrigger'), dropdown = $('#pDropdown'), search = $('#pSearch');
+  const manualWrap = $('#manualWrap'), inpManual = $('#inpManual');
+
+  trigger.onclick = (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('show');
+    trigger.classList.toggle('active');
+    if (dropdown.classList.contains('show')) {
+      search.value = ''; filterList(''); setTimeout(() => search.focus(), 100);
     }
-    showRegisterSuccess(email, res);
-  } catch (e) {
-    toast(e.message || 'Gagal mendaftar.', 'error');
-    btn.disabled = false; btn.innerHTML = orig;
-  }
-}
+  };
 
-function handleRegisterError(res, ctx) {
-  const err = String(res.error || '');
-  if (err === 'email_terdaftar') {
-    showContactPanitia('Email Sudah Terdaftar',
-      `Email <b>${esc(ctx.email)}</b> sudah pernah mendaftar. Jika ini akun Anda, gunakan <b>Login</b> atau <b>Lupa Token</b>.`);
-    return;
-  }
-  if (err === 'kapanewon_terisi') {
-    showContactPanitia('Kapanewon Sudah Ada Ofisial',
-      `Kapanewon <b>${esc(ctx.kapanewon)}</b> sudah memiliki ofisial aktif. Jika Anda ofisial pengganti, hubungi panitia.`);
-    return;
-  }
-  if (err === 'rate_limited') { toast(res.message || 'Tunggu beberapa saat.', 'error'); return; }
-  if (err === 'closed') { toast('Pendaftaran sudah ditutup.', 'error'); setTimeout(showLanding, 1500); return; }
-  if (Array.isArray(res.messages) && res.messages.length) { toast(res.messages[0], 'error'); return; }
-  toast(res.message || 'Terjadi kesalahan.', 'error');
-}
-
-/* ============================================================
- * §13 SCREEN: REGISTER SUCCESS
- * ============================================================ */
-function showRegisterSuccess(email) {
-  setAppbar({ show: true, title: 'Pendaftaran Berhasil', sub: 'Cek email Anda' });
-  showScreen('register-success', s => {
-    s.innerHTML = `
-      <div class="success-screen">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <h2>Cek Email Anda</h2>
-        <p>Token akses telah dikirim ke<br><b>${esc(email)}</b></p>
-        <div class="info-box">
-          <b>Belum menerima email?</b><br>• Cek folder <b>Spam</b> / <b>Promotions</b><br>• Tunggu hingga 5 menit<br>• Pastikan email tidak typo<br>• Gunakan tombol <b>Kirim Ulang</b> jika perlu
-        </div>
-        <button class="btn btn-primary" id="btnToLogin" style="max-width:320px;margin:0 auto;">Sudah Dapat Token — Login</button>
-      </div>
-    `;
-    $('#btnToLogin').onclick = showLogin;
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
+      dropdown.classList.remove('show'); trigger.classList.remove('active');
+    }
   });
-}
 
-/* ============================================================
- * §14 SCREEN: CONTACT PANITIA
- * ============================================================ */
-function showContactPanitia(title, msgHtml) {
-  setAppbar({ show: true, back: true, title: 'Hubungi Panitia', sub: 'Bantuan pendaftaran' });
-  $('#btnBack').onclick = showLanding;
-  showScreen('contact', s => {
-    s.innerHTML = `
-      <div class="contact-screen">
-        <div class="contact-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        </div>
-        <h2>${esc(title)}</h2>
-        <p>${msgHtml}</p>
-        <button class="wa-btn" id="btnWA">
-          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-          Hubungi Panitia via WhatsApp
-        </button>
-        <div style="margin-top:1.2rem;">
-          <button class="btn btn-ghost" id="btnBackHome" style="max-width:280px; margin:0 auto;">← Kembali</button>
-        </div>
-      </div>
-    `;
-    $('#btnWA').onclick = () => openWAPanitia(`${title}\n\n${msgHtml.replace(/<[^>]+>/g, '')}`);
-    $('#btnBackHome').onclick = showLanding;
+  search.oninput = (e) => filterList(e.target.value);
+
+  function filterList(q) {
+    q = q.toUpperCase();
+    dropdown.querySelectorAll('.picker-group').forEach(g => {
+      let has = false;
+      g.querySelectorAll('.picker-option').forEach(o => {
+        if (!q || o.dataset.s.includes(q)) { o.style.display = 'flex'; has = true; }
+        else { o.style.display = 'none'; }
+      });
+      g.style.display = has ? 'block' : 'none';
+      g.previousElementSibling.style.display = has ? 'block' : 'none';
+    });
+  }
+
+  dropdown.querySelectorAll('.picker-option').forEach(o => {
+    o.onclick = () => {
+      const v = o.dataset.v;
+      if (v === '__manual__') {
+        manualWrap.style.display = 'block'; inpManual.value = ''; inpManual.focus();
+        trigger.querySelector('span').innerHTML = '<span class="placeholder">Isi manual di bawah...</span>';
+        onSelect('', true);
+      } else {
+        manualWrap.style.display = 'none';
+        trigger.querySelector('span').textContent = v;
+        trigger.querySelector('span').classList.remove('placeholder');
+        onSelect(v, false);
+      }
+      dropdown.querySelectorAll('.picker-option').forEach(x => x.classList.remove('selected'));
+      if (v !== '__manual__') o.classList.add('selected');
+      dropdown.classList.remove('show'); trigger.classList.remove('active');
+    };
   });
+
+  if (inpManual) {
+    inpManual.oninput = (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      onSelect(e.target.value, true);
+    };
+  }
 }
 
+
 /* ============================================================
- * §15 SCREEN: DASHBOARD
+ * SCREEN: DASHBOARD (LIST CABANG)
  * ============================================================ */
 function renderDashboard() {
-  setAppbar({
-    show: true,
-    title: State.ofisial.Kapanewon || 'Dashboard',
-    sub: 'Pendaftaran Ofisial',
-    logout: true
-  });
-  $('#btnLogout').onclick = () => {
-    if (!confirm('Keluar dari aplikasi?')) return;
-    clearSession(); showLanding();
-  };
+  setAppbar({ show: true, title: State.ofisial.Kapanewon, sub: 'Dashboard Ofisial', logout: true });
+  $('#btnLogout').onclick = () => { if(confirm('Keluar?')) { lsDel(LS_TOKEN); lsDel(LS_OFISIAL); location.reload(); } };
+
   showScreen('dashboard', s => {
-    const of = State.ofisial;
     const used = State.slotTerpakai;
     const pct = Math.min(100, Math.round((used / State.kuota) * 100));
     const fillClass = used >= State.kuota ? 'full' : (used >= State.kuota - 2 ? 'warn' : '');
-    const canAddMore = used < State.kuota && isPendaftaranBuka();
-    const pesertaCount = State.peserta.length;
-    const sekolahCount = State.sekolah.length;
+    
+    const pMap = {};
+    State.peserta.forEach(p => { pMap[p.Cabang] = p; });
 
     s.innerHTML = `
-      <div class="dash-container">
-        <div class="dash-sidebar">
-          <div class="dash-header">
-            <div class="ofisial-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/><path d="M9 12l2 2 4-4"/></svg>
-            </div>
-            <h2>${esc(of.Kapanewon)}</h2>
-            <p>Ofisial: ${esc(of.Nama)}</p>
-          </div>
-
-          <div class="quota-card">
-            <div class="quota-row">
-              <span class="quota-label">Kuota Kapanewon</span>
-              <span class="quota-val ${used >= State.kuota ? 'full' : ''}">${used} / ${State.kuota} slot</span>
-            </div>
-            <div class="quota-bar">
-              <div class="quota-bar-fill ${fillClass}" style="width:${pct}%"></div>
-            </div>
-            <p class="quota-hint">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              LCP 3 slot · Cabang lain 1 slot · Total 11
-            </p>
-          </div>
-
-          ${sekolahCount > 0 ? `
-            <div class="sekolah-info">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 21V7l9-5 9 5v14M9 21v-6h6v6"/></svg>
-              <div class="info-text"><b>${sekolahCount}</b> sekolah terdaftar</div>
-            </div>
-          ` : `
-            <div class="sekolah-info warn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-              <div class="info-text">Belum ada sekolah terdaftar. Isi manual atau hubungi panitia.</div>
-            </div>
-          `}
-
-          ${!isPendaftaranBuka() ? `
-            <div class="card" style="background:var(--gold-l); border-color:var(--gold); margin-bottom:.85rem;">
-              <p style="font-size:.82rem; color:#92400e; margin:0; font-weight:700; text-align:center;">⚠ Pendaftaran sudah ditutup</p>
-            </div>
-          ` : ''}
-
-          ${canAddMore ? `
-            <button class="btn btn-primary" id="btnAdd" style="margin-bottom:.6rem;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Tambah Peserta
-            </button>
-          ` : ''}
-
-          ${pesertaCount > 0 ? `
-            <button class="btn btn-success" id="btnSubmitFinal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-              Kunci &amp; Submit Final
-            </button>
-            <p class="text-center" style="font-size:.72rem; color:var(--ink-l); margin:.5rem 0 0; line-height:1.4;">
-              Setelah dikunci, data tidak dapat diubah sendiri.<br>Hubungi panitia untuk revisi.
-            </p>
-          ` : ''}
+      <div class="quota-card">
+        <div class="quota-row">
+          <h3>Kuota Peserta</h3>
+          <span class="quota-val">${used} / ${State.kuota} slot</span>
         </div>
+        <div class="quota-bar"><div class="quota-bar-fill ${fillClass}" style="width:${pct}%"></div></div>
+      </div>
 
-        <div class="dash-main">
-          <div class="section-title">
-            <h3>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-              Peserta Terdaftar
-            </h3>
-            <span class="count-badge">${pesertaCount}</span>
-          </div>
-          <div id="pesertaList">
-            ${pesertaCount === 0 ? renderEmptyState() : State.peserta.map(renderPesertaItem).join('')}
-          </div>
+      <div class="section-title">Daftar Cabang Lomba</div>
+      <div class="cabang-list">
+        ${State.cabang.map(c => renderCabangCard(c, pMap[c.key])).join('')}
+      </div>
+      
+      <div style="height:2rem;"></div>
+      ${State.peserta.length > 0 ? `
+        <button class="btn btn-success" id="btnFinal" ${State.peserta.some(p => !p.berkas_lengkap) ? 'disabled' : ''}>
+          ${State.peserta.some(p => !p.berkas_lengkap) ? 'Lengkapi Akta Sebelum Submit' : 'Kunci & Submit Final'}
+        </button>
+      ` : ''}
+    `;
+
+    $$('[data-action="add"]').forEach(b => b.onclick = () => renderForm(b.dataset.cabang));
+    $$('[data-action="edit"]').forEach(b => b.onclick = () => renderForm(b.dataset.cabang, pMap[b.dataset.cabang]));
+    $$('[data-action="upload"]').forEach(b => b.onclick = () => renderUpload(b.dataset.cabang, pMap[b.dataset.cabang]));
+    $$('[data-action="delete"]').forEach(b => b.onclick = () => doDelete(pMap[b.dataset.cabang]));
+    
+    const btnFinal = $('#btnFinal');
+    if (btnFinal && !btnFinal.disabled) btnFinal.onclick = doSubmitFinal;
+  });
+}
+
+function renderCabangCard(cab, p) {
+  const isLCP = cab.key === 'LCP';
+  if (!p) {
+    return `
+      <div class="cabang-item empty">
+        <div class="cabang-icon">${cab.kode}</div>
+        <div class="cabang-info">
+          <h4>${esc(cab.label)}</h4>
+          <p>Belum ada peserta terdaftar.</p>
+        </div>
+        <div class="cabang-actions">
+          <button class="btn btn-primary" data-action="add" data-cabang="${cab.key}">Isi Data</button>
         </div>
       </div>
     `;
-    bindPesertaActions();
-    const btnAdd = $('#btnAdd');
-    if (btnAdd) btnAdd.onclick = openAddModal;
-    const btnFinal = $('#btnSubmitFinal');
-    if (btnFinal) btnFinal.onclick = doSubmitFinal;
-  });
-}
-
-function renderEmptyState() {
-  return `
-    <div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-      <p>Belum ada peserta terdaftar.<br>Klik <b>Tambah Peserta</b> untuk memulai.</p>
-    </div>
-  `;
-}
-
-function renderPesertaItem(p) {
-  const cab = State.cabangMap[p.Cabang] || { kode: p.Cabang, team: false };
-  const isTeam = !!cab.team;
-  const statusMap = {
-    menunggu: { label: 'Menunggu', cls: 'status-menunggu' },
-    terkunci: { label: 'Terkunci', cls: 'status-terkunci' },
-    diterima: { label: 'Diterima', cls: 'status-diterima' },
-    ditolak: { label: 'Ditolak', cls: 'status-ditolak' }
-  };
-  const st = statusMap[p.Status] || statusMap.menunggu;
-  const needAkta = isTeam ? 3 : 1;
-  const aktaCount = [p.has_akta1, p.has_akta2, p.has_akta3].filter(Boolean).length;
-  const berkasComplete = p.berkas_lengkap;
-  const isManualSchool = String(p.Catatan || '').includes('Sekolah manual');
-
-  const berkasBadge = berkasComplete
-    ? `<span class="badge berkas-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Berkas Lengkap</span>`
-    : `<span class="badge berkas-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Akta ${aktaCount}/${needAkta}</span>`;
-
-  const manualBadge = isManualSchool
-    ? `<span class="badge manual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 9v2M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Sekolah Manual</span>`
-    : '';
-
-  let subtitle;
-  if (isTeam && p.Anggota_2 && p.Anggota_3) {
-    subtitle = `${esc(p.Nama_Lengkap)}, ${esc(p.Anggota_2)}, ${esc(p.Anggota_3)} · ${esc(p.Asal_Sekolah)}`;
-  } else {
-    subtitle = `${esc(p.Nama_Lengkap)} · ${esc(p.Jenis_Kelamin === 'L' ? 'Putra' : 'Putri')} · ${esc(p.Asal_Sekolah)}`;
   }
-
-  const canEdit = p.Status === 'menunggu' || p.Status === 'ditolak';
-  const canDelete = p.Status === 'menunggu';
-  const canUpload = p.Status === 'menunggu';
-
-  const actions = [];
-  if (canUpload && !berkasComplete) actions.push(`<button class="btn btn-accent btn-sm" data-action="upload" data-id="${esc(p.ID)}">Upload Akta</button>`);
-  if (canEdit) actions.push(`<button class="btn btn-ghost btn-sm" data-action="edit" data-id="${esc(p.ID)}">Edit</button>`);
-  if (canDelete) actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-id="${esc(p.ID)}">Hapus</button>`);
-
+  
+  const isComplete = p.berkas_lengkap;
   return `
-    <div class="peserta-item" data-peserta-id="${esc(p.ID)}">
-      <div class="peserta-icon">${esc(cab.kode)}</div>
-      <div class="peserta-info">
-        <h4>${esc(cab.kode)}${isTeam ? ' · Tim' : ''}</h4>
-        <p class="sub">${subtitle}</p>
-        <div class="peserta-badges">
-          <span class="badge ${st.cls}">${esc(st.label)}</span>
-          ${berkasBadge}
-          ${manualBadge}
+    <div class="cabang-item filled">
+      <div class="cabang-icon">${cab.kode}</div>
+      <div class="cabang-info">
+        <h4>${esc(p.Nama_Lengkap)} ${isLCP ? '(Tim)' : ''}</h4>
+        <p>${esc(p.Asal_Sekolah)}</p>
+        <div>
+          ${isComplete ? `<span class="badge ok">✓ Berkas Lengkap</span>` : `<span class="badge warn">⚠ Akta Belum Lengkap</span>`}
         </div>
-        ${actions.length ? `<div class="peserta-actions">${actions.join('')}</div>` : ''}
+      </div>
+      <div class="cabang-actions">
+        ${!isComplete ? `<button class="btn btn-primary" data-action="upload" data-cabang="${cab.key}">Upload Akta</button>` : ''}
+        <button class="btn btn-ghost" data-action="edit" data-cabang="${cab.key}">Edit</button>
+        <button class="btn btn-danger" data-action="delete" data-cabang="${cab.key}">Hapus</button>
       </div>
     </div>
   `;
 }
 
-function bindPesertaActions() {
-  $$('[data-action]').forEach(btn => {
-    btn.onclick = () => {
-      const action = btn.dataset.action;
-      const id = btn.dataset.id;
-      if (action === 'delete') doDeletePeserta(id);
-      else if (action === 'edit') openEditModal(id);
-      else if (action === 'upload') openUploadModal(id);
-    };
-  });
-}
-
 /* ============================================================
- * §16 MODAL: ADD PARTICIPANT — CABANG PICKER
+ * SCREEN: FORM PESERTA
  * ============================================================ */
-function openAddModal() {
-  const usedCabang = new Set(State.peserta.map(p => p.Cabang));
-  const slotAvailable = State.kuota - State.slotTerpakai;
-  const cabangList = State.cabang.map(c => {
-    const used = usedCabang.has(c.key);
-    const notEnoughSlots = c.slot > slotAvailable;
-    return { ...c, used, disabled: used || notEnoughSlots, notEnoughSlots };
-  });
-
-  $('#modalRoot').innerHTML = `
-    <div class="modal-overlay show" id="addModal">
-      <div class="modal lg">
-        <div class="modal-head">
-          <div class="modal-head-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-          </div>
-          <div class="modal-head-text">
-            <h3>Tambah Peserta</h3>
-            <p>Sisa ${slotAvailable} slot · Pilih cabang lomba</p>
-          </div>
-          <button class="modal-close" id="modalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        </div>
-        <div class="modal-body">
-          <div class="cabang-grid" id="cabangGrid">
-            ${cabangList.map(c => `
-              <button class="cabang-pick" data-cabang="${esc(c.key)}" ${c.disabled ? 'disabled' : ''}>
-                ${!c.disabled ? `<span class="slot-tag">${c.slot} slot</span>` : ''}
-                <span class="code">${esc(c.kode)}</span>
-                <span class="name">${esc(shortLabel(c.label))}</span>
-                ${c.used ? `<span class="meta">✓ Sudah terdaftar</span>` : ''}
-                ${!c.used && c.notEnoughSlots ? `<span class="meta">⚠ Slot tidak cukup</span>` : ''}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-        <div class="modal-foot"><button class="btn btn-ghost" id="btnCancelAdd">Batal</button></div>
-      </div>
-    </div>
-  `;
-  $('#modalClose').onclick = closeModal;
-  $('#btnCancelAdd').onclick = closeModal;
-  $$('.cabang-pick:not(:disabled)').forEach(btn => {
-    btn.onclick = () => openAddForm(btn.dataset.cabang);
-  });
-}
-
-/* ============================================================
- * §17 MODAL: FORM (ADD/EDIT)
- * ============================================================ */
-function openAddForm(cabangKey) {
+function renderForm(cabangKey, existingPeserta = null) {
   const cab = State.cabangMap[cabangKey];
   if (!cab) return;
-  State.form = {
-    mode: 'add',
+  
+  const isEdit = !!existingPeserta;
+  State.currentForm = {
     cabang: cabangKey,
-    id: null,
-    asalSekolah: '',
-    sekolahManual: false,
-    sekolahSearch: '',
+    id: existingPeserta ? existingPeserta.ID : null,
+    asalSekolah: existingPeserta ? existingPeserta.Asal_Sekolah : '',
+    isManual: existingPeserta ? String(existingPeserta.Catatan||'').includes('Sekolah manual') : false,
     members: cab.team
-      ? [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' },
-         { nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' },
-         { nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }]
-      : [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }]
+      ? [0,1,2].map(i => {
+          return {
+            nama: existingPeserta ? (i === 0 ? existingPeserta.Nama_Lengkap : existingPeserta[`Anggota_${i+1}`]) || '' : '',
+            jk: existingPeserta ? (i === 0 ? existingPeserta.Jenis_Kelamin : existingPeserta[`JK_${i+1}`]) || '' : '',
+            nisn: existingPeserta ? (i === 0 ? existingPeserta.NISN : existingPeserta[`NISN_${i+1}`]) || '' : '',
+            tl: existingPeserta ? (i === 0 ? existingPeserta.Tempat_Lahir : existingPeserta[`Tempat_Lahir_${i+1}`]) || '' : '',
+            tgl: existingPeserta ? (i === 0 ? existingPeserta.Tanggal_Lahir : existingPeserta[`Tanggal_Lahir_${i+1}`]) || '' : '',
+            kelas: existingPeserta ? (i === 0 ? existingPeserta.Kelas : existingPeserta[`Kelas_${i+1}`]) || '' : ''
+          };
+        })
+      : [{
+          nama: existingPeserta ? existingPeserta.Nama_Lengkap : '',
+          jk: existingPeserta ? existingPeserta.Jenis_Kelamin : '',
+          nisn: existingPeserta ? existingPeserta.NISN : '',
+          tl: existingPeserta ? existingPeserta.Tempat_Lahir : '',
+          tgl: existingPeserta ? existingPeserta.Tanggal_Lahir : '',
+          kelas: existingPeserta ? existingPeserta.Kelas : ''
+        }]
   };
-  renderFormModal(cab, 'Formulir ' + cab.kode, 'Simpan & Lanjut', doSavePeserta);
-}
 
-function openEditModal(pesertaId) {
-  const p = State.peserta.find(x => x.ID === pesertaId);
-  if (!p) { toast('Peserta tidak ditemukan.', 'error'); return; }
-  const cab = State.cabangMap[p.Cabang];
-  if (!cab) return;
-  const schoolIsManual = String(p.Catatan || '').includes('Sekolah manual') || !State.sekolah.some(s => s.Nama === p.Asal_Sekolah);
+  setAppbar({ show: true, back: true, title: isEdit ? 'Edit Peserta' : 'Tambah Peserta', sub: cab.kode });
+  $('#btnBack').onclick = renderDashboard;
 
-  State.form = {
-    mode: 'edit',
-    cabang: p.Cabang,
-    id: p.ID,
-    asalSekolah: p.Asal_Sekolah || '',
-    sekolahManual: schoolIsManual,
-    sekolahSearch: '',
-    members: cab.team
-      ? [
-          { nama: p.Nama_Lengkap || '', jk: p.Jenis_Kelamin || '', nisn: p.NISN || '', tl: p.Tempat_Lahir || '', tgl: p.Tanggal_Lahir || '', kelas: p.Kelas || '' },
-          { nama: p.Anggota_2 || '', jk: p.JK_2 || '', nisn: p.NISN_2 || '', tl: p.Tempat_Lahir_2 || '', tgl: p.Tanggal_Lahir_2 || '', kelas: p.Kelas_2 || '' },
-          { nama: p.Anggota_3 || '', jk: p.JK_3 || '', nisn: p.NISN_3 || '', tl: p.Tempat_Lahir_3 || '', tgl: p.Tanggal_Lahir_3 || '', kelas: p.Kelas_3 || '' }
-        ]
-      : [{ nama: p.Nama_Lengkap || '', jk: p.Jenis_Kelamin || '', nisn: p.NISN || '', tl: p.Tempat_Lahir || '', tgl: p.Tanggal_Lahir || '', kelas: p.Kelas || '' }]
-  };
-  renderFormModal(cab, 'Edit ' + cab.kode, 'Simpan Perubahan', doUpdatePeserta);
-}
-
-function renderFormModal(cab, title, submitLabel, submitFn) {
-  const isTeam = cab.team;
-  const members = State.form.members;
-  const memberLabels = isTeam ? ['Anggota 1 (Ketua)', 'Anggota 2', 'Anggota 3'] : ['Data Peserta'];
-  const memberClass = isTeam ? 'member-group-wrap' : '';
-
-  $('#modalRoot').innerHTML = `
-    <div class="modal-overlay show" id="addFormModal">
-      <div class="modal lg">
-        <div class="modal-head">
-          <div class="modal-head-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
-          </div>
-          <div class="modal-head-text">
-            <h3>${esc(title)}</h3>
-            <p>${cab.team ? 'Tim 3 siswa' : '1 peserta'} · ${cab.slot} slot</p>
-          </div>
-          <button class="modal-close" id="formClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        </div>
-        <div class="modal-body" id="formBody">
-          <div class="school-picker-wrap">
-            <label class="label-inline">Asal Sekolah <span class="req">*</span></label>
-            <div id="schoolPickerContent"></div>
-            <p class="school-meta" id="schoolMeta"></p>
-          </div>
-          <div class="${memberClass}">
-            ${members.map((m, i) => renderMemberGroup(m, i, isTeam, memberLabels[i])).join('')}
-          </div>
-        </div>
-        <div class="modal-foot">
-          <button class="btn btn-ghost" id="btnFormCancel">Batal</button>
-          <button class="btn btn-primary" id="btnFormSubmit">${esc(submitLabel)}</button>
+  showScreen('form', s => {
+    const mArr = State.currentForm.members;
+    s.innerHTML = `
+      <div class="card">
+        <div class="form-group">
+          <label>Asal Sekolah <span class="req">*</span></label>
+          <div id="pickerContainer"></div>
         </div>
       </div>
-    </div>
-  `;
-  $('#formClose').onclick = closeModal;
-  $('#btnFormCancel').onclick = closeModal;
-  $('#btnFormSubmit').onclick = submitFn;
-  renderSchoolPicker();
-  bindFormInputs();
-}
 
-function renderMemberGroup(m, i, isTeam, label) {
-  const prefix = `f${i + 1}`;
-  return `
-    <div class="member-group">
-      ${isTeam ? `<div class="member-group-label">${esc(label)}</div>` : ''}
-      <div class="form-group">
-        <label>Nama Lengkap <span class="req">*</span></label>
-        <input type="text" class="form-input f-member-nama" data-idx="${i}" id="${prefix}_nama"
-          placeholder="NAMA LENGKAP" maxlength="80" style="text-transform:uppercase;" value="${esc(m.nama)}" />
+      <div class="form-grid">
+        ${mArr.map((m, i) => renderMemberInputs(m, i, cab.team)).join('')}
       </div>
-      <div class="form-group">
-        <label>Jenis Kelamin <span class="req">*</span></label>
-        <div class="radio-group">
-          <button type="button" class="radio-btn ${m.jk === 'L' ? 'active' : ''}" data-idx="${i}" data-jk="L">Putra</button>
-          <button type="button" class="radio-btn ${m.jk === 'P' ? 'active' : ''}" data-idx="${i}" data-jk="P">Putri</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>NISN <span class="req">*</span></label>
-        <input type="text" class="form-input f-member-nisn" data-idx="${i}" id="${prefix}_nisn"
-          placeholder="10 digit" maxlength="10" inputmode="numeric" value="${esc(m.nisn)}" />
-      </div>
-      <div class="form-group">
-        <label>Tempat Lahir <span class="req">*</span></label>
-        <input type="text" class="form-input f-member-tl" data-idx="${i}" id="${prefix}_tl"
-          placeholder="Contoh: Bantul" maxlength="40" value="${esc(m.tl)}" />
-      </div>
-      <div class="form-group">
-        <label>Tanggal Lahir <span class="req">*</span></label>
-        <input type="date" class="form-input f-member-tgl" data-idx="${i}" id="${prefix}_tgl"
-          value="${esc(m.tgl)}" min="2008-01-01" max="2021-12-31" />
-      </div>
-      <div class="form-group">
-        <label>Kelas <span class="req">*</span></label>
-        <select class="form-select f-member-kelas" data-idx="${i}" id="${prefix}_kelas">
-          <option value="">— Pilih Kelas —</option>
-          ${[1,2,3,4,5,6].map(k => `<option value="${k}" ${String(m.kelas) === String(k) ? 'selected' : ''}>Kelas ${k}</option>`).join('')}
-        </select>
-      </div>
-    </div>
-  `;
-}
 
-/* ============================================================
- * §18 SCHOOL PICKER
- * ============================================================ */
-function renderSchoolPicker() {
-  const wrap = $('#schoolPickerContent');
-  const meta = $('#schoolMeta');
-  if (!wrap) return;
-  const sekolahList = State.sekolah;
-  const currentVal = State.form.asalSekolah;
-  const isManual = State.form.sekolahManual;
-
-  // No schools → force manual
-  if (!sekolahList.length) {
-    wrap.innerHTML = `
-      <div class="manual-input-wrap">
-        <div class="warning-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-          Ketik manual nama sekolah (belum ada data untuk kapanewon ini)
-        </div>
-        <input type="text" id="fSekolahManual" placeholder="NAMA SEKOLAH..." maxlength="80"
-          value="${esc(isManual ? currentVal : '')}" />
-      </div>
+      <button class="btn btn-primary" id="btnSave" style="margin-top:1rem;">Simpan Data ${cab.kode}</button>
     `;
-    if (meta) meta.innerHTML = '';
-    const inp = $('#fSekolahManual');
-    if (inp) {
-      inp.addEventListener('input', e => {
-        e.target.value = e.target.value.toUpperCase();
-        State.form.asalSekolah = e.target.value;
-      });
-      setTimeout(() => inp.focus(), 100);
-    }
-    return;
-  }
 
-  // Has schools → dropdown
-  const showSearch = sekolahList.length > 8;
-  const negeri = sekolahList.filter(s => /negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama));
-  const swasta = sekolahList.filter(s => !(/negeri/i.test(s.Status_Sekolah || '') || /negeri/i.test(s.Nama)));
-  const filtered = filterSchools(sekolahList, State.form.sekolahSearch || '');
-  const filteredNegeri = filtered.filter(s => negeri.includes(s));
-  const filteredSwasta = filtered.filter(s => swasta.includes(s));
-
-  let optionsHtml = '<option value="">— Pilih Sekolah —</option>';
-  if (filteredNegeri.length) {
-    optionsHtml += '<optgroup label="SD Negeri">' + filteredNegeri.map(s =>
-      `<option value="${esc(s.Nama)}" ${s.Nama === currentVal && !isManual ? 'selected' : ''}>${esc(s.Nama)}</option>`
-    ).join('') + '</optgroup>';
-  }
-  if (filteredSwasta.length) {
-    optionsHtml += '<optgroup label="SD/MI Swasta">' + filteredSwasta.map(s =>
-      `<option value="${esc(s.Nama)}" ${s.Nama === currentVal && !isManual ? 'selected' : ''}>${esc(s.Nama)}</option>`
-    ).join('') + '</optgroup>';
-  }
-  optionsHtml += `<option value="__manual__" ${isManual ? 'selected' : ''}>⚠ Sekolah tidak ada di daftar (isi manual)</option>`;
-
-  wrap.innerHTML = `
-    ${showSearch ? `
-      <div class="school-search-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="school-search" id="fSekolahSearch" placeholder="Cari sekolah..."
-          value="${esc(State.form.sekolahSearch || '')}" autocomplete="off" />
-      </div>
-    ` : ''}
-    <select class="school-select" id="fSekolahSelect" size="${sekolahList.length > 8 ? '6' : '1'}">
-      ${optionsHtml}
-    </select>
-    <div id="manualInputWrap" style="display:${isManual ? 'block' : 'none'}; margin-top:.5rem;">
-      <div class="manual-input-wrap">
-        <div class="warning-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-          Ketik nama sekolah manual
-        </div>
-        <input type="text" id="fSekolahManual" placeholder="NAMA SEKOLAH..." maxlength="80"
-          value="${esc(isManual ? currentVal : '')}" />
-      </div>
-    </div>
-  `;
-
-  if (meta) {
-    meta.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 21V7l9-5 9 5v14M9 21v-6h6v6"/></svg>
-      <span><b>${sekolahList.length}</b> sekolah terdaftar · ${filtered.length} ditampilkan</span>
-    `;
-  }
-
-  // Bind search
-  const searchInp = $('#fSekolahSearch');
-  if (searchInp) {
-    searchInp.addEventListener('input', e => {
-      State.form.sekolahSearch = e.target.value;
-      renderSchoolPicker();
-      const ns = $('#fSekolahSearch');
-      if (ns) { ns.focus(); ns.setSelectionRange(ns.value.length, ns.value.length); }
+    renderPickerUI($('#pickerContainer'), State.sekolah, (val, isMan) => {
+      State.currentForm.asalSekolah = val;
+      State.currentForm.isManual = isMan;
     });
-  }
-
-  // Bind select
-  const select = $('#fSekolahSelect');
-  if (select) {
-    select.addEventListener('change', e => {
-      const val = e.target.value;
-      if (val === '__manual__') {
-        State.form.sekolahManual = true;
-        State.form.asalSekolah = '';
-        const wrapEl = $('#manualInputWrap');
-        if (wrapEl) wrapEl.style.display = 'block';
-        const manualInp = $('#fSekolahManual');
-        if (manualInp) { manualInp.value = ''; setTimeout(() => manualInp.focus(), 100); }
-      } else if (val) {
-        State.form.sekolahManual = false;
-        State.form.asalSekolah = val;
-        const wrapEl = $('#manualInputWrap');
-        if (wrapEl) wrapEl.style.display = 'none';
-      } else {
-        State.form.sekolahManual = false;
-        State.form.asalSekolah = '';
+    
+    // Prefill picker trigger if edit
+    if (State.currentForm.asalSekolah && !State.currentForm.isManual) {
+      const trig = $('#pTrigger');
+      if (trig) {
+        trig.querySelector('span').textContent = State.currentForm.asalSekolah;
+        trig.querySelector('span').classList.remove('placeholder');
+        $('#pDropdown').querySelectorAll('.picker-option').forEach(o => {
+          if (o.dataset.v === State.currentForm.asalSekolah) o.classList.add('selected');
+        });
       }
-    });
-  }
+    }
 
-  // Bind manual input
-  const manualInp = $('#fSekolahManual');
-  if (manualInp) {
-    manualInp.addEventListener('input', e => {
-      e.target.value = e.target.value.toUpperCase();
-      State.form.asalSekolah = e.target.value;
-    });
-  }
-}
+    bindInputs();
 
-function filterSchools(list, query) {
-  const q = String(query || '').trim().toUpperCase();
-  if (!q) return list;
-  return list.filter(s => String(s.Nama).toUpperCase().includes(q) || String(s.NPSN || '').includes(q));
-}
-
-/* ============================================================
- * §19 FORM INPUT BINDING
- * ============================================================ */
-function bindFormInputs() {
-  $$('.f-member-nama').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9 .']/g, '');
-      State.form.members[idx].nama = e.target.value;
-    });
-  });
-  $$('.f-member-nisn').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
-      State.form.members[idx].nisn = e.target.value;
-    });
-  });
-  $$('.f-member-tl').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      State.form.members[idx].tl = e.target.value;
-    });
-  });
-  $$('.f-member-tgl').forEach(inp => {
-    inp.addEventListener('change', e => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      State.form.members[idx].tgl = e.target.value;
-    });
-  });
-  $$('.f-member-kelas').forEach(inp => {
-    inp.addEventListener('change', e => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      State.form.members[idx].kelas = e.target.value;
-    });
-  });
-  $$('.radio-btn[data-jk]').forEach(btn => {
-    btn.onclick = () => {
-      const idx = parseInt(btn.dataset.idx, 10);
-      State.form.members[idx].jk = btn.dataset.jk;
-      $$(`.radio-btn[data-idx="${idx}"]`).forEach(b => b.classList.toggle('active', b === btn));
+    $('#btnSave').onclick = () => {
+      const payload = validateForm(cab);
+      if (payload) doSave(cab, payload);
     };
   });
 }
 
-/* ============================================================
- * §20 SAVE / UPDATE
- * ============================================================ */
-function validateAndBuildPayload() {
-  const cab = State.cabangMap[State.form.cabang];
-  const errs = [];
-  const asalSekolah = String(State.form.asalSekolah || '').trim();
-  const isManual = !!State.form.sekolahManual || !State.sekolah.some(s => s.Nama === asalSekolah);
-  if (!asalSekolah || asalSekolah.length < 3) {
-    errs.push(State.sekolah.length === 0
-      ? 'Isi nama sekolah manual (belum ada sekolah terdaftar).'
-      : 'Pilih sekolah dari daftar atau isi manual.');
-  }
-  State.form.members.forEach((m, i) => {
-    const label = cab.team ? `Anggota ${i + 1}` : 'Peserta';
-    if (!m.nama || m.nama.length < 3) errs.push(`${label}: Nama minimal 3 karakter.`);
-    if (!['L', 'P'].includes(m.jk)) errs.push(`${label}: Pilih jenis kelamin.`);
-    if (!/^\d{10}$/.test(m.nisn || '')) errs.push(`${label}: NISN harus 10 digit.`);
-    if (!m.tl || m.tl.length < 3) errs.push(`${label}: Tempat lahir wajib.`);
-    if (!m.tgl) errs.push(`${label}: Tanggal lahir wajib.`);
-    if (!m.kelas) errs.push(`${label}: Kelas wajib.`);
-  });
-  if (cab.gender === 'L' && State.form.members[0].jk && State.form.members[0].jk !== 'L') {
-    errs.push('Cabang Adzan hanya untuk putra.');
-  }
-  if (cab.team) {
-    const nisns = State.form.members.map(m => m.nisn);
-    if (new Set(nisns).size !== 3) errs.push('NISN anggota harus berbeda.');
-  }
-  if (errs.length) { toast(errs[0], 'error'); return null; }
-
-  const payload = {
-    Cabang: State.form.cabang,
-    Asal_Sekolah: asalSekolah,
-    Sekolah_Manual: isManual,
-    Nama_Lengkap: State.form.members[0].nama,
-    Jenis_Kelamin: State.form.members[0].jk,
-    NISN: State.form.members[0].nisn,
-    Tempat_Lahir: State.form.members[0].tl,
-    Tanggal_Lahir: State.form.members[0].tgl,
-    Kelas: State.form.members[0].kelas
-  };
-  if (cab.team) {
-    payload.Anggota_2 = State.form.members[1].nama;
-    payload.JK_2 = State.form.members[1].jk;
-    payload.NISN_2 = State.form.members[1].nisn;
-    payload.Tempat_Lahir_2 = State.form.members[1].tl;
-    payload.Tanggal_Lahir_2 = State.form.members[1].tgl;
-    payload.Kelas_2 = State.form.members[1].kelas;
-    payload.Anggota_3 = State.form.members[2].nama;
-    payload.JK_3 = State.form.members[2].jk;
-    payload.NISN_3 = State.form.members[2].nisn;
-    payload.Tempat_Lahir_3 = State.form.members[2].tl;
-    payload.Tanggal_Lahir_3 = State.form.members[2].tgl;
-    payload.Kelas_3 = State.form.members[2].kelas;
-  }
-  return payload;
-}
-
-async function doSavePeserta() {
-  const payload = validateAndBuildPayload();
-  if (!payload) return;
-  const btn = $('#btnFormSubmit');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>Menyimpan...</span>';
-  try {
-    const res = await api('daftar_peserta', { payload });
-    if (res.error) {
-      toast((res.messages && res.messages[0]) || res.message || 'Gagal menyimpan.', 'error');
-      btn.disabled = false; btn.innerHTML = orig;
-      return;
-    }
-    toast(res.message || 'Peserta terdaftar.', 'success');
-    closeModal();
-    await refreshPeserta();
-    if (res.id) setTimeout(() => openUploadModal(res.id), 300);
-  } catch (e) {
-    toast(e.message || 'Gagal menyimpan.', 'error');
-    btn.disabled = false; btn.innerHTML = orig;
-  }
-}
-
-async function doUpdatePeserta() {
-  const payload = validateAndBuildPayload();
-  if (!payload) return;
-  const btn = $('#btnFormSubmit');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>Menyimpan...</span>';
-  try {
-    const res = await api('update_peserta', { id: State.form.id, payload });
-    if (res.error) {
-      toast((res.messages && res.messages[0]) || res.message || 'Gagal.', 'error');
-      btn.disabled = false; btn.innerHTML = orig;
-      return;
-    }
-    toast('Data diperbarui.', 'success');
-    closeModal();
-    await refreshPeserta();
-  } catch (e) {
-    toast(e.message || 'Gagal.', 'error');
-    btn.disabled = false; btn.innerHTML = orig;
-  }
-}
-
-async function doDeletePeserta(id) {
-  const p = State.peserta.find(x => x.ID === id);
-  if (!p) return;
-  if (!confirm(`Hapus peserta ${p.Nama_Lengkap}?\n\nBerkas akta yang sudah diunggah juga akan dihapus.`)) return;
-  try {
-    const res = await api('hapus_peserta', { id });
-    if (res.error) throw new Error(res.message || 'Gagal hapus.');
-    toast('Peserta dihapus.', 'success');
-    await refreshPeserta();
-  } catch (e) {
-    toast(e.message, 'error');
-  }
-}
-
-/* ============================================================
- * §21 MODAL: UPLOAD AKTA
- * ============================================================ */
-function openUploadModal(pesertaId) {
-  const p = State.peserta.find(x => x.ID === pesertaId);
-  if (!p) { toast('Peserta tidak ditemukan.', 'error'); return; }
-  const cab = State.cabangMap[p.Cabang];
-  if (!cab) return;
-  const isTeam = !!cab.team;
-  const aktaLabels = isTeam
-    ? [{ slot: 1, key: 'akta1', label: 'Akta Ketua' }, { slot: 2, key: 'akta2', label: 'Akta Anggota 2' }, { slot: 3, key: 'akta3', label: 'Akta Anggota 3' }]
-    : [{ slot: 1, key: 'akta1', label: 'Akta Kelahiran' }];
-  const uploadedMap = { akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3 };
-
-  $('#modalRoot').innerHTML = `
-    <div class="modal-overlay show" id="uploadModal">
-      <div class="modal">
-        <div class="modal-head">
-          <div class="modal-head-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <div class="modal-head-text">
-            <h3>Upload Akta</h3>
-            <p>${esc(cab.kode)} · ${esc(p.Nama_Lengkap)}</p>
-          </div>
-          <button class="modal-close" id="uploadClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+function renderMemberInputs(m, i, isTeam) {
+  const label = isTeam ? `Anggota ${i+1}` : 'Data Peserta';
+  const width = isTeam ? 'full-width' : '';
+  return `
+    <div class="member-group ${width}">
+      <div class="member-label">${label}</div>
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Nama Lengkap <span class="req">*</span></label>
+          <input type="text" class="form-input f-nama" data-i="${i}" value="${esc(m.nama)}" placeholder="NAMA LENGKAP" style="text-transform:uppercase;">
         </div>
-        <div class="modal-body" id="uploadBody">
-          <div style="font-size:.82rem; color:var(--ink-l); margin-bottom:.8rem; line-height:1.5;">
-            Format: JPG, PNG, atau PDF · Maks 2 MB (gambar dikompres otomatis).
+        <div class="form-group">
+          <label>Jenis Kelamin <span class="req">*</span></label>
+          <div class="radio-group">
+            <button type="button" class="radio-btn f-jk ${m.jk === 'L' ? 'active' : ''}" data-i="${i}" data-val="L">Putra</button>
+            <button type="button" class="radio-btn f-jk ${m.jk === 'P' ? 'active' : ''}" data-i="${i}" data-val="P">Putri</button>
           </div>
-          ${aktaLabels.map(a => renderUploadBox(p, a, uploadedMap[a.key])).join('')}
         </div>
-        <div class="modal-foot"><button class="btn btn-primary" id="uploadDone">Selesai</button></div>
+        <div class="form-group">
+          <label>NISN <span class="req">*</span></label>
+          <input type="text" class="form-input f-nisn" data-i="${i}" value="${esc(m.nisn)}" placeholder="10 digit" inputmode="numeric" maxlength="10">
+        </div>
+        <div class="form-group">
+          <label>Tempat Lahir <span class="req">*</span></label>
+          <input type="text" class="form-input f-tl" data-i="${i}" value="${esc(m.tl)}" placeholder="Contoh: Bantul">
+        </div>
+        <div class="form-group">
+          <label>Tanggal Lahir <span class="req">*</span></label>
+          <input type="date" class="form-input f-tgl" data-i="${i}" value="${esc(m.tgl)}" min="2008-01-01" max="2021-12-31">
+        </div>
+        <div class="form-group">
+          <label>Kelas <span class="req">*</span></label>
+          <select class="form-input f-kelas" data-i="${i}">
+            <option value="">— Pilih —</option>
+            ${[1,2,3,4,5,6].map(k => `<option value="${k}" ${String(m.kelas)===String(k)?'selected':''}>Kelas ${k}</option>`).join('')}
+          </select>
+        </div>
       </div>
     </div>
   `;
-  $('#uploadClose').onclick = () => { closeModal(); refreshPeserta(); };
-  $('#uploadDone').onclick = () => { closeModal(); refreshPeserta(); };
-  aktaLabels.forEach(a => {
-    const box = $(`#upload-${a.key}`);
-    if (!box) return;
-    const fi = box.querySelector('input[type="file"]');
-    if (fi) fi.onchange = e => handleFileSelect(e.target.files[0], a.key, p.ID, p.Cabang);
+}
+
+function bindInputs() {
+  $$('.f-nama').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.toUpperCase(); State.currentForm.members[e.target.dataset.i].nama = e.target.value; });
+  $$('.f-nisn').forEach(inp => inp.oninput = e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0,10); State.currentForm.members[e.target.dataset.i].nisn = e.target.value; });
+  $$('.f-tl').forEach(inp => inp.oninput = e => { State.currentForm.members[e.target.dataset.i].tl = e.target.value; });
+  $$('.f-tgl').forEach(inp => inp.onchange = e => { State.currentForm.members[e.target.dataset.i].tgl = e.target.value; });
+  $$('.f-kelas').forEach(inp => inp.onchange = e => { State.currentForm.members[e.target.dataset.i].kelas = e.target.value; });
+  $$('.f-jk').forEach(btn => btn.onclick = () => {
+    const i = btn.dataset.i;
+    State.currentForm.members[i].jk = btn.dataset.val;
+    $$(`.f-jk[data-i="${i}"]`).forEach(b => b.classList.toggle('active', b === btn));
   });
 }
 
-function renderUploadBox(p, akta, uploaded) {
-  const inputId = `file-${akta.key}`;
-  if (uploaded) {
-    return `
-      <div class="upload-box has-file" id="upload-${akta.key}">
-        <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="upload-info">
-          <div class="upload-title">${esc(akta.label)} <small style="color:var(--hijau);">✓ Terunggah</small></div>
-          <div class="upload-sub">Berkas sudah diunggah</div>
-        </div>
-        <label class="upload-action" for="${inputId}" title="Ganti">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </label>
-        <input type="file" id="${inputId}" accept="image/jpeg,image/png,application/pdf" style="display:none;" />
-      </div>
-    `;
+function validateForm(cab) {
+  const f = State.currentForm;
+  if (!f.asalSekolah || f.asalSekolah.length < 3) { toast('Asal sekolah wajib diisi.', 'error'); return null; }
+  
+  for (let i=0; i<f.members.length; i++) {
+    const m = f.members[i];
+    const lbl = cab.team ? `Anggota ${i+1}` : 'Peserta';
+    if (!m.nama || m.nama.length < 3) { toast(`${lbl}: Nama minimal 3 karakter.`, 'error'); return null; }
+    if (!['L','P'].includes(m.jk)) { toast(`${lbl}: Pilih jenis kelamin.`, 'error'); return null; }
+    if (!/^\d{10}$/.test(m.nisn)) { toast(`${lbl}: NISN harus 10 digit.`, 'error'); return null; }
+    if (!m.tl || m.tl.length < 3) { toast(`${lbl}: Tempat lahir wajib.`, 'error'); return null; }
+    if (!m.tgl) { toast(`${lbl}: Tanggal lahir wajib.`, 'error'); return null; }
+    if (!m.kelas) { toast(`${lbl}: Kelas wajib.`, 'error'); return null; }
   }
-  return `
-    <label class="upload-box" id="upload-${akta.key}" for="${inputId}">
-      <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-      <div class="upload-info">
-        <div class="upload-title">${esc(akta.label)} <small>*</small></div>
-        <div class="upload-sub">Klik untuk pilih file</div>
-      </div>
-      <input type="file" id="${inputId}" accept="image/jpeg,image/png,application/pdf" style="display:none;" />
-    </label>
-  `;
+
+  if (cab.team) {
+    const nisns = f.members.map(m => m.nisn);
+    if (new Set(nisns).size !== 3) { toast('NISN anggota harus berbeda.', 'error'); return null; }
+  }
+  if (cab.gender === 'L' && f.members[0].jk !== 'L') { toast('Cabang Adzan hanya untuk putra.', 'error'); return null; }
+
+  const p = {
+    Cabang: cab.key,
+    Asal_Sekolah: f.asalSekolah,
+    Sekolah_Manual: f.isManual,
+    Nama_Lengkap: f.members[0].nama,
+    Jenis_Kelamin: f.members[0].jk,
+    NISN: f.members[0].nisn,
+    Tempat_Lahir: f.members[0].tl,
+    Tanggal_Lahir: f.members[0].tgl,
+    Kelas: f.members[0].kelas
+  };
+  if (cab.team) {
+    p.Anggota_2 = f.members[1].nama; p.JK_2 = f.members[1].jk; p.NISN_2 = f.members[1].nisn; p.Tempat_Lahir_2 = f.members[1].tl; p.Tanggal_Lahir_2 = f.members[1].tgl; p.Kelas_2 = f.members[1].kelas;
+    p.Anggota_3 = f.members[2].nama; p.JK_3 = f.members[2].jk; p.NISN_3 = f.members[2].nisn; p.Tempat_Lahir_3 = f.members[2].tl; p.Tanggal_Lahir_3 = f.members[2].tgl; p.Kelas_3 = f.members[2].kelas;
+  }
+  return p;
 }
 
-async function handleFileSelect(file, jenis, pesertaId, cabang) {
-  if (!file) return;
-  if (!['image/jpeg', 'image/png', 'application/pdf'].includes(file.type)) { toast('Format harus JPG, PNG, atau PDF.', 'error'); return; }
-  if (file.size > 10 * 1024 * 1024) { toast('File maksimal 10 MB.', 'error'); return; }
-
-  const box = $(`#upload-${jenis}`);
-  if (!box) return;
-  box.classList.add('uploading');
-  box.innerHTML = `
-    <div class="upload-icon"><span class="spinner" style="border-color:rgba(83,59,77,.2); border-top-color:var(--rose-deep);"></span></div>
-    <div class="upload-info"><div class="upload-title">Mengunggah...</div><div class="upload-sub">${esc(file.name)}</div></div>
-  `;
-
+async function doSave(cab, payload) {
+  const btn = $('#btnSave'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  const isEdit = !!State.currentForm.id;
   try {
-    let finalFile = file;
-    if (file.type.startsWith('image/')) finalFile = await compressImage(file);
-    const base64 = await fileToBase64(finalFile);
-    const res = await api('upload_berkas', {
-      peserta_id: pesertaId, jenis, file_base64: base64,
-      mime_type: finalFile.type, file_name: finalFile.name
-    });
-    if (res.error) throw new Error(res.message || 'Upload gagal.');
-    toast('Akta berhasil diunggah.', 'success');
-    const p = State.peserta.find(x => x.ID === pesertaId);
-    if (p) {
-      if (jenis === 'akta1') p.has_akta1 = true;
-      else if (jenis === 'akta2') p.has_akta2 = true;
-      else if (jenis === 'akta3') p.has_akta3 = true;
-      const need = cabang === 'LCP' ? 3 : 1;
-      p.berkas_lengkap = jenis === 'akta1'
-        ? (need === 1 ? true : (p.has_akta2 && p.has_akta3))
-        : (p.has_akta1 && (need === 3 ? (p.has_akta2 && p.has_akta3) : true));
-    }
-    const labels = cabang === 'LCP'
-      ? { akta1: 'Akta Ketua', akta2: 'Akta Anggota 2', akta3: 'Akta Anggota 3' }
-      : { akta1: 'Akta Kelahiran' };
-    box.outerHTML = renderUploadBox(p, { slot: parseInt(jenis.replace('akta',''),10), label: labels[jenis], key: jenis }, true);
-    const newBox = $(`#upload-${jenis}`);
-    if (newBox) {
-      const fi = newBox.querySelector('input[type="file"]');
-      if (fi) fi.onchange = e => handleFileSelect(e.target.files[0], jenis, pesertaId, cabang);
-    }
-  } catch (e) {
-    toast(e.message || 'Upload gagal.', 'error');
-    box.classList.remove('uploading');
-    const p = State.peserta.find(x => x.ID === pesertaId);
-    const labels = cabang === 'LCP'
-      ? { akta1: 'Akta Ketua', akta2: 'Akta Anggota 2', akta3: 'Akta Anggota 3' }
-      : { akta1: 'Akta Kelahiran' };
-    box.outerHTML = renderUploadBox(p, { slot: parseInt(jenis.replace('akta',''),10), label: labels[jenis], key: jenis }, false);
-    const newBox = $(`#upload-${jenis}`);
-    if (newBox) {
-      const fi = newBox.querySelector('input[type="file"]');
-      if (fi) fi.onchange = e => handleFileSelect(e.target.files[0], jenis, pesertaId, cabang);
-    }
-  }
-}
-
-/* ============================================================
- * §22 FILE UTIL
- * ============================================================ */
-function compressImage(file) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX_W = 1200;
-      const scale = Math.min(1, MAX_W / img.width);
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      let quality = 0.75;
-      const tryCompress = () => {
-        canvas.toBlob(blob => {
-          if (!blob) { reject(new Error('Compression failed.')); return; }
-          if (blob.size > 480 * 1024 && quality > 0.4) { quality -= 0.1; tryCompress(); }
-          else {
-            const name = file.name.replace(/\.[^.]+$/, '.jpg');
-            resolve(new File([blob], name, { type: 'image/jpeg' }));
-          }
-        }, 'image/jpeg', quality);
-      };
-      tryCompress();
-    };
-    img.onerror = () => reject(new Error('Gagal load gambar.'));
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-/* ============================================================
- * §23 SUBMIT FINAL
- * ============================================================ */
-async function doSubmitFinal() {
-  const incomplete = State.peserta.filter(p => p.Status === 'menunggu' && !p.berkas_lengkap);
-  if (incomplete.length > 0) {
-    toast(`${incomplete.length} peserta belum lengkap aktanya. Upload dulu.`, 'error');
-    setTimeout(() => openUploadModal(incomplete[0].ID), 400);
-    return;
-  }
-  if (!confirm(`Kunci ${State.peserta.length} peserta?\n\nSetelah dikunci, data tidak dapat diubah sendiri.`)) return;
-  const btn = $('#btnSubmitFinal');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>Mengunci...</span>';
-  try {
-    const res = await api('submit_final_ofisial');
-    if (res.error) throw new Error(res.message || 'Gagal submit.');
-    toast(res.message || 'Data berhasil dikunci.', 'success');
-    await refreshPeserta();
-  } catch (e) {
-    toast(e.message || 'Gagal submit.', 'error');
-    btn.disabled = false; btn.innerHTML = orig;
-  }
-}
-
-/* ============================================================
- * §24 REFRESH
- * ============================================================ */
-async function refreshPeserta() {
-  try {
-    const res = await api('list_peserta');
-    if (res.status === 'success') {
-      State.ofisial = res.ofisial || State.ofisial;
-      State.peserta = res.peserta || [];
-      State.slotTerpakai = res.slot_terpakai || 0;
+    const res = await api(isEdit ? 'update_peserta' : 'daftar_peserta', { id: State.currentForm.id, payload });
+    if (res.error) throw new Error(res.message || (res.messages && res.messages[0]));
+    
+    toast(isEdit ? 'Data diperbarui.' : 'Peserta terdaftar.', 'success');
+    
+    // Refresh
+    const list = await api('list_peserta');
+    State.peserta = list.peserta || [];
+    State.slotTerpakai = list.slot_terpakai || 0;
+    
+    // Jika tambah baru, langsung ke upload
+    if (!isEdit && res.id) {
+      const newP = State.peserta.find(p => p.ID === res.id);
+      renderUpload(cab.key, newP);
+    } else {
       renderDashboard();
     }
-  } catch (e) { /* silent */ }
+  } catch (e) {
+    toast(e.message, 'error'); btn.disabled = false; btn.textContent = 'Simpan Data';
+  }
 }
 
 /* ============================================================
- * §25 START
+ * SCREEN: UPLOAD AKTA
+ * ============================================================ */
+function renderUpload(cabangKey, peserta) {
+  const cab = State.cabangMap[cabangKey];
+  setAppbar({ show: true, back: true, title: 'Upload Akta', sub: cab.kode });
+  $('#btnBack').onclick = renderDashboard;
+
+  showScreen('upload', s => {
+    s.innerHTML = `
+      <div class="card">
+        <h3 style="font-size:1.1rem;color:var(--rose-deep);margin-bottom:.2rem;">${esc(peserta.Nama_Lengkap)}</h3>
+        <p style="font-size:.85rem;color:var(--ink-l);margin-bottom:1.5rem;">Format JPG/PNG/PDF. Maks 2 MB.</p>
+        <div id="aktaContainer"></div>
+      </div>
+      <button class="btn btn-primary" id="btnDone" style="margin-top:1rem;">Selesai & Kembali ke Dashboard</button>
+    `;
+    
+    const isTeam = cab.team;
+    const aktaKeys = isTeam ? ['akta1','akta2','akta3'] : ['akta1'];
+    
+    $('#aktaContainer').innerHTML = aktaKeys.map((k, i) => renderUploadBox(peserta, k, i)).join('');
+    
+    aktaKeys.forEach((k, i) => {
+      const box = $(`#box-${k}`);
+      if (!box) return;
+      const input = box.querySelector('input[type="file"]');
+      if (input) input.onchange = e => handleFile(e.target.files[0], k, peserta.ID, isTeam, i);
+    });
+    
+    $('#btnDone').onclick = renderDashboard;
+  });
+}
+
+function renderUploadBox(p, key, i) {
+  const isUploaded = p[`has_${key}`];
+  const label = key === 'akta1' ? (p.Cabang === 'LCP' ? 'Akta Ketua' : 'Akta Kelahiran') : `Akta Anggota ${i+1}`;
+  return `
+    <div class="upload-box ${isUploaded ? 'has-file' : ''}" id="box-${key}">
+      <div class="upload-icon">
+        ${isUploaded 
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`}
+      </div>
+      <div class="upload-info">
+        <div class="upload-title">${label}</div>
+        <div class="upload-sub">${isUploaded ? 'Berkas tersimpan' : 'Klik untuk unggah'}</div>
+      </div>
+      ${!isUploaded ? `<input type="file" class="upload-btn" accept="image/jpeg,image/png,application/pdf" style="display:none;">` : ''}
+    </div>
+  `;
+}
+
+async function handleFile(file, key, id, isTeam, i) {
+  if (!file) return;
+  if (file.size > 10*1024*1024) return toast('Maks 10MB', 'error');
+  const box = $(`#box-${key}`);
+  box.classList.add('uploading');
+  box.querySelector('.upload-sub').textContent = 'Mengunggah...';
+  
+  try {
+    const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(file); });
+    const res = await api('upload_berkas', {
+      peserta_id: id, jenis: key, file_base64: b64, mime_type: file.type, file_name: file.name
+    });
+    if (res.error) throw new Error(res.message);
+    
+    toast('Berhasil diunggah', 'success');
+    box.classList.remove('uploading');
+    box.classList.add('has-file');
+    box.querySelector('.upload-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+    box.querySelector('.upload-sub').textContent = 'Berkas tersimpan';
+    const input = box.querySelector('input[type="file"]');
+    if (input) input.remove();
+    
+    const p = State.peserta.find(x => x.ID === id);
+    if (p) {
+      p[`has_${key}`] = true;
+      const need = isTeam ? 3 : 1;
+      let count = ['akta1','akta2','akta3'].filter(k => p[`has_${k}`]).length;
+      if (count >= need) p.berkas_lengkap = true;
+    }
+  } catch(e) {
+    toast(e.message, 'error');
+    box.classList.remove('uploading');
+    box.querySelector('.upload-sub').textContent = 'Gagal. Coba lagi.';
+  }
+}
+
+/* ============================================================
+ * AKSI HAPUS & SUBMIT
+ * ============================================================ */
+async function doDelete(p) {
+  if (!confirm(`Hapus data ${p.Nama_Lengkap}? Berkas akta juga akan terhapus.`)) return;
+  try {
+    const res = await api('hapus_peserta', { id: p.ID });
+    if (res.error) throw new Error(res.message);
+    toast('Peserta dihapus.', 'success');
+    boot();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function doSubmitFinal() {
+  if (!confirm('Kunci data peserta? Setelah dikunci tidak dapat diubah.')) return;
+  const btn = $('#btnFinal'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res = await api('submit_final_ofisial');
+    if (res.error) throw new Error(res.message);
+    toast('Data berhasil dikunci.', 'success');
+    boot();
+  } catch (e) {
+    toast(e.message, 'error');
+    btn.disabled = false; btn.textContent = 'Kunci & Submit Final';
+  }
+}
+
+/* ============================================================
+ * BOOTSTRAP
  * ============================================================ */
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
 else boot();
 
 })();
 </script>
-
 </body>
 </html>
