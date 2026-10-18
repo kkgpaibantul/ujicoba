@@ -35,19 +35,19 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
   --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-
+  
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
-
+  
   --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================================
- * §2 RESET & BASE
+ * §2 RESET & BASE (ANTI-SCROLL)
  * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
+html, body { 
   height: 100dvh;
   overflow: hidden;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -76,8 +76,8 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
  * §3 APP SHELL & AUTH LAYOUT
  * ============================================================ */
-#app {
-  width: 100%; height: 100dvh;
+#app { 
+  width: 100%; height: 100dvh; 
   display: flex; align-items: center; justify-content: center;
   padding: 1.5rem;
 }
@@ -85,7 +85,26 @@ a { color: inherit; text-decoration: none; }
 .screen.active { display: flex; animation: fadeIn 0.4s ease; }
 
 #view-dashboard { flex-direction: column; max-width: 1000px; margin: 0 auto; overflow-y: auto; }
-#view-auth { flex-direction: column; max-width: 1000px; margin: 0 auto; justify-content: center; gap: 1.5rem; }
+#view-auth { flex-direction: column; max-width: 1000px; margin: 0 auto; justify-content: center; gap: 1.5rem; position: relative; }
+
+/* Tombol kembali ke beranda */
+.back-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: var(--trans);
+  z-index: 10;
+  padding: 0.5rem;
+}
+.back-home:hover { color: var(--rose-primary); }
+.back-home svg { width: 18px; height: 18px; }
 
 /* ============================================================
  * §4 UI COMPONENTS
@@ -138,14 +157,15 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(0.9rem, 1.5vw, 1.05rem); font-weight: 600; color: var(--ink-light); margin: 0;
 }
 
-.guide-steps {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem;
+/* Panduan Langkah Horizontal */
+.guide-steps { 
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; 
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
   padding: 0.6rem 1.5rem; box-shadow: var(--shadow-sm); width: fit-content; margin: 0 auto;
 }
 .guide-step { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--ink-light); }
 .guide-step b { color: var(--rose-deep); }
-.guide-step-num {
+.guide-step-num { 
   display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 50%; background: var(--rose-deep); color: #fff;
   font-size: 0.65rem; font-weight: 800;
@@ -156,18 +176,18 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
  * §6 AUTH CARDS (SPLIT)
  * ============================================================ */
-.auth-container {
-  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem;
+.auth-container { 
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; 
   max-width: 950px; margin: 0 auto; width: 100%;
-  align-items: stretch;
+  align-items: stretch; 
 }
-@media (max-width: 800px) {
-  .auth-container { grid-template-columns: 1fr; }
-  #view-auth { overflow-y: auto; justify-content: flex-start; }
+@media (max-width: 800px) { 
+  .auth-container { grid-template-columns: 1fr; } 
+  #view-auth { overflow-y: auto; justify-content: flex-start; padding-top: 2rem; } 
 }
 
-.auth-card {
-  background: var(--surface); border-radius: var(--r-lg);
+.auth-card { 
+  background: var(--surface); border-radius: var(--r-lg); 
   padding: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border);
   display: flex; flex-direction: column; height: 100%;
 }
@@ -176,14 +196,15 @@ a { color: inherit; text-decoration: none; }
 .link-btn { font-size: 0.8rem; font-weight: 700; color: var(--rose-primary); }
 .link-btn:hover { text-decoration: underline; }
 
+/* Login Spesifik */
 .login-form-wrap { margin: auto 0; }
 .token-input { text-align:center; letter-spacing:0.2em; font-weight:800; font-size:1.2rem; text-transform:uppercase; }
 
 /* ============================================================
- * §7 DASHBOARD
+ * §7 DASHBOARD (BRANCH GRID)
  * ============================================================ */
 .appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.2rem; margin-bottom: 1.2rem; }
-.appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem; }
+.appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem; text-decoration: none; }
 .appbar-brand svg { width: 22px; height: 22px; color: var(--accent); }
 
 .dash-header-area { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
@@ -290,11 +311,14 @@ a { color: inherit; text-decoration: none; }
   <!-- DASHBOARD VIEW -->
   <div id="view-dashboard" class="screen">
     <header class="appbar">
-      <div class="appbar-brand">
+      <a href="./index.html" class="appbar-brand" title="Kembali ke Beranda">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
         MTQ Ofisial
+      </a>
+      <div style="display:flex; gap:0.5rem;">
+        <a href="./index.html" class="btn btn-ghost btn-sm" style="text-decoration:none;">Beranda</a>
+        <button class="btn btn-ghost btn-sm" id="btnLogout">Keluar</button>
       </div>
-      <button class="btn btn-ghost btn-sm" id="btnLogout">Keluar</button>
     </header>
 
     <div class="dash-header-area">
@@ -316,14 +340,22 @@ a { color: inherit; text-decoration: none; }
     <div class="branch-grid" id="branchGrid"></div>
   </div>
 
-  <!-- AUTH VIEW -->
+  <!-- AUTH VIEW (FULL SCREEN NO SCROLL) -->
   <div id="view-auth" class="screen">
+    
+    <!-- Tombol Kembali ke Beranda -->
+    <a href="./index.html" class="back-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Beranda
+    </a>
+
     <div class="auth-header">
       <span class="title-kicker">KKG PAI Kabupaten Bantul</span>
       <h1 class="main-title">Pendaftaran Peserta</h1>
       <p class="title-sub">MTQ Pelajar SD Tingkat Kabupaten Bantul Tahun 2026</p>
     </div>
 
+    <!-- Compact Guide Box -->
     <div class="guide-steps">
       <div class="guide-step"><span class="guide-step-num">1</span> Isi <b>Daftar Baru</b></div>
       <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -339,7 +371,7 @@ a { color: inherit; text-decoration: none; }
       <div class="auth-card">
         <h2>Login</h2>
         <p class="desc">Masukkan token yang dikirim ke email Anda.</p>
-
+        
         <div class="login-form-wrap">
           <div class="form-group">
             <label>Token Akses</label>
@@ -352,11 +384,11 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- Register -->
+      <!-- Register (2-Column Grid) -->
       <div class="auth-card">
         <h2>Daftar Baru</h2>
         <p class="desc">Belum punya token? Daftarkan kapanewon Anda di sini.</p>
-
+        
         <div class="form-row">
           <div class="form-group">
             <label>Kapanewon <span>*</span></label>
@@ -414,6 +446,7 @@ a { color: inherit; text-decoration: none; }
 
     <div id="formMembersArea"></div>
 
+    <!-- SECTION UPLOAD -->
     <div class="form-section">
       <div class="form-section-title">Unggah Berkas</div>
       <div id="formUploadsArea"></div>
@@ -574,16 +607,16 @@ a { color: inherit; text-decoration: none; }
     const inpWA = $('#regWA');
     const btnReg = $('#btnRegister');
     const wrapSekolah = $('#regSekolahContainer');
-
+    
     let selectedSekolah = '';
 
     api('kapanewon_status').then(res => {
       if (res.status === 'success' && res.kapanewon) {
-        selKap.innerHTML = '<option value="">— Pilih —</option>' +
+        selKap.innerHTML = '<option value="">— Pilih —</option>' + 
           res.kapanewon.map(k => `<option value="${k.nama}" ${k.terisi?'disabled':''}>${k.nama} ${k.terisi?'(Ada)':''}</option>`).join('');
       } else throw new Error();
     }).catch(() => {
-      selKap.innerHTML = '<option value="">— Pilih —</option>' +
+      selKap.innerHTML = '<option value="">— Pilih —</option>' + 
         KAPANEWON_LIST.map(k => `<option value="${k}">${k}</option>`).join('');
     });
 
@@ -600,7 +633,7 @@ a { color: inherit; text-decoration: none; }
       try {
         const res = await api('sekolah_list', { kapanewon: kap });
         const list = res.status === 'success' ? res.sekolah : [];
-        renderSearchSelect(wrapSekolah, list, '', (val) => {
+        renderSearchSelect(wrapSekolah, list, '', (val, isManual) => {
           selectedSekolah = val;
         });
       } catch (err) {
@@ -614,7 +647,7 @@ a { color: inherit; text-decoration: none; }
       if (!selectedSekolah) return toast('Pilih Asal Sekolah', 'error');
       if (!inpEmail.value.includes('@')) return toast('Isi Email dengan benar', 'error');
       if (inpWA.value.length < 10) return toast('Isi No WhatsApp dengan benar', 'error');
-
+      
       btnReg.disabled = true; btnReg.innerHTML = 'Memproses...';
       try {
         const res = await api('register_ofisial', {
@@ -629,7 +662,7 @@ a { color: inherit; text-decoration: none; }
           wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Pilih Kapanewon dulu" disabled>`;
           selectedSekolah = '';
         }
-      } catch (err) { toast(err.message || 'Gagal mendaftar', 'error'); }
+      } catch (err) { toast('Gagal mendaftar', 'error'); }
       btnReg.disabled = false; btnReg.innerHTML = 'Daftar & Kirim Token';
     };
   }
@@ -638,7 +671,7 @@ a { color: inherit; text-decoration: none; }
   function renderDashboard() {
     $('#dashKapanewon').textContent = State.ofisial.Kapanewon;
     $('#dashNama').textContent = State.ofisial.Nama;
-
+    
     const pct = Math.min(100, Math.round((State.slotTerpakai / State.kuota) * 100));
     $('#dashKuotaText').textContent = `${State.slotTerpakai} / ${State.kuota} slot`;
     $('#dashProgress').style.width = pct + '%';
@@ -647,7 +680,7 @@ a { color: inherit; text-decoration: none; }
     const grid = $('#branchGrid');
     grid.innerHTML = State.cabang.map(c => {
       const p = State.peserta.find(x => x.Cabang === c.key);
-
+      
       if (p) {
         const isTeam = !!c.team;
         const isMenyanyi = c.key === 'Menyanyi';
@@ -655,7 +688,7 @@ a { color: inherit; text-decoration: none; }
         const hasAkta = [p.has_akta1, p.has_akta2, p.has_akta3].filter(Boolean).length;
         const isComplete = p.berkas_lengkap;
         const karaokeMissing = isMenyanyi && !p.has_karaoke;
-
+        
         let badgeBerkas;
         if (isComplete && !karaokeMissing) {
           badgeBerkas = `<span style="font-size:0.65rem; font-weight:800; color:var(--hijau); background:var(--hijau-light); padding:0.15rem 0.4rem; border-radius:4px;">✓ Lengkap</span>`;
@@ -680,7 +713,7 @@ a { color: inherit; text-decoration: none; }
         const uploadHtml = files.map(f => `
           <div class="upload-box ${f.has ? 'done' : ''}" id="box-${p.ID}-${f.key}">
             <div class="upload-icon">
-              ${f.has ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'
+              ${f.has ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
                      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
             </div>
             <div class="upload-text">
@@ -738,14 +771,14 @@ a { color: inherit; text-decoration: none; }
 
     $$('.btn-expand').forEach(b => b.onclick = () => {
       const area = document.getElementById('upload-' + b.dataset.id);
-      if (area) area.classList.toggle('active');
+      area.classList.toggle('active');
     });
     $$('.btn-edit').forEach(b => b.onclick = () => {
       const p = State.peserta.find(x => x.ID === b.dataset.id);
-      if (p) openForm(p.Cabang, p.ID);
+      if(p) openForm(p.Cabang, p.ID);
     });
     $$('.btn-del').forEach(b => b.onclick = () => deletePeserta(b.dataset.id));
-
+    
     bindUploads();
   }
 
@@ -771,22 +804,22 @@ a { color: inherit; text-decoration: none; }
       let finalFile = file;
       if (file.type.startsWith('image/')) finalFile = await compressImage(file);
       const base64 = await fileToBase64(finalFile);
-
-      const res = await api('upload_berkas', {
-        peserta_id: id, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name
+      
+      const res = await api('upload_berkas', { 
+        peserta_id: id, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
       });
-
+      
       if (res.error) throw new Error(res.message);
-
+      
       toast('Berhasil diunggah', 'success');
       await loadData();
       renderDashboard();
-
+      
       setTimeout(() => {
-        const newSec = document.getElementById('upload-' + id);
-        if (newSec) newSec.classList.add('active');
+        const newSec = document.getElementById('upload-'+id);
+        if(newSec) newSec.classList.add('active');
       }, 100);
-
+      
     } catch (e) {
       toast(e.message || 'Gagal upload', 'error');
       boxEl.innerHTML = oldHTML;
@@ -798,7 +831,7 @@ a { color: inherit; text-decoration: none; }
     const isEdit = !!id;
     let p = {};
     if (isEdit) p = State.peserta.find(x => x.ID === id);
-
+    
     State.formId = id;
     State.form = {
       mode: isEdit ? 'edit' : 'add',
@@ -806,7 +839,7 @@ a { color: inherit; text-decoration: none; }
       asalSekolah: isEdit ? p.Asal_Sekolah : '',
       sekolahManual: isEdit ? String(p.Catatan).includes('Sekolah manual') : false,
       members: isEdit ? [] : [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }],
-      files: {},
+      files: {}, 
       existingFiles: isEdit ? {
         akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3,
         karaoke: !!p.has_karaoke
@@ -857,7 +890,7 @@ a { color: inherit; text-decoration: none; }
   function renderFormMembers() {
     const box = $('#formMembersArea');
     const isTeam = State.form.members.length > 1;
-
+    
     box.innerHTML = State.form.members.map((m, i) => `
       <div class="member-block">
         <div class="member-title">
@@ -935,10 +968,10 @@ a { color: inherit; text-decoration: none; }
     let html = requiredFiles.map(f => {
       const hasExisting = State.form.existingFiles && State.form.existingFiles[f.key];
       const pendingFile = State.form.files && State.form.files[f.key];
-
+      
       let statusText = f.hint ? `Klik pilih file · ${f.hint}` : `Klik pilih file (${f.maxMB} MB max)`;
       let isSelected = false;
-
+      
       if (pendingFile) {
         statusText = `Terpilih: ${pendingFile.name} (${(pendingFile.size / 1024).toFixed(0)} KB)`;
         isSelected = true;
@@ -946,12 +979,12 @@ a { color: inherit; text-decoration: none; }
         statusText = '✓ Sudah diunggah sebelumnya';
         isSelected = true;
       }
-
+      
       return `
         <div class="form-upload-box ${isSelected ? 'selected' : ''}" id="form-box-${f.key}">
           <div class="form-upload-icon">
-            ${isSelected ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'
-                         : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
+            ${isSelected ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
+                       : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
           </div>
           <div class="form-upload-text">
             ${f.label}
@@ -972,7 +1005,7 @@ a { color: inherit; text-decoration: none; }
         if (!file) return;
         const maxMB = parseInt(input.dataset.max, 10) || 2;
         if (file.size > maxMB * 1024 * 1024) return toast(`Maksimal ${maxMB} MB`, 'error');
-
+        
         if (!State.form.files) State.form.files = {};
         State.form.files[input.dataset.key] = file;
         renderFormUploads();
@@ -1029,14 +1062,14 @@ a { color: inherit; text-decoration: none; }
       if (fSwasta.length) html += `<div class="opt-group">SD / MI Swasta</div>` + fSwasta.map(s => `<div class="opt-item ${s.Nama===currentVal?'selected':''}" data-val="${esc(s.Nama)}">${s.Nama===currentVal?'✓ ':''}${esc(s.Nama)}</div>`).join('');
       if (!wajib) html += `<div class="opt-item opt-manual" data-val="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>`;
       if (!html) html = '<div style="padding:1rem;text-align:center;color:var(--ink-light);font-size:0.85rem;">Sekolah tidak ditemukan</div>';
-
+      
       listWrap.innerHTML = html;
       listWrap.querySelectorAll('.opt-item').forEach(opt => {
         opt.onclick = () => {
           const v = opt.dataset.val;
           if (v === '__manual__') {
             manualWrap.style.display = 'block';
-            manualInp.value = ''; setTimeout(() => manualInp.focus(), 50);
+            manualInp.value = ''; setTimeout(()=>manualInp.focus(), 50);
             trigger.querySelector('span').textContent = 'Isi manual di bawah...';
             currentVal = ''; onSelect('', true);
           } else {
@@ -1070,7 +1103,7 @@ a { color: inherit; text-decoration: none; }
       Nama_Lengkap: f.members[0].nama, Jenis_Kelamin: f.members[0].jk, NISN: f.members[0].nisn,
       Tempat_Lahir: f.members[0].tl, Tanggal_Lahir: f.members[0].tgl, Kelas: f.members[0].kelas
     };
-
+    
     if (isTeam) {
       payload.Anggota_2 = f.members[1].nama; payload.JK_2 = f.members[1].jk; payload.NISN_2 = f.members[1].nisn;
       payload.Tempat_Lahir_2 = f.members[1].tl; payload.Tanggal_Lahir_2 = f.members[1].tgl; payload.Kelas_2 = f.members[1].kelas;
@@ -1078,23 +1111,22 @@ a { color: inherit; text-decoration: none; }
       payload.Tempat_Lahir_3 = f.members[2].tl; payload.Tanggal_Lahir_3 = f.members[2].tgl; payload.Kelas_3 = f.members[2].kelas;
     }
 
-    for (let i = 0; i < f.members.length; i++) {
+    for (let i=0; i<f.members.length; i++) {
       const m = f.members[i];
-      if (!m.nama || !m.jk || m.nisn.length < 10 || !m.tl || !m.tgl || !m.kelas) {
+      if (!m.nama || !m.jk || m.nisn.length<10 || !m.tl || !m.tgl || !m.kelas) {
         return toast(`Data anggota ${i+1} belum lengkap`, 'error');
       }
     }
 
-    const btn = $('#btnSaveData');
-    btn.disabled = true; btn.innerHTML = 'Menyimpan data...';
+    const btn = $('#btnSaveData'); btn.disabled = true; btn.innerHTML = 'Menyimpan data...';
 
     try {
       const endpoint = f.mode === 'edit' ? 'update_peserta' : 'daftar_peserta';
       const body = f.mode === 'edit' ? { id: State.formId, payload } : { payload };
-
+      
       const res = await api(endpoint, body);
       if (res.error) throw new Error(res.messages ? res.messages[0] : res.message);
-
+      
       const pId = f.mode === 'edit' ? State.formId : res.id;
 
       if (f.files && Object.keys(f.files).length > 0) {
@@ -1102,15 +1134,15 @@ a { color: inherit; text-decoration: none; }
         for (let i = 0; i < fileKeys.length; i++) {
           const jenis = fileKeys[i];
           const file = f.files[jenis];
-          const label = jenis === 'karaoke' ? 'Musik Pengiring' : jenis.replace('akta', 'Akta ');
+          const label = jenis === 'karaoke' ? 'Musik Pengiring' : jenis.replace('akta','Akta ');
           btn.innerHTML = `Mengunggah ${label} (${i+1}/${fileKeys.length})...`;
-
+          
           let finalFile = file;
-          if (file.type.startsWith('image/')) finalFile = await compressImage(file);
+          if(file.type.startsWith('image/')) finalFile = await compressImage(file);
           const base64 = await fileToBase64(finalFile);
-
-          const uploadRes = await api('upload_berkas', {
-            peserta_id: pId, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name
+          
+          const uploadRes = await api('upload_berkas', { 
+            peserta_id: pId, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
           });
           if (uploadRes.error) {
             toast(`Gagal upload ${label}: ` + uploadRes.message, 'error');
@@ -1120,11 +1152,11 @@ a { color: inherit; text-decoration: none; }
 
       toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta ditambahkan', 'success');
       await loadData();
-
+      
       $('#view-form').classList.remove('active');
       document.body.style.overflow = '';
       renderDashboard();
-
+      
     } catch (e) {
       toast(e.message, 'error');
       btn.disabled = false; btn.innerHTML = 'Simpan Data & Unggah';
@@ -1137,8 +1169,7 @@ a { color: inherit; text-decoration: none; }
       const res = await api('hapus_peserta', { id });
       if (res.error) throw new Error(res.message);
       toast('Peserta dihapus', 'success');
-      await loadData();
-      renderDashboard();
+      await loadData(); renderDashboard();
     } catch (e) { toast(e.message, 'error'); }
   }
 
@@ -1165,7 +1196,6 @@ a { color: inherit; text-decoration: none; }
       img.src = URL.createObjectURL(file);
     });
   }
-
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const r = new FileReader();
