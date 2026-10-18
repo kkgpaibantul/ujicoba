@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#533B4D" />
-<title>Pendaftaran Peserta — MTQ 2026</title>
+<title>Pendaftaran Ofisial — MTQ 2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -48,8 +48,8 @@
  * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { 
-  height: 100dvh; /* Memaksa pas 1 layar */
-  overflow: hidden; /* Menghilangkan scroll di body */
+  height: 100dvh;
+  overflow: hidden;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background-color: var(--bg);
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
@@ -84,60 +84,54 @@ a { color: inherit; text-decoration: none; }
 .screen { display: none; width: 100%; height: 100%; }
 .screen.active { display: flex; animation: fadeIn 0.4s ease; }
 
-/* Dashboard Screen (Scrollable internal) */
 #view-dashboard { flex-direction: column; max-width: 1000px; margin: 0 auto; overflow-y: auto; }
-
-/* Auth Screen (Fixed no scroll) */
-#view-auth {
-  flex-direction: column; max-width: 1050px; margin: 0 auto;
-  justify-content: center; gap: 1.5rem;
-}
+#view-auth { flex-direction: column; max-width: 1000px; margin: 0 auto; justify-content: center; gap: 1.5rem; }
 
 /* ============================================================
  * §4 UI COMPONENTS
  * ============================================================ */
 .btn {
   display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem;
-  padding: 0.65rem 1rem; border-radius: var(--r-md); font-size: 0.95rem; font-weight: 700;
+  padding: 0.75rem 1rem; border-radius: var(--r-md); font-size: 0.95rem; font-weight: 700;
   transition: var(--trans); border: none; cursor: pointer;
 }
 .btn:active { transform: translateY(1px); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .btn-primary { background: var(--rose-deep); color: #fff; box-shadow: 0 4px 12px rgba(74,46,63,0.2); }
 .btn-primary:hover:not(:disabled) { background: var(--rose-primary); transform: translateY(-1px); }
-.btn-accent { background: var(--accent); color: #fff; }
-.btn-accent:hover:not(:disabled) { background: #d88588; transform: translateY(-1px); }
+.btn-accent { background: var(--hijau); color: #fff; }
+.btn-accent:hover:not(:disabled) { background: #21867a; transform: translateY(-1px); }
 .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
 .btn-danger { background: var(--danger-light); color: var(--danger); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: var(--r-sm); }
 
-.form-group { margin-bottom: 0.7rem; }
-.form-group label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--ink-light); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group { margin-bottom: 0.8rem; }
+.form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--ink-light); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .form-group label span { color: var(--danger); }
 .form-control {
-  width: 100%; padding: 0.55rem 0.8rem; border: 1.5px solid var(--border); border-radius: var(--r-md);
-  font-size: 0.9rem; background: var(--surface); color: var(--ink); transition: var(--trans); font-weight: 500;
+  width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid var(--border); border-radius: var(--r-md);
+  font-size: 0.95rem; background: var(--surface); color: var(--ink); transition: var(--trans); font-weight: 500;
 }
-.form-control:focus { outline: none; border-color: var(--rose-primary); box-shadow: 0 0 0 4px var(--rose-light); }
+.form-control:focus { outline: none; border-color: var(--rose-primary); box-shadow: 0 0 0 3px rgba(158, 95, 123, 0.15); }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .form-row .form-group { margin-bottom: 0; }
 
 /* ============================================================
- * §5 AUTH HEADER & GUIDE (Desain Baru)
+ * §5 AUTH HEADER & GUIDE
  * ============================================================ */
 .auth-header { text-align: center; margin-bottom: 0.5rem; }
 .title-kicker {
   display: inline-block; font-size: 0.7rem; font-weight: 800;
   letter-spacing: 0.15em; text-transform: uppercase; color: var(--rose-primary);
-  background: var(--rose-light); padding: 0.2rem 0.8rem; border-radius: 99px; margin-bottom: 0.6rem;
+  background: var(--rose-light); padding: 0.25rem 0.8rem; border-radius: 99px; margin-bottom: 0.6rem;
 }
 .main-title {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: clamp(1.8rem, 3.5vw, 2.4rem); /* Ukuran proporsional */
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
   font-weight: 900; color: var(--rose-deep);
-  line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.3rem;
+  line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.4rem;
 }
 .title-sub {
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -157,15 +151,16 @@ a { color: inherit; text-decoration: none; }
   width: 20px; height: 20px; border-radius: 50%; background: var(--rose-deep); color: #fff;
   font-size: 0.65rem; font-weight: 800;
 }
-.guide-arrow { color: var(--border); font-weight: bold; font-size: 1.1rem; }
+.guide-arrow { display: flex; align-items: center; justify-content: center; color: var(--border); }
+.guide-arrow svg { width: 14px; height: 14px; }
 
 /* ============================================================
  * §6 AUTH CARDS (SPLIT)
  * ============================================================ */
 .auth-container { 
   display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; 
-  max-width: 1000px; margin: 0 auto; width: 100%;
-  align-items: stretch;
+  max-width: 950px; margin: 0 auto; width: 100%;
+  align-items: stretch; /* Memaksa tinggi kartu sama */
 }
 @media (max-width: 800px) { 
   .auth-container { grid-template-columns: 1fr; } 
@@ -174,15 +169,16 @@ a { color: inherit; text-decoration: none; }
 
 .auth-card { 
   background: var(--surface); border-radius: var(--r-lg); 
-  padding: 1.5rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
-  display: flex; flex-direction: column;
+  padding: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+  display: flex; flex-direction: column; height: 100%;
 }
 .auth-card h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
 .auth-card p.desc { font-size: 0.8rem; color: var(--ink-light); margin-bottom: 1.2rem; }
 .link-btn { font-size: 0.8rem; font-weight: 700; color: var(--rose-primary); }
 .link-btn:hover { text-decoration: underline; }
 
-.login-form-wrap { margin: auto 0; } 
+/* Login Spesifik */
+.login-form-wrap { margin: auto 0; } /* Menengahkan form login secara vertikal */
 .token-input { text-align:center; letter-spacing:0.2em; font-weight:800; font-size:1.2rem; text-transform:uppercase; }
 
 /* ============================================================
@@ -333,11 +329,11 @@ a { color: inherit; text-decoration: none; }
     <!-- Compact Guide Box -->
     <div class="guide-steps">
       <div class="guide-step"><span class="guide-step-num">1</span> Isi <b>Daftar Baru</b></div>
-      <span class="guide-arrow">→</span>
+      <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       <div class="guide-step"><span class="guide-step-num">2</span> Cek Email / Spam</div>
-      <span class="guide-arrow">→</span>
+      <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       <div class="guide-step"><span class="guide-step-num">3</span> Salin <b>Token</b></div>
-      <span class="guide-arrow">→</span>
+      <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       <div class="guide-step"><span class="guide-step-num">4</span> <b>Login</b> di sini</div>
     </div>
 
@@ -391,6 +387,7 @@ a { color: inherit; text-decoration: none; }
           </div>
         </div>
 
+        <!-- Tombol diubah warnanya menjadi hijau agar kontras -->
         <button class="btn btn-accent btn-block" id="btnRegister" style="margin-top: 1.2rem;">Daftar & Kirim Token</button>
       </div>
     </div>
