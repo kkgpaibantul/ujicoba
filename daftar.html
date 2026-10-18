@@ -35,19 +35,19 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
   --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-  
+
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
-  
+
   --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================================
- * §2 RESET & BASE (ANTI-SCROLL)
+ * §2 RESET & BASE
  * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { 
+html, body {
   height: 100dvh;
   overflow: hidden;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -76,8 +76,8 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
  * §3 APP SHELL & AUTH LAYOUT
  * ============================================================ */
-#app { 
-  width: 100%; height: 100dvh; 
+#app {
+  width: 100%; height: 100dvh;
   display: flex; align-items: center; justify-content: center;
   padding: 1.5rem;
 }
@@ -138,15 +138,14 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(0.9rem, 1.5vw, 1.05rem); font-weight: 600; color: var(--ink-light); margin: 0;
 }
 
-/* Panduan Langkah Horizontal */
-.guide-steps { 
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; 
+.guide-steps {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem;
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
   padding: 0.6rem 1.5rem; box-shadow: var(--shadow-sm); width: fit-content; margin: 0 auto;
 }
 .guide-step { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--ink-light); }
 .guide-step b { color: var(--rose-deep); }
-.guide-step-num { 
+.guide-step-num {
   display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 50%; background: var(--rose-deep); color: #fff;
   font-size: 0.65rem; font-weight: 800;
@@ -157,18 +156,18 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
  * §6 AUTH CARDS (SPLIT)
  * ============================================================ */
-.auth-container { 
-  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; 
+.auth-container {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem;
   max-width: 950px; margin: 0 auto; width: 100%;
-  align-items: stretch; /* Memaksa tinggi kartu sama */
+  align-items: stretch;
 }
-@media (max-width: 800px) { 
-  .auth-container { grid-template-columns: 1fr; } 
-  #view-auth { overflow-y: auto; justify-content: flex-start; } 
+@media (max-width: 800px) {
+  .auth-container { grid-template-columns: 1fr; }
+  #view-auth { overflow-y: auto; justify-content: flex-start; }
 }
 
-.auth-card { 
-  background: var(--surface); border-radius: var(--r-lg); 
+.auth-card {
+  background: var(--surface); border-radius: var(--r-lg);
   padding: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border);
   display: flex; flex-direction: column; height: 100%;
 }
@@ -177,12 +176,11 @@ a { color: inherit; text-decoration: none; }
 .link-btn { font-size: 0.8rem; font-weight: 700; color: var(--rose-primary); }
 .link-btn:hover { text-decoration: underline; }
 
-/* Login Spesifik */
-.login-form-wrap { margin: auto 0; } /* Menengahkan form login secara vertikal */
+.login-form-wrap { margin: auto 0; }
 .token-input { text-align:center; letter-spacing:0.2em; font-weight:800; font-size:1.2rem; text-transform:uppercase; }
 
 /* ============================================================
- * §7 DASHBOARD (BRANCH GRID)
+ * §7 DASHBOARD
  * ============================================================ */
 .appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.2rem; margin-bottom: 1.2rem; }
 .appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem; }
@@ -278,6 +276,7 @@ a { color: inherit; text-decoration: none; }
 
 .fab-save { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); width: calc(100% - 2.4rem); max-width: 640px; padding: 0.9rem; border-radius: var(--r-md); background: var(--rose-deep); color: #fff; font-size: 0.95rem; font-weight: 800; text-align: center; box-shadow: var(--shadow-lg); z-index: 50; border: none; cursor: pointer; }
 .fab-save:hover { background: var(--rose-primary); }
+.fab-save:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .toast-container { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
 .toast { background: var(--ink); color: #fff; padding: 0.6rem 1.2rem; border-radius: 99px; font-size: 0.8rem; font-weight: 600; box-shadow: var(--shadow-md); animation: fadeIn 0.3s ease; }
@@ -317,16 +316,14 @@ a { color: inherit; text-decoration: none; }
     <div class="branch-grid" id="branchGrid"></div>
   </div>
 
-  <!-- AUTH VIEW (FULL SCREEN NO SCROLL) -->
+  <!-- AUTH VIEW -->
   <div id="view-auth" class="screen">
-    
     <div class="auth-header">
       <span class="title-kicker">KKG PAI Kabupaten Bantul</span>
       <h1 class="main-title">Pendaftaran Peserta</h1>
       <p class="title-sub">MTQ Pelajar SD Tingkat Kabupaten Bantul Tahun 2026</p>
     </div>
 
-    <!-- Compact Guide Box -->
     <div class="guide-steps">
       <div class="guide-step"><span class="guide-step-num">1</span> Isi <b>Daftar Baru</b></div>
       <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -342,7 +339,7 @@ a { color: inherit; text-decoration: none; }
       <div class="auth-card">
         <h2>Login</h2>
         <p class="desc">Masukkan token yang dikirim ke email Anda.</p>
-        
+
         <div class="login-form-wrap">
           <div class="form-group">
             <label>Token Akses</label>
@@ -355,11 +352,11 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- Register (2-Column Grid) -->
+      <!-- Register -->
       <div class="auth-card">
         <h2>Daftar Baru</h2>
         <p class="desc">Belum punya token? Daftarkan kapanewon Anda di sini.</p>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label>Kapanewon <span>*</span></label>
@@ -387,7 +384,6 @@ a { color: inherit; text-decoration: none; }
           </div>
         </div>
 
-        <!-- Tombol diubah warnanya menjadi hijau agar kontras -->
         <button class="btn btn-accent btn-block" id="btnRegister" style="margin-top: 1.2rem;">Daftar & Kirim Token</button>
       </div>
     </div>
@@ -418,9 +414,8 @@ a { color: inherit; text-decoration: none; }
 
     <div id="formMembersArea"></div>
 
-    <!-- SECTION UPLOAD -->
     <div class="form-section">
-      <div class="form-section-title">Unggah Akta Kelahiran</div>
+      <div class="form-section-title">Unggah Berkas</div>
       <div id="formUploadsArea"></div>
     </div>
   </div>
@@ -441,6 +436,7 @@ a { color: inherit; text-decoration: none; }
   const State = {
     token: lsGet(LS_TOKEN), ofisial: lsGet(LS_OFISIAL),
     config: {}, cabang: [], sekolah: [], peserta: [],
+    kapanewon: KAPANEWON_LIST, wajibSekolah: false,
     kuota: 11, slotTerpakai: 0, cabangMap: {},
     form: null, formId: null
   };
@@ -462,10 +458,29 @@ a { color: inherit; text-decoration: none; }
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
   }
 
+  /* ── API wrapper: deteksi Unauthorized & network error ── */
   async function api(action, payload = {}) {
     const body = { action, token: State.token, ...payload };
-    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
-    return await res.json();
+    let res;
+    try {
+      res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+    } catch (e) {
+      throw new Error('Koneksi gagal. Periksa internet Anda.');
+    }
+    if (!res.ok) throw new Error(`Server error (${res.status})`);
+    const data = await res.json();
+    if (data && data.error === 'Unauthorized') {
+      lsDel(LS_TOKEN);
+      lsDel(LS_OFISIAL);
+      toast('Sesi berakhir, silakan login ulang', 'error');
+      setTimeout(() => location.reload(), 900);
+      throw new Error('Unauthorized');
+    }
+    return data;
   }
 
   function showView(id) {
@@ -483,14 +498,22 @@ a { color: inherit; text-decoration: none; }
         State.cabang = res.cabang || [];
         State.cabangMap = {};
         State.cabang.forEach(c => State.cabangMap[c.key] = c);
+        State.kapanewon = res.kapanewon || KAPANEWON_LIST;
         State.kuota = parseInt(State.config.kuota_per_kapanewon, 10) || 11;
+        State.wajibSekolah = String(State.config.wajib_sekolah_terdaftar || '').toLowerCase() === 'true';
       }
     } catch (e) { console.warn('Config error', e); }
 
     if (State.token && State.ofisial) {
-      await loadData();
-      showView('view-dashboard');
-      renderDashboard();
+      try {
+        await loadData();
+        showView('view-dashboard');
+        renderDashboard();
+      } catch (e) {
+        if (e.message !== 'Unauthorized') {
+          toast('Gagal memuat data. Coba refresh.', 'error');
+        }
+      }
     } else {
       showView('view-auth');
       initAuth();
@@ -498,21 +521,15 @@ a { color: inherit; text-decoration: none; }
   }
 
   async function loadData() {
-    try {
-      const res = await api('list_peserta');
-      if (res.status === 'success') {
-        State.ofisial = res.ofisial;
-        State.peserta = res.peserta || [];
-        State.slotTerpakai = res.slot_terpakai || 0;
-        lsSet(LS_OFISIAL, State.ofisial);
+    const res = await api('list_peserta');
+    if (res.status === 'success') {
+      State.ofisial = res.ofisial;
+      State.peserta = res.peserta || [];
+      State.slotTerpakai = res.slot_terpakai || 0;
+      lsSet(LS_OFISIAL, State.ofisial);
 
-        const sch = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
-        if (sch.status === 'success') State.sekolah = sch.sekolah || [];
-      }
-    } catch (e) {
-      if (e.message === 'Unauthorized') {
-        lsDel(LS_TOKEN); lsDel(LS_OFISIAL); location.reload();
-      }
+      const sch = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon });
+      if (sch.status === 'success') State.sekolah = sch.sekolah || [];
     }
   }
 
@@ -528,11 +545,19 @@ a { color: inherit; text-decoration: none; }
         if (res.status === 'success') {
           State.token = tok; State.ofisial = res.ofisial;
           lsSet(LS_TOKEN, tok); lsSet(LS_OFISIAL, res.ofisial);
-          await loadData(); showView('view-dashboard'); renderDashboard();
+          await loadData();
+          showView('view-dashboard');
+          renderDashboard();
         } else {
-          toast(res.message || 'Token salah', 'error'); btn.disabled = false; btn.innerHTML = 'Masuk';
+          toast(res.message || 'Token salah', 'error');
+          btn.disabled = false; btn.innerHTML = 'Masuk';
         }
-      } catch (e) { toast('Gagal koneksi', 'error'); btn.disabled = false; btn.innerHTML = 'Masuk'; }
+      } catch (e) {
+        if (e.message !== 'Unauthorized') {
+          toast(e.message || 'Gagal koneksi', 'error');
+          btn.disabled = false; btn.innerHTML = 'Masuk';
+        }
+      }
     };
 
     $('#btnLupaToken').onclick = () => {
@@ -549,17 +574,16 @@ a { color: inherit; text-decoration: none; }
     const inpWA = $('#regWA');
     const btnReg = $('#btnRegister');
     const wrapSekolah = $('#regSekolahContainer');
-    
+
     let selectedSekolah = '';
 
     api('kapanewon_status').then(res => {
       if (res.status === 'success' && res.kapanewon) {
-        const taken = new Set(res.kapanewon.filter(k => k.terisi).map(k => k.nama));
-        selKap.innerHTML = '<option value="">— Pilih —</option>' + 
+        selKap.innerHTML = '<option value="">— Pilih —</option>' +
           res.kapanewon.map(k => `<option value="${k.nama}" ${k.terisi?'disabled':''}>${k.nama} ${k.terisi?'(Ada)':''}</option>`).join('');
       } else throw new Error();
     }).catch(() => {
-      selKap.innerHTML = '<option value="">— Pilih —</option>' + 
+      selKap.innerHTML = '<option value="">— Pilih —</option>' +
         KAPANEWON_LIST.map(k => `<option value="${k}">${k}</option>`).join('');
     });
 
@@ -576,7 +600,7 @@ a { color: inherit; text-decoration: none; }
       try {
         const res = await api('sekolah_list', { kapanewon: kap });
         const list = res.status === 'success' ? res.sekolah : [];
-        renderSearchSelect(wrapSekolah, list, '', (val, isManual) => {
+        renderSearchSelect(wrapSekolah, list, '', (val) => {
           selectedSekolah = val;
         });
       } catch (err) {
@@ -590,7 +614,7 @@ a { color: inherit; text-decoration: none; }
       if (!selectedSekolah) return toast('Pilih Asal Sekolah', 'error');
       if (!inpEmail.value.includes('@')) return toast('Isi Email dengan benar', 'error');
       if (inpWA.value.length < 10) return toast('Isi No WhatsApp dengan benar', 'error');
-      
+
       btnReg.disabled = true; btnReg.innerHTML = 'Memproses...';
       try {
         const res = await api('register_ofisial', {
@@ -605,7 +629,7 @@ a { color: inherit; text-decoration: none; }
           wrapSekolah.innerHTML = `<input type="text" class="form-control" placeholder="Pilih Kapanewon dulu" disabled>`;
           selectedSekolah = '';
         }
-      } catch (err) { toast('Gagal mendaftar', 'error'); }
+      } catch (err) { toast(err.message || 'Gagal mendaftar', 'error'); }
       btnReg.disabled = false; btnReg.innerHTML = 'Daftar & Kirim Token';
     };
   }
@@ -614,7 +638,7 @@ a { color: inherit; text-decoration: none; }
   function renderDashboard() {
     $('#dashKapanewon').textContent = State.ofisial.Kapanewon;
     $('#dashNama').textContent = State.ofisial.Nama;
-    
+
     const pct = Math.min(100, Math.round((State.slotTerpakai / State.kuota) * 100));
     $('#dashKuotaText').textContent = `${State.slotTerpakai} / ${State.kuota} slot`;
     $('#dashProgress').style.width = pct + '%';
@@ -623,36 +647,47 @@ a { color: inherit; text-decoration: none; }
     const grid = $('#branchGrid');
     grid.innerHTML = State.cabang.map(c => {
       const p = State.peserta.find(x => x.Cabang === c.key);
-      
+
       if (p) {
         const isTeam = !!c.team;
+        const isMenyanyi = c.key === 'Menyanyi';
         const needAkta = isTeam ? 3 : 1;
         const hasAkta = [p.has_akta1, p.has_akta2, p.has_akta3].filter(Boolean).length;
         const isComplete = p.berkas_lengkap;
-        
-        let badgeBerkas = isComplete 
-          ? `<span style="font-size:0.65rem; font-weight:800; color:var(--hijau); background:var(--hijau-light); padding:0.15rem 0.4rem; border-radius:4px;">✓ Lengkap</span>` 
-          : `<span style="font-size:0.65rem; font-weight:800; color:var(--gold); background:var(--gold-light); padding:0.15rem 0.4rem; border-radius:4px;">⚠ ${hasAkta}/${needAkta}</span>`;
+        const karaokeMissing = isMenyanyi && !p.has_karaoke;
+
+        let badgeBerkas;
+        if (isComplete && !karaokeMissing) {
+          badgeBerkas = `<span style="font-size:0.65rem; font-weight:800; color:var(--hijau); background:var(--hijau-light); padding:0.15rem 0.4rem; border-radius:4px;">✓ Lengkap</span>`;
+        } else if (isComplete && karaokeMissing) {
+          badgeBerkas = `<span style="font-size:0.65rem; font-weight:800; color:var(--gold); background:var(--gold-light); padding:0.15rem 0.4rem; border-radius:4px;" title="Musik pengiring belum diunggah">⚠ Musik</span>`;
+        } else {
+          badgeBerkas = `<span style="font-size:0.65rem; font-weight:800; color:var(--gold); background:var(--gold-light); padding:0.15rem 0.4rem; border-radius:4px;">⚠ ${hasAkta}/${needAkta}</span>`;
+        }
 
         const files = isTeam ? [
-          { key: 'akta1', label: 'Akta Ketua', has: p.has_akta1 },
-          { key: 'akta2', label: 'Akta Anggota 2', has: p.has_akta2 },
-          { key: 'akta3', label: 'Akta Anggota 3', has: p.has_akta3 }
+          { key: 'akta1', label: 'Akta Ketua', has: p.has_akta1, accept: 'image/jpeg,image/png,application/pdf' },
+          { key: 'akta2', label: 'Akta Anggota 2', has: p.has_akta2, accept: 'image/jpeg,image/png,application/pdf' },
+          { key: 'akta3', label: 'Akta Anggota 3', has: p.has_akta3, accept: 'image/jpeg,image/png,application/pdf' }
         ] : [
-          { key: 'akta1', label: 'Akta Kelahiran', has: p.has_akta1 }
+          { key: 'akta1', label: 'Akta Kelahiran', has: p.has_akta1, accept: 'image/jpeg,image/png,application/pdf' }
         ];
 
-        let uploadHtml = files.map(f => `
+        if (isMenyanyi) {
+          files.push({ key: 'karaoke', label: 'Musik Pengiring (MP3)', has: p.has_karaoke, accept: 'audio/mpeg,audio/mp3,audio/*' });
+        }
+
+        const uploadHtml = files.map(f => `
           <div class="upload-box ${f.has ? 'done' : ''}" id="box-${p.ID}-${f.key}">
             <div class="upload-icon">
-              ${f.has ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
+              ${f.has ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'
                      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
             </div>
             <div class="upload-text">
               ${f.label}
               <small>${f.has ? 'Tersimpan' : 'Klik upload'}</small>
             </div>
-            <input type="file" accept="image/jpeg,image/png,application/pdf" style="display:none;" class="file-input" data-id="${p.ID}" data-jenis="${f.key}">
+            <input type="file" accept="${f.accept}" style="display:none;" class="file-input" data-id="${p.ID}" data-jenis="${f.key}">
           </div>
         `).join('');
 
@@ -703,14 +738,14 @@ a { color: inherit; text-decoration: none; }
 
     $$('.btn-expand').forEach(b => b.onclick = () => {
       const area = document.getElementById('upload-' + b.dataset.id);
-      area.classList.toggle('active');
+      if (area) area.classList.toggle('active');
     });
     $$('.btn-edit').forEach(b => b.onclick = () => {
       const p = State.peserta.find(x => x.ID === b.dataset.id);
-      if(p) openForm(p.Cabang, p.ID);
+      if (p) openForm(p.Cabang, p.ID);
     });
     $$('.btn-del').forEach(b => b.onclick = () => deletePeserta(b.dataset.id));
-    
+
     bindUploads();
   }
 
@@ -725,31 +760,33 @@ a { color: inherit; text-decoration: none; }
 
   async function handleUpload(file, jenis, id, boxEl, inputEl) {
     if (!file) return;
-    if (file.size > 3 * 1024 * 1024) return toast('Maksimal 3 MB', 'error');
+    const LIMITS = { akta1: 2, akta2: 2, akta3: 2, karaoke: 10 }; // MB, sesuai backend BERKAS
+    const maxMB = LIMITS[jenis] || 2;
+    if (file.size > maxMB * 1024 * 1024) return toast(`Maksimal ${maxMB} MB`, 'error');
 
     const oldHTML = boxEl.innerHTML;
     boxEl.innerHTML = '<div class="upload-text" style="color:var(--rose-primary);">Mengunggah...</div>';
 
     try {
       let finalFile = file;
-      if(file.type.startsWith('image/')) finalFile = await compressImage(file);
+      if (file.type.startsWith('image/')) finalFile = await compressImage(file);
       const base64 = await fileToBase64(finalFile);
-      
-      const res = await api('upload_berkas', { 
-        peserta_id: id, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
+
+      const res = await api('upload_berkas', {
+        peserta_id: id, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name
       });
-      
+
       if (res.error) throw new Error(res.message);
-      
+
       toast('Berhasil diunggah', 'success');
       await loadData();
       renderDashboard();
-      
+
       setTimeout(() => {
-        const newSec = document.getElementById('upload-'+id);
-        if(newSec) newSec.classList.add('active');
+        const newSec = document.getElementById('upload-' + id);
+        if (newSec) newSec.classList.add('active');
       }, 100);
-      
+
     } catch (e) {
       toast(e.message || 'Gagal upload', 'error');
       boxEl.innerHTML = oldHTML;
@@ -761,7 +798,7 @@ a { color: inherit; text-decoration: none; }
     const isEdit = !!id;
     let p = {};
     if (isEdit) p = State.peserta.find(x => x.ID === id);
-    
+
     State.formId = id;
     State.form = {
       mode: isEdit ? 'edit' : 'add',
@@ -769,8 +806,11 @@ a { color: inherit; text-decoration: none; }
       asalSekolah: isEdit ? p.Asal_Sekolah : '',
       sekolahManual: isEdit ? String(p.Catatan).includes('Sekolah manual') : false,
       members: isEdit ? [] : [{ nama: '', jk: '', nisn: '', tl: '', tgl: '', kelas: '' }],
-      files: {}, 
-      existingFiles: isEdit ? { akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3 } : {}
+      files: {},
+      existingFiles: isEdit ? {
+        akta1: !!p.has_akta1, akta2: !!p.has_akta2, akta3: !!p.has_akta3,
+        karaoke: !!p.has_karaoke
+      } : {}
     };
 
     if (isEdit) {
@@ -817,7 +857,7 @@ a { color: inherit; text-decoration: none; }
   function renderFormMembers() {
     const box = $('#formMembersArea');
     const isTeam = State.form.members.length > 1;
-    
+
     box.innerHTML = State.form.members.map((m, i) => `
       <div class="member-block">
         <div class="member-title">
@@ -844,7 +884,7 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="form-group">
           <label>Tanggal Lahir <span>*</span></label>
-          <input type="date" class="form-control m-tgl" data-i="${i}" value="${esc(m.tgl)}" min="2008-01-01" max="2021-12-31">
+          <input type="date" class="form-control m-tgl" data-i="${i}" value="${esc(m.tgl)}" min="2013-01-01" max="2020-12-31">
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label>Kelas <span>*</span></label>
@@ -872,40 +912,52 @@ a { color: inherit; text-decoration: none; }
 
   function renderFormUploads() {
     const isTeam = State.form.members.length > 1;
+    const isMenyanyi = State.form.cabang === 'Menyanyi';
+
     const requiredFiles = isTeam ? [
-      { key: 'akta1', label: 'Akta Ketua' },
-      { key: 'akta2', label: 'Akta Anggota 2' },
-      { key: 'akta3', label: 'Akta Anggota 3' }
+      { key: 'akta1', label: 'Akta Ketua', accept: 'image/jpeg,image/png,application/pdf', maxMB: 2 },
+      { key: 'akta2', label: 'Akta Anggota 2', accept: 'image/jpeg,image/png,application/pdf', maxMB: 2 },
+      { key: 'akta3', label: 'Akta Anggota 3', accept: 'image/jpeg,image/png,application/pdf', maxMB: 2 }
     ] : [
-      { key: 'akta1', label: 'Akta Kelahiran' }
+      { key: 'akta1', label: 'Akta Kelahiran', accept: 'image/jpeg,image/png,application/pdf', maxMB: 2 }
     ];
+
+    if (isMenyanyi) {
+      requiredFiles.push({
+        key: 'karaoke',
+        label: 'Musik Pengiring (MP3)',
+        accept: 'audio/mpeg,audio/mp3,audio/*',
+        maxMB: 10,
+        hint: 'MP3 instrumental, tanpa vokal backing'
+      });
+    }
 
     let html = requiredFiles.map(f => {
       const hasExisting = State.form.existingFiles && State.form.existingFiles[f.key];
       const pendingFile = State.form.files && State.form.files[f.key];
-      
-      let statusText = 'Klik untuk pilih file (JPG/PDF)';
+
+      let statusText = f.hint ? `Klik pilih file · ${f.hint}` : `Klik pilih file (${f.maxMB} MB max)`;
       let isSelected = false;
-      
+
       if (pendingFile) {
-        statusText = `Terpilih: ${pendingFile.name}`;
+        statusText = `Terpilih: ${pendingFile.name} (${(pendingFile.size / 1024).toFixed(0)} KB)`;
         isSelected = true;
       } else if (hasExisting) {
         statusText = '✓ Sudah diunggah sebelumnya';
         isSelected = true;
       }
-      
+
       return `
         <div class="form-upload-box ${isSelected ? 'selected' : ''}" id="form-box-${f.key}">
           <div class="form-upload-icon">
-            ${isSelected ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' 
-                       : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
+            ${isSelected ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'
+                         : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>'}
           </div>
           <div class="form-upload-text">
             ${f.label}
             <small>${statusText}</small>
           </div>
-          <input type="file" accept="image/jpeg,image/png,application/pdf" style="display:none;" class="form-file-input" data-key="${f.key}">
+          <input type="file" accept="${f.accept}" style="display:none;" class="form-file-input" data-key="${f.key}" data-max="${f.maxMB}">
         </div>
       `;
     }).join('');
@@ -918,8 +970,9 @@ a { color: inherit; text-decoration: none; }
       input.onchange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 3 * 1024 * 1024) return toast('Maksimal 3 MB', 'error');
-        
+        const maxMB = parseInt(input.dataset.max, 10) || 2;
+        if (file.size > maxMB * 1024 * 1024) return toast(`Maksimal ${maxMB} MB`, 'error');
+
         if (!State.form.files) State.form.files = {};
         State.form.files[input.dataset.key] = file;
         renderFormUploads();
@@ -929,11 +982,19 @@ a { color: inherit; text-decoration: none; }
 
   function renderSearchSelect(container, list, currentVal, onSelect) {
     if (!container) return;
+    const wajib = State.wajibSekolah === true;
+
+    // Kasus: tidak ada sekolah di master
     if (list.length === 0) {
+      if (wajib) {
+        container.innerHTML = `<div class="form-control" style="background:var(--danger-light);color:var(--danger);border-color:var(--danger);text-align:center;font-weight:600;">⚠ Belum ada sekolah terdaftar untuk kapanewon ini.<br><small style="font-weight:400;">Hubungi panitia untuk pendaftaran sekolah.</small></div>`;
+        onSelect('', false);
+        return;
+      }
       container.innerHTML = `<input type="text" class="form-control" id="manualInputTemp" placeholder="Ketik Nama Sekolah (Manual)" value="${esc(currentVal)}" style="text-transform:uppercase;border-color:var(--gold);"><small style="color:var(--gold);font-size:0.7rem;margin-top:0.2rem;display:block;">*Data belum tersedia. Ketik manual.</small>`;
       const inp = container.querySelector('#manualInputTemp');
       inp.oninput = (e) => { e.target.value = e.target.value.toUpperCase(); onSelect(e.target.value, true); };
-      if(currentVal) onSelect(currentVal, true);
+      if (currentVal) onSelect(currentVal, true);
       return;
     }
 
@@ -948,7 +1009,7 @@ a { color: inherit; text-decoration: none; }
           <div class="search-results" id="pickerList"></div>
         </div>
       </div>
-      <div id="pickerManualWrap" style="display:none;margin-top:0.6rem;"><input type="text" class="form-control" id="pickerManualInput" placeholder="Ketik Nama Sekolah..." style="text-transform:uppercase;border-color:var(--gold);"></div>
+      ${wajib ? '' : '<div id="pickerManualWrap" style="display:none;margin-top:0.6rem;"><input type="text" class="form-control" id="pickerManualInput" placeholder="Ketik Nama Sekolah..." style="text-transform:uppercase;border-color:var(--gold);"></div>'}
     `;
 
     const trigger = container.querySelector('#pickerTrigger');
@@ -966,19 +1027,20 @@ a { color: inherit; text-decoration: none; }
       let html = '';
       if (fNegeri.length) html += `<div class="opt-group">SD Negeri</div>` + fNegeri.map(s => `<div class="opt-item ${s.Nama===currentVal?'selected':''}" data-val="${esc(s.Nama)}">${s.Nama===currentVal?'✓ ':''}${esc(s.Nama)}</div>`).join('');
       if (fSwasta.length) html += `<div class="opt-group">SD / MI Swasta</div>` + fSwasta.map(s => `<div class="opt-item ${s.Nama===currentVal?'selected':''}" data-val="${esc(s.Nama)}">${s.Nama===currentVal?'✓ ':''}${esc(s.Nama)}</div>`).join('');
-      html += `<div class="opt-item opt-manual" data-val="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>`;
-      
+      if (!wajib) html += `<div class="opt-item opt-manual" data-val="__manual__">⚠ Sekolah tidak ada di daftar (isi manual)</div>`;
+      if (!html) html = '<div style="padding:1rem;text-align:center;color:var(--ink-light);font-size:0.85rem;">Sekolah tidak ditemukan</div>';
+
       listWrap.innerHTML = html;
       listWrap.querySelectorAll('.opt-item').forEach(opt => {
         opt.onclick = () => {
           const v = opt.dataset.val;
           if (v === '__manual__') {
             manualWrap.style.display = 'block';
-            manualInp.value = ''; setTimeout(()=>manualInp.focus(), 50);
+            manualInp.value = ''; setTimeout(() => manualInp.focus(), 50);
             trigger.querySelector('span').textContent = 'Isi manual di bawah...';
             currentVal = ''; onSelect('', true);
           } else {
-            manualWrap.style.display = 'none';
+            if (manualWrap) manualWrap.style.display = 'none';
             trigger.querySelector('span').textContent = v;
             currentVal = v; onSelect(v, false);
           }
@@ -994,7 +1056,7 @@ a { color: inherit; text-decoration: none; }
     };
     document.addEventListener('click', (e) => { if (!container.contains(e.target)) { dropdown.classList.remove('active'); trigger.classList.remove('active'); } });
     searchInp.oninput = (e) => filterList(e.target.value);
-    manualInp.oninput = (e) => { e.target.value = e.target.value.toUpperCase(); onSelect(e.target.value, true); };
+    if (manualInp) manualInp.oninput = (e) => { e.target.value = e.target.value.toUpperCase(); onSelect(e.target.value, true); };
     filterList();
   }
 
@@ -1008,7 +1070,7 @@ a { color: inherit; text-decoration: none; }
       Nama_Lengkap: f.members[0].nama, Jenis_Kelamin: f.members[0].jk, NISN: f.members[0].nisn,
       Tempat_Lahir: f.members[0].tl, Tanggal_Lahir: f.members[0].tgl, Kelas: f.members[0].kelas
     };
-    
+
     if (isTeam) {
       payload.Anggota_2 = f.members[1].nama; payload.JK_2 = f.members[1].jk; payload.NISN_2 = f.members[1].nisn;
       payload.Tempat_Lahir_2 = f.members[1].tl; payload.Tanggal_Lahir_2 = f.members[1].tgl; payload.Kelas_2 = f.members[1].kelas;
@@ -1016,22 +1078,23 @@ a { color: inherit; text-decoration: none; }
       payload.Tempat_Lahir_3 = f.members[2].tl; payload.Tanggal_Lahir_3 = f.members[2].tgl; payload.Kelas_3 = f.members[2].kelas;
     }
 
-    for (let i=0; i<f.members.length; i++) {
+    for (let i = 0; i < f.members.length; i++) {
       const m = f.members[i];
-      if (!m.nama || !m.jk || m.nisn.length<10 || !m.tl || !m.tgl || !m.kelas) {
+      if (!m.nama || !m.jk || m.nisn.length < 10 || !m.tl || !m.tgl || !m.kelas) {
         return toast(`Data anggota ${i+1} belum lengkap`, 'error');
       }
     }
 
-    const btn = $('#btnSaveData'); btn.disabled = true; btn.innerHTML = 'Menyimpan data...';
+    const btn = $('#btnSaveData');
+    btn.disabled = true; btn.innerHTML = 'Menyimpan data...';
 
     try {
       const endpoint = f.mode === 'edit' ? 'update_peserta' : 'daftar_peserta';
       const body = f.mode === 'edit' ? { id: State.formId, payload } : { payload };
-      
+
       const res = await api(endpoint, body);
       if (res.error) throw new Error(res.messages ? res.messages[0] : res.message);
-      
+
       const pId = f.mode === 'edit' ? State.formId : res.id;
 
       if (f.files && Object.keys(f.files).length > 0) {
@@ -1039,28 +1102,29 @@ a { color: inherit; text-decoration: none; }
         for (let i = 0; i < fileKeys.length; i++) {
           const jenis = fileKeys[i];
           const file = f.files[jenis];
-          btn.innerHTML = `Mengunggah ${jenis.replace('akta','Akta ')} (${i+1}/${fileKeys.length})...`;
-          
+          const label = jenis === 'karaoke' ? 'Musik Pengiring' : jenis.replace('akta', 'Akta ');
+          btn.innerHTML = `Mengunggah ${label} (${i+1}/${fileKeys.length})...`;
+
           let finalFile = file;
-          if(file.type.startsWith('image/')) finalFile = await compressImage(file);
+          if (file.type.startsWith('image/')) finalFile = await compressImage(file);
           const base64 = await fileToBase64(finalFile);
-          
-          const uploadRes = await api('upload_berkas', { 
-            peserta_id: pId, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name 
+
+          const uploadRes = await api('upload_berkas', {
+            peserta_id: pId, jenis, file_base64: base64, mime_type: finalFile.type, file_name: finalFile.name
           });
           if (uploadRes.error) {
-            toast(`Gagal upload ${jenis}: ` + uploadRes.message, 'error');
+            toast(`Gagal upload ${label}: ` + uploadRes.message, 'error');
           }
         }
       }
 
       toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta ditambahkan', 'success');
       await loadData();
-      
+
       $('#view-form').classList.remove('active');
       document.body.style.overflow = '';
       renderDashboard();
-      
+
     } catch (e) {
       toast(e.message, 'error');
       btn.disabled = false; btn.innerHTML = 'Simpan Data & Unggah';
@@ -1073,7 +1137,8 @@ a { color: inherit; text-decoration: none; }
       const res = await api('hapus_peserta', { id });
       if (res.error) throw new Error(res.message);
       toast('Peserta dihapus', 'success');
-      await loadData(); renderDashboard();
+      await loadData();
+      renderDashboard();
     } catch (e) { toast(e.message, 'error'); }
   }
 
@@ -1100,6 +1165,7 @@ a { color: inherit; text-decoration: none; }
       img.src = URL.createObjectURL(file);
     });
   }
+
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const r = new FileReader();
@@ -1108,6 +1174,14 @@ a { color: inherit; text-decoration: none; }
       r.readAsDataURL(file);
     });
   }
+
+  // ── Tombol Keluar ────────────────────────────────────
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    if (!confirm('Keluar dari portal ofisial?\nAnda harus login ulang untuk mengakses kembali.')) return;
+    lsDel(LS_TOKEN);
+    lsDel(LS_OFISIAL);
+    location.reload();
+  });
 
   // Start
   boot();
