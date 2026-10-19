@@ -43,7 +43,7 @@
 
             --trans: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             --topbar-h: 64px;
-            --max-width: 1200px;
+            --max-width: 1100px;
             --section-pad-x: clamp(1rem, 4vw, 2rem);
             --section-pad-y: clamp(3rem, 8vh, 5rem);
         }
@@ -220,14 +220,14 @@
         }
 
         /* ============================================================
-         * §5 PORTAL SECTION (Hanya Publik & Ofisial)
+         * §5 PORTAL SECTION (Proporsional)
          * ============================================================ */
         .portal-section {
             background: var(--surface);
             padding: var(--section-pad-y) var(--section-pad-x);
             border-bottom: 2px solid var(--border-dark);
         }
-        .portal-inner { max-width: 900px; margin: 0 auto; } /* Diperkecil karena hanya 2 kartu */
+        .portal-inner { max-width: 900px; margin: 0 auto; }
         .portal-head { text-align: center; margin-bottom: 2.5rem; }
         .portal-head .eyebrow {
             display: inline-block; font-size: .75rem; font-weight: 800;
@@ -247,9 +247,10 @@
             padding: 1.5rem; border-radius: var(--r-lg);
             text-decoration: none; 
             transition: var(--trans); position: relative; overflow: hidden;
-            min-height: 170px; 
+            min-height: 160px; 
             border: 2px solid var(--border-dark);
             box-shadow: 4px 4px 0 var(--border);
+            justify-content: space-between;
         }
         .portal-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--border-dark); }
         
@@ -260,21 +261,22 @@
         .portal-card.accent { background: #059669; border-color: #047857; box-shadow: 4px 4px 0 #A7F3D0; }
         .portal-card.accent:hover { box-shadow: 6px 6px 0 #A7F3D0; }
 
+        .portal-header-flex { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .portal-icon {
-            width: 42px; height: 42px; border-radius: var(--r-sm);
+            width: 48px; height: 48px; border-radius: var(--r-sm);
             background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.3);
         }
-        .portal-icon svg { width: 24px; height: 24px; color: #fff; }
+        .portal-icon svg { width: 26px; height: 26px; color: #fff; }
 
         .portal-card h3 {
-            font-size: 1.3rem; font-weight: 800; margin: 0 0 .4rem;
+            font-size: 1.35rem; font-weight: 800; margin: 0;
             display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
             color: #ffffff !important; 
         }
         .portal-card p {
-            font-size: .85rem; line-height: 1.5; margin: 0 0 1.5rem;
+            font-size: .85rem; line-height: 1.5; margin: 0 0 1.2rem;
             flex: 1; color: rgba(255,255,255,.9) !important;
         }
 
@@ -282,7 +284,7 @@
             display: inline-flex; align-items: center; gap: .5rem;
             background: #fff; color: #1E293B; font-size: .85rem; font-weight: 800;
             padding: .6rem 1.2rem; border-radius: var(--r-sm);
-            transition: var(--trans); margin-top: auto; width: fit-content;
+            transition: var(--trans); width: fit-content;
             border: 1.5px solid transparent;
         }
         .portal-card:hover .portal-btn { transform: translateX(4px); }
@@ -465,6 +467,7 @@
             .topbar .brand span.sub { display: none; }
             .lomba-item { flex: 1 1 100%; }
             .back-to-top { bottom: calc(56px + 20px + 16px); right: 20px; }
+            .portal-header-flex { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
         }
     </style>
 </head>
@@ -531,15 +534,17 @@
         <div class="portal-grid">
 
             <a href="./daftar.html" class="portal-card primary" id="btnDaftar">
-                <div class="portal-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="8.5" cy="7" r="4"/>
-                        <line x1="20" y1="8" x2="20" y2="14"/>
-                        <line x1="23" y1="11" x2="17" y2="11"/>
-                    </svg>
+                <div class="portal-header-flex">
+                    <div class="portal-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                    </div>
+                    <h3>Daftar Peserta</h3>
                 </div>
-                <h3>Daftar Peserta</h3>
                 <p>Portal ofisial kapanewon untuk mendaftarkan 11 peserta cabang lomba.</p>
                 <span class="portal-btn">
                     Masuk Portal
@@ -548,13 +553,15 @@
             </a>
 
             <a href="./pemantauan.html" class="portal-card accent" id="btnPemantauan">
-                <div class="portal-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
+                <div class="portal-header-flex">
+                    <div class="portal-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Pemantauan Live</h3>
                 </div>
-                <h3>Pemantauan Live</h3>
                 <p>Papan informasi publik: status lomba, nomor undian, antrian tampil, countdown timer.</p>
                 <span class="portal-btn">
                     Lihat Live
