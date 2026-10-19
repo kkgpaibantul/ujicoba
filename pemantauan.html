@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#2A9D8F" />
+<title>Pemantauan Publik — MTQ 2026</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+ * §1 DESIGN TOKENS
+ * ============================================================ */
+:root {
+  --cream: #FFF9F0;
+  --rose-deep: #4A2E3F;
+  --rose-primary: #9E5F7B;
+  --rose-light: #F3D5E0;
+  --hijau: #2A9D8F;
+  --hijau-light: #E8F6F4;
+  --gold: #E9C46A;
+  --gold-light: #FEF5E7;
+  
+  --ink: #1E293B;
+  --ink-light: #64748B;
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+  --border-dark: #CBD5E0;
+  --danger: #E53E3E;
+  --danger-light: #FFF5F5;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+ * §2 RESET & BASE
+ * ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { 
+  min-height: 100dvh;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--border-dark) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 2rem;
+}
+h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; color: var(--rose-deep); }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, select, textarea { font-family: inherit; font-size: 16px; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--hijau); outline-offset: 2px; border-radius: 4px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(42,157,143,0.2); border-radius: 50%; border-top-color: var(--hijau); animation: spin 0.8s linear infinite; }
+
+/* ============================================================
+ * §3 LAYOUT & HEADER
+ * ============================================================ */
+.appbar { 
+  position: sticky; top: 0; z-index: 50; 
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); 
+  border-bottom: 2px solid var(--border-dark); 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 0.8rem 1.2rem; 
+}
+.appbar-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; color: var(--rose-deep); font-size: 1.1rem; }
+.appbar-brand svg { width: 24px; height: 24px; color: var(--hijau); }
+.btn-home { font-size: 0.85rem; font-weight: 700; color: var(--ink); padding: 0.4rem 0.8rem; border-radius: var(--r-sm); border: 1.5px solid var(--border); transition: var(--trans); }
+.btn-home:hover { border-color: var(--hijau); color: var(--hijau); background: var(--hijau-light); }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+/* Tabs Navigation */
+.tabs-nav { 
+  display: flex; gap: 0.5rem; background: var(--surface); 
+  padding: 0.4rem; border-radius: var(--r-lg); border: 1px solid var(--border); 
+  box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; 
+  overflow-x: auto; scrollbar-width: none; 
+}
+.tabs-nav::-webkit-scrollbar { display: none; }
+.tab-btn { 
+  flex: 1; padding: 0.7rem 1rem; border-radius: var(--r-md); font-weight: 700; font-size: 0.9rem; 
+  color: var(--ink-light); transition: var(--trans); white-space: nowrap; text-align: center;
+}
+.tab-btn:hover { color: var(--hijau); background: var(--hijau-light); }
+.tab-btn.active { background: var(--hijau); color: #fff; box-shadow: 0 4px 12px rgba(42,157,143,0.3); }
+
+.tab-pane { display: none; animation: fadeIn 0.3s ease; }
+.tab-pane.active { display: block; }
+
+/* ============================================================
+ * §4 TAB 1: LIVE PANGGUNG
+ * ============================================================ */
+.live-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .live-grid { grid-template-columns: 1fr 1fr; } }
+
+.live-card { 
+  background: var(--surface); border: 1.5px solid var(--border); 
+  border-radius: var(--r-lg); padding: 1.25rem; box-shadow: var(--shadow-sm); 
+  display: flex; flex-direction: column; gap: 1rem; transition: var(--trans);
+}
+.live-card.is-live { border-color: var(--hijau); box-shadow: 0 4px 15px rgba(42,157,143,0.15); }
+.live-header { display: flex; justify-content: space-between; align-items: center; }
+.live-title { font-size: 1.1rem; font-weight: 800; color: var(--rose-deep); display: flex; align-items: center; gap: 0.5rem; }
+.live-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 99px; letter-spacing: 0.05em; }
+.live-badge.belum { background: var(--border); color: var(--ink-light); }
+.live-badge.berlangsung { background: var(--hijau); color: #fff; animation: pulse 1.5s infinite; }
+.live-badge.istirahat { background: var(--gold); color: var(--rose-deep); }
+.live-badge.selesai { background: var(--rose-deep); color: #fff; }
+
+.live-body { background: var(--bg); border-radius: var(--r-md); padding: 1rem; text-align: center; border: 1px dashed var(--border-dark); }
+.live-label { font-size: 0.75rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.live-value { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--hijau); line-height: 1.1; }
+.live-value small { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; color: var(--ink-light); font-weight: 600; margin-top: 0.2rem; }
+.live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; }
+.live-timer { font-size: 2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
+
+/* ============================================================
+ * §5 TAB 2: CEK HASIL
+ * ============================================================ */
+.cek-box { max-width: 600px; margin: 0 auto; background: var(--surface); padding: 2rem; border-radius: var(--r-lg); border: 1.5px solid var(--border); box-shadow: var(--shadow-md); }
+.cek-box h2 { text-align: center; margin-bottom: 0.5rem; font-size: 1.4rem; }
+.cek-box p { text-align: center; color: var(--ink-light); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.input-group { display: flex; gap: 0.5rem; }
+.input-cek { flex: 1; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: var(--r-md); font-size: 1.1rem; font-weight: 800; text-transform: uppercase; text-align: center; transition: var(--trans); outline: none; }
+.input-cek:focus { border-color: var(--hijau); box-shadow: 0 0 0 4px var(--hijau-light); }
+.btn-cek { padding: 0 1.5rem; border-radius: var(--r-md); background: var(--hijau); color: #fff; font-weight: 800; font-size: 0.95rem; transition: var(--trans); }
+.btn-cek:hover { background: #21867a; }
+.btn-cek:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.result-card { display: none; margin-top: 1.5rem; background: linear-gradient(135deg, #FFFFFF, #F0FDF4); border: 2px solid var(--hijau); border-radius: var(--r-lg); padding: 1.5rem; text-align: center; animation: fadeIn 0.3s ease; }
+.result-card.show { display: block; }
+.result-card .no { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; color: var(--hijau); line-height: 1; }
+.result-card h3 { font-size: 1.2rem; margin: 0.5rem 0 0.2rem; color: var(--ink); }
+.result-card p { font-size: 0.85rem; color: var(--ink-light); margin-bottom: 1rem; }
+.result-score { font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 900; color: var(--rose-deep); line-height: 1; }
+.result-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); margin-bottom: 0.5rem; }
+.result-badge { display: inline-block; padding: 0.3rem 1rem; border-radius: 99px; font-size: 0.85rem; font-weight: 800; margin-top: 0.5rem; }
+.result-badge.juara { background: var(--gold); color: var(--rose-deep); box-shadow: 0 2px 8px rgba(233,196,106,0.4); }
+.result-badge.biasa { background: var(--bg); color: var(--ink-light); border: 1px solid var(--border); }
+.result-blind { background: var(--gold-light); border: 2px dashed var(--gold); color: #92400e; padding: 1.5rem; border-radius: var(--r-md); font-weight: 600; font-size: 0.9rem; }
+
+/* ============================================================
+ * §6 TAB 3: DAFTAR PESERTA
+ * ============================================================ */
+.search-bar { margin-bottom: 1rem; }
+.search-bar input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: var(--r-md); font-size: 1rem; outline: none; transition: var(--trans); }
+.search-bar input:focus { border-color: var(--hijau); box-shadow: 0 0 0 3px var(--hijau-light); }
+.peserta-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.peserta-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: var(--trans); }
+.peserta-item:hover { border-color: var(--hijau); transform: translateX(2px); }
+.peserta-item .no { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.1rem; color: var(--hijau); min-width: 70px; }
+.peserta-item .info { flex: 1; min-width: 0; }
+.peserta-item .info h4 { font-size: 0.95rem; margin: 0 0 0.1rem; color: var(--ink); }
+.peserta-item .info p { font-size: 0.75rem; color: var(--ink-light); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.peserta-item .kode { font-size: 0.7rem; font-weight: 800; background: var(--hijau-light); color: var(--hijau); padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-light); }
+.empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.3; }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
+    Pemantauan MTQ
+  </div>
+  <a href="./index.html" class="btn-home">Beranda</a>
+</header>
+
+<div class="container">
+  
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="tab-live">🎭 Live Panggung</button>
+    <button class="tab-btn" data-tab="tab-cek">🏆 Cek Hasil</button>
+    <button class="tab-btn" data-tab="tab-peserta">👥 Daftar Peserta</button>
+  </div>
+
+  <!-- TAB 1: LIVE PANGGUNG -->
+  <div id="tab-live" class="tab-pane active">
+    <div class="live-grid" id="liveGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;"><span class="spinner"></span><p style="margin-top:1rem;color:var(--ink-light);font-size:0.9rem;">Memuat status panggung...</p></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: CEK HASIL -->
+  <div id="tab-cek" class="tab-pane">
+    <div class="cek-box">
+      <h2>Cek Hasil Lomba</h2>
+      <p>Masukkan nomor undian peserta (contoh: <b>MTQ-01</b> atau <b>LCP-03</b>)</p>
+      
+      <div class="input-group">
+        <input type="text" id="inputNoUndian" class="input-cek" placeholder="MTQ-01" maxlength="10" autocomplete="off" spellcheck="false">
+        <button class="btn-cek" id="btnCek">Cek</button>
+      </div>
+
+      <div id="resultCard" class="result-card"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: DAFTAR PESERTA -->
+  <div id="tab-peserta" class="tab-pane">
+    <div class="search-bar">
+      <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, atau kapanewon..." autocomplete="off">
+    </div>
+    <div class="peserta-list" id="pesertaList">
+      <div style="text-align:center;padding:3rem;"><span class="spinner"></span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+(() => {
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
+  
+  let allPeserta = [];
+  let isPolling = false;
+  let pollTimeout = null;
+
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  async function api(action, payload = {}) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, ...payload })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  }
+
+  // ── TABS CONTROLLER ──
+  $$('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      $$('.tab-btn').forEach(b => b.classList.remove('active'));
+      $$('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      $('#' + btn.dataset.tab).classList.add('active');
+
+      // Lazy load data saat tab dibuka
+      if (btn.dataset.tab === 'tab-peserta' && allPeserta.length === 0) {
+        loadPeserta();
+      }
+    };
+  });
+
+  // ── 1. LIVE PANGGUNG ──
+  async function loadLive() {
+    if (isPolling) return;
+    isPolling = true;
+    
+    try {
+      const res = await api('publik_panggung');
+      if (res.status === 'success') {
+        renderLive(res.cabang || []);
+      }
+    } catch (e) {
+      console.warn('Gagal load live', e);
+      const grid = $('#liveGrid');
+      if (grid) grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <p>Gagal memuat status panggung. Koneksi terputus.</p>
+      </div>`;
+    } finally {
+      isPolling = false;
+      // Polling berantai setiap 15 detik
+      clearTimeout(pollTimeout);
+      pollTimeout = setTimeout(() => {
+        if (!document.hidden && $('#tab-live').classList.contains('active')) {
+          loadLive();
+        }
+      }, 15000);
+    }
+  }
+
+  function renderLive(cabangList) {
+    const grid = $('#liveGrid');
+    
+    grid.innerHTML = cabangList.map(c => {
+      const isLive = c.status_lomba === 'berlangsung';
+      const cls = isLive ? 'is-live' : '';
+      
+      let badgeCls = 'belum';
+      if (c.status_lomba === 'berlangsung') badgeCls = 'berlangsung';
+      else if (c.status_lomba === 'istirahat') badgeCls = 'istirahat';
+      else if (c.status_lomba === 'selesai') badgeCls = 'selesai';
+      
+      let bodyHtml = '';
+
+      // Mode Antrian (Queue)
+      if (c.mode === 'queue') {
+        const now = c.sekarang;
+        const next = c.berikut;
+        bodyHtml = `
+          <div class="live-body">
+            <div class="live-label">Sedang Tampil</div>
+            <div class="live-value">${now ? esc(now.No_Undian) : '—'}</div>
+            ${now && now.Nama ? `<small style="color:var(--ink-light);font-size:0.8rem;">${esc(now.Nama)}</small>` : ''}
+          </div>
+          <div class="live-next">
+            <span>Berikutnya:</span>
+            <span style="font-weight:800;color:var(--rose-deep)">${next ? esc(next.No_Undian) : '—'}</span>
+          </div>
+        `;
+      } 
+      // Mode Timer (Melukis)
+      else if (c.mode === 'timer') {
+        let timerStr = '00 : 00 : 00';
+        if (c.timer_start && c.sisa_detik !== undefined) {
+          const h = Math.floor(c.sisa_detik / 3600);
+          const m = Math.floor((c.sisa_detik % 3600) / 60);
+          const s = c.sisa_detik % 60;
+          timerStr = `${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
+        }
+        bodyHtml = `
+          <div class="live-body">
+            <div class="live-label">Sisa Waktu</div>
+            <div class="live-timer">${timerStr}</div>
+            ${c.timer_habis ? '<span style="color:var(--danger);font-weight:800;font-size:0.8rem;margin-top:0.5rem;display:block;">WAKTU HABIS</span>' : ''}
+          </div>
+        `;
+      } 
+      // Mode Fase (LCP)
+      else if (c.mode === 'phase') {
+        bodyHtml = `
+          <div class="live-body">
+            <div class="live-label">Fase Saat Ini</div>
+            <div class="live-value" style="font-size:1.2rem">${c.phase_label ? esc(c.phase_label) : '—'}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="live-card ${cls}">
+          <div class="live-header">
+            <div class="live-title">
+              <span style="background:var(--hijau-light);color:var(--hijau);padding:0.2rem 0.6rem;border-radius:6px;font-size:0.75rem;">${esc(c.kode)}</span>
+              ${esc(c.label.split('(')[0])}
+            </div>
+            <span class="live-badge ${badgeCls}">${c.status_lomba}</span>
+          </div>
+          ${bodyHtml}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── 2. CEK HASIL ──
+  $('#inputNoUndian').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+  $('#inputNoUndian').addEventListener('keydown', e => { if (e.key === 'Enter') cekHasil(); });
+  $('#btnCek').onclick = cekHasil;
+
+  async function cekHasil() {
+    const no = $('#inputNoUndian').value.trim();
+    if (!no) return alert('Masukkan nomor undian terlebih dahulu.');
+    
+    const btn = $('#btnCek');
+    const card = $('#resultCard');
+    
+    btn.disabled = true; btn.textContent = 'Memuat...';
+    card.classList.remove('show');
+
+    try {
+      const res = await api('publik_cek_hasil', { no_undian: no });
+      if (res.error) throw new Error(res.message);
+
+      const p = res.peserta;
+      let html = `
+        <div class="no">${esc(p.No_Undian)}</div>
+        <h3>${esc(p.Nama)}</h3>
+        <p>${esc(p.Kapanewon)} · ${esc(p.Sekolah)} · ${esc(p.Cabang)}</p>
+      `;
+
+      if (res.blind) {
+        html += `<div class="result-blind">${esc(res.message)}</div>`;
+      } else if (!res.hasil) {
+        html += `<div style="padding:1rem;color:var(--ink-light);font-style:italic;">Nilai belum tersedia.</div>`;
+      } else {
+        const h = res.hasil;
+        const total = h.Total ? Number(h.Total).toFixed(2) : '0.00';
+        const isJuara = h.Label && h.Label !== '';
+        
+        html += `
+          <div class="result-label" style="margin-top:1rem">Total Skor</div>
+          <div class="result-score">${total}</div>
+          ${isJuara 
+            ? `<div class="result-badge juara">🏆 ${esc(h.Label)}</div>` 
+            : `<div class="result-badge biasa">Peringkat ${h.Rank}</div>`}
+        `;
+      }
+
+      card.innerHTML = html;
+      card.classList.add('show');
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Cek';
+    }
+  }
+
+  // ── 3. DAFTAR PESERTA ──
+  async function loadPeserta() {
+    const list = $('#pesertaList');
+    try {
+      const res = await api('publik_peserta_list');
+      if (res.status === 'success') {
+        allPeserta = res.peserta || [];
+        renderPeserta(allPeserta);
+      } else {
+        throw new Error(res.message || 'Gagal memuat');
+      }
+    } catch (e) {
+      list.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <p>Gagal memuat data peserta.<br>Silakan coba beberapa saat lagi.</p>
+      </div>`;
+    }
+  }
+
+  function renderPeserta(data) {
+    const list = $('#pesertaList');
+    
+    if (data.length === 0) {
+      list.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <p>Tidak ada peserta yang cocok dengan pencarian Anda.</p>
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = data.map(p => `
+      <div class="peserta-item">
+        <div class="no">${esc(p.No_Undian || '-')}</div>
+        <div class="info">
+          <h4>${esc(p.Nama)}</h4>
+          <p>${esc(p.Kapanewon)} · ${esc(p.Sekolah)}</p>
+        </div>
+        <div class="kode">${esc(p.Cabang)}</div>
+      </div>
+    `).join('');
+  }
+
+  $('#searchPeserta').addEventListener('input', (e) => {
+    const q = e.target.value.toUpperCase();
+    const filtered = allPeserta.filter(p => 
+      p.Nama.toUpperCase().includes(q) || 
+      p.Sekolah.toUpperCase().includes(q) || 
+      p.Kapanewon.toUpperCase().includes(q) ||
+      p.No_Undian.toUpperCase().includes(q)
+    );
+    renderPeserta(filtered);
+  });
+
+  // ── BOOT ──
+  // Cek hash URL untuk langsung buka tab tertentu (opsional)
+  const hash = window.location.hash.replace('#', '');
+  if (hash === 'peserta') {
+    $('[data-tab="tab-peserta"]').click();
+  } else if (hash === 'cek') {
+    $('[data-tab="tab-cek"]').click();
+  } else {
+    loadLive();
+  }
+
+  // Re-poll saat tab aktif kembali
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && $('#tab-live').classList.contains('active') && !isPolling) {
+      clearTimeout(pollTimeout);
+      loadLive();
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
