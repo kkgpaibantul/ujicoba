@@ -213,13 +213,6 @@ a { color: inherit; text-decoration: none; }
   align-items: stretch; max-height: 65dvh;
 }
 
-@media (max-width: 800px) {
-  .auth-container { grid-template-columns: 1fr; max-height: none; }
-  html, body { overflow: auto; }
-  #app { height: auto; min-height: 100dvh; align-items: flex-start; padding-top: 3rem; padding-bottom: 2rem; }
-  #view-loading { min-height: 70dvh; padding-top: 15dvh; }
-}
-
 .auth-card {
   background: var(--surface); border-radius: var(--r-lg);
   padding: 1.2rem; box-shadow: var(--shadow-md); border: 1px solid var(--border);
@@ -262,7 +255,6 @@ a { color: inherit; text-decoration: none; }
 .progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
 
 .branch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.8rem; }
-@media (max-width: 600px) { .branch-grid { grid-template-columns: 1fr; } }
 
 .branch-card {
   background: var(--surface); border-radius: var(--r-lg); border: 2px dashed var(--border);
@@ -484,7 +476,63 @@ a { color: inherit; text-decoration: none; }
 .connection-banner.show { transform: translateY(0); }
 
 /* ============================================================
- * §12 REDUCED MOTION
+ * §12 RESPONSIVE MOBILE (PROPORSIONAL)
+ * ============================================================ */
+@media (max-width: 800px) {
+  html, body { overflow: auto; }
+  #app { height: auto; min-height: 100dvh; align-items: flex-start; padding: 1.5rem 1rem; }
+  #view-loading { min-height: 70dvh; padding-top: 15dvh; }
+  .auth-container { grid-template-columns: 1fr; max-height: none; gap: 1.2rem; }
+  .branch-grid { grid-template-columns: 1fr; }
+  .appbar { padding: 0.6rem 1rem; margin-bottom: 1rem; }
+  .form-content { padding: 1rem; padding-bottom: 100px; }
+}
+
+@media (max-width: 600px) {
+  /* Layout Dasar */
+  #app { padding: 1rem 0.8rem; }
+  .main-title { font-size: 1.5rem; }
+  .title-sub { font-size: 0.85rem; }
+  .auth-card { padding: 1rem; }
+  
+  /* Panduan Pendaftaran (Scroll Horizontal) */
+  .guide-steps {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.6rem 0.8rem;
+  }
+  .guide-steps::-webkit-scrollbar { display: none; }
+  .guide-step { font-size: 0.7rem; white-space: nowrap; }
+  
+  /* Form & Input */
+  .form-row { grid-template-columns: 1fr; gap: 0.6rem; } /* Tumpuk jadi 1 kolom */
+  .form-row .form-group { margin-bottom: 0; }
+  .form-section { padding: 1rem; margin-bottom: 1rem; }
+  .radio-pill { padding: 0.6rem 0.4rem; font-size: 0.8rem; }
+
+  /* Dashboard */
+  .dash-header-area { flex-direction: column; align-items: stretch; gap: 0.8rem; }
+  .quota-widget { min-width: 100%; padding: 0.8rem 1rem; }
+  .branch-card { padding: 1rem; min-height: 100px; }
+  .filled-actions .btn { flex: 1; }
+  
+  /* Modal */
+  .modal-footer { flex-direction: column-reverse; gap: 0.6rem; }
+  .modal-footer .btn { width: 100%; margin: 0; }
+  .modal-token { font-size: 1.2rem; letter-spacing: 0.15em; }
+  
+  /* Tombol Simpan Bawah */
+  .fab-save { width: calc(100% - 1.6rem); bottom: 1rem; padding: 0.8rem; font-size: 0.9rem; }
+  
+  /* Dropdown Pencarian */
+  .search-dropdown { max-height: 40vh; }
+}
+
+/* ============================================================
+ * §13 REDUCED MOTION
  * ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop, .modal-box { animation: none !important; }
