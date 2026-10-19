@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#2A9D8F" />
-<title>Pemantauan Live — MTQ 2026</title>
+<title>Pemantauan MTQ 2026 — Bantul</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
- * §1 DESIGN TOKENS
+ * §1 DESIGN TOKENS & RESET
  * ============================================================ */
 :root {
   --cream: #FFF9F0;
@@ -32,18 +32,15 @@
   --danger: #E53E3E;
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
-  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
 
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
-  --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --trans: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================================================
- * §2 RESET & BASE
- * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { 
   min-height: 100dvh;
@@ -53,173 +50,333 @@ html, body {
   background-size: 24px 24px;
   color: var(--ink); line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: 2rem;
+  overflow-x: clip; 
 }
+
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 1.5rem 1rem 8rem 1rem; 
+  transition: var(--trans); 
+}
+
 h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; color: var(--rose-deep); }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-input, select, textarea { font-family: inherit; font-size: 16px; }
+input { font-family: inherit; font-size: 16px; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 3px solid var(--hijau); outline-offset: 2px; border-radius: 4px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
+@keyframes pulse-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .6; transform: scale(1.1); } }
 
-.spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(42,157,143,0.2); border-radius: 50%; border-top-color: var(--hijau); animation: spin 0.8s linear infinite; }
+.spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid rgba(42,157,143,0.2); border-radius: 50%; border-top-color: var(--hijau); animation: spin 0.8s linear infinite; }
 
 /* ============================================================
- * §3 LAYOUT & HEADER
+ * §2 WRAPPER STICKY (Appbar + Tabs)
  * ============================================================ */
+.sticky-wrapper {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--border-dark);
+  box-shadow: var(--shadow-sm);
+  transition: var(--trans);
+}
+
 .appbar { 
-  position: sticky; top: 0; z-index: 50; 
-  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); 
-  border-bottom: 2px solid var(--border-dark); 
   display: flex; align-items: center; justify-content: space-between; 
   padding: 0.8rem 1.2rem; 
+  background: var(--surface);
 }
 .appbar-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; color: var(--rose-deep); font-size: 1.1rem; }
 .appbar-brand svg { width: 24px; height: 24px; color: var(--hijau); }
-.btn-home { font-size: 0.85rem; font-weight: 700; color: var(--ink); padding: 0.4rem 0.8rem; border-radius: var(--r-sm); border: 1.5px solid var(--border); transition: var(--trans); }
-.btn-home:hover { border-color: var(--hijau); color: var(--hijau); background: var(--hijau-light); }
-
-.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem; }
+.appbar-actions { display: flex; gap: 0.5rem; align-items: center; }
+.btn-action { 
+  font-size: 0.85rem; font-weight: 700; color: var(--ink); 
+  padding: 0.4rem 0.8rem; border-radius: var(--r-sm); 
+  border: 1.5px solid var(--border); transition: var(--trans);
+  display: flex; align-items: center; gap: 0.4rem; background: var(--surface);
+}
+.btn-action:hover { border-color: var(--hijau); color: var(--hijau); background: var(--hijau-light); }
+.btn-action svg { width: 16px; height: 16px; }
 
 /* Tabs Navigation */
 .tabs-nav { 
   display: flex; gap: 0.5rem; background: var(--surface); 
-  padding: 0.4rem; border-radius: var(--r-lg); border: 1px solid var(--border); 
-  box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; 
+  padding: 0.4rem 1.2rem 0.8rem 1.2rem; 
   overflow-x: auto; scrollbar-width: none; 
 }
 .tabs-nav::-webkit-scrollbar { display: none; }
 .tab-btn { 
-  flex: 1; padding: 0.7rem 1rem; border-radius: var(--r-md); font-weight: 700; font-size: 0.9rem; 
+  flex: 1; padding: 0.6rem 1rem; border-radius: var(--r-md); font-weight: 700; font-size: 0.95rem; 
   color: var(--ink-light); transition: var(--trans); white-space: nowrap; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
 .tab-btn:hover { color: var(--hijau); background: var(--hijau-light); }
 .tab-btn.active { background: var(--hijau); color: #fff; box-shadow: 0 4px 12px rgba(42,157,143,0.3); }
 
-.tab-pane { display: none; animation: fadeIn 0.3s ease; }
+/* Hero Title (Judul Halaman Normal) */
+.hero-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+}
+.hero-title h1 {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--rose-deep);
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+}
+.hero-title p {
+  font-size: 1rem;
+  color: var(--ink-light);
+  font-weight: 500;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tab-pane { display: none; animation: fadeIn 0.4s ease; }
 .tab-pane.active { display: block; }
+
+/* ============================================================
+ * §3 FULLSCREEN MODE (3x3 GRID + JUDUL MINIMALIS)
+ * ============================================================ */
+/* Judul khusus Fullscreen (default hidden) */
+.fs-title {
+  display: none;
+}
+
+body.is-fullscreen { overflow: hidden; background: var(--bg); }
+body.is-fullscreen .sticky-wrapper,
+body.is-fullscreen .hero-title { display: none !important; }
+
+body.is-fullscreen .container { 
+  max-width: 100%; padding: 0; height: 100dvh; margin: 0; 
+  display: flex; flex-direction: column;
+}
+
+/* Tampilkan Judul saat Fullscreen */
+body.is-fullscreen .fs-title {
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  padding: 1rem 0 0.5rem 0;
+  font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900;
+  color: var(--rose-deep); letter-spacing: -0.02em;
+}
+
+body.is-fullscreen #tab-live { 
+  flex: 1; padding: 0 1rem 1rem 1rem; 
+  display: flex; flex-direction: column; min-height: 0;
+}
+
+/* Formasi 3x3 Sempurna */
+body.is-fullscreen .live-grid { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(3, 1fr); 
+  gap: 1rem; 
+  height: 100%; 
+  flex: 1; min-height: 0;
+}
+body.is-fullscreen .live-card {
+  height: 100%; margin: 0; display: flex; flex-direction: column; padding: 0.8rem;
+}
+body.is-fullscreen .live-body {
+  flex: 1; min-height: 0; padding: 0.5rem;
+}
 
 /* ============================================================
  * §4 TAB 1: LIVE PANGGUNG
  * ============================================================ */
-.live-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
-@media (min-width: 768px) { .live-grid { grid-template-columns: 1fr 1fr; } }
+.live-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  gap: 1.2rem; 
+}
 
 .live-card { 
   background: var(--surface); border: 1.5px solid var(--border); 
   border-radius: var(--r-lg); padding: 1.25rem; box-shadow: var(--shadow-sm); 
   display: flex; flex-direction: column; gap: 1rem; transition: var(--trans);
+  position: relative; overflow: hidden;
 }
-.live-card.is-live { border-color: var(--hijau); box-shadow: 0 4px 15px rgba(42,157,143,0.15); }
-.live-header { display: flex; justify-content: space-between; align-items: center; }
-.live-title { font-size: 1.05rem; font-weight: 800; color: var(--rose-deep); display: flex; align-items: center; gap: 0.5rem; }
+.live-card::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--border); transition: var(--trans);
+}
+.live-card.is-live { border-color: var(--hijau); box-shadow: 0 4px 20px rgba(42,157,143,0.15); transform: translateY(-2px); }
+.live-card.is-live::after { background: var(--hijau); }
+
+.live-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.live-title { font-size: 1.05rem; font-weight: 800; color: var(--rose-deep); display: flex; flex-direction: column; gap: 0.2rem; }
+.live-kode { font-size: 0.75rem; font-weight: 800; color: var(--hijau); background: var(--hijau-light); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; width: fit-content; letter-spacing: 0.05em;}
 .live-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 99px; letter-spacing: 0.05em; }
 .live-badge.belum { background: var(--border); color: var(--ink-light); }
-.live-badge.berlangsung { background: var(--hijau); color: #fff; animation: pulse 1.5s infinite; }
+.live-badge.berlangsung { background: var(--hijau); color: #fff; animation: pulse-live 2s infinite; }
 .live-badge.istirahat { background: var(--gold); color: var(--rose-deep); }
 .live-badge.selesai { background: var(--rose-deep); color: #fff; }
 
-.live-body { background: var(--bg); border-radius: var(--r-md); padding: 1.2rem 1rem; text-align: center; border: 1.5px dashed var(--border-dark); }
+.live-body { 
+  background: var(--bg); border-radius: var(--r-md); padding: 1.2rem 1rem; 
+  text-align: center; border: 1.5px dashed var(--border-dark); 
+  display: flex; flex-direction: column; justify-content: center; min-height: 120px;
+}
+.live-card.is-live .live-body { border-style: solid; border-color: var(--hijau-light); background: #F0FDF4; }
 .live-label { font-size: 0.75rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
 .live-value { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--hijau); line-height: 1.1; }
 .live-value small { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-top: 0.3rem; }
-.live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; background: var(--surface); padding: 0.6rem 0.8rem; border-radius: var(--r-sm); border: 1px solid var(--border); }
 .live-timer { font-size: 2.2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
 
+.live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 0.6rem 0.8rem; border-radius: var(--r-sm); border: 1px solid var(--border); }
+.live-next strong { color: var(--rose-deep); font-size: 0.95rem; }
+
 /* ============================================================
- * §5 TAB 2: DAFTAR PESERTA (CARD GRID)
+ * §5 TAB 2: DAFTAR PESERTA
  * ============================================================ */
-.search-bar { margin-bottom: 1.5rem; position: relative; }
+.search-bar { margin-bottom: 1.5rem; position: relative; max-width: 600px; margin-left: auto; margin-right: auto; }
 .search-bar input { 
-  width: 100%; padding: 0.9rem 1rem 0.9rem 2.8rem; 
-  border: 1.5px solid var(--border); border-radius: var(--r-md); 
+  width: 100%; padding: 1rem 1rem 1rem 3rem; 
+  border: 2px solid var(--border); border-radius: var(--r-lg); 
   font-size: 1rem; outline: none; transition: var(--trans);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm); background: var(--surface);
 }
 .search-bar input:focus { border-color: var(--hijau); box-shadow: 0 0 0 4px var(--hijau-light); }
-.search-bar svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-light); }
+.search-bar svg { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-light); }
 
-/* Grid Layout for Cards */
-.peserta-list { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-  gap: 1rem; 
-}
+.peserta-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; }
 
-/* Individual Card */
 .peserta-item { 
-  background: var(--surface); border: 1px solid var(--border); 
-  border-radius: var(--r-lg); padding: 1.2rem; 
+  background: var(--surface); border: 1.5px solid var(--border); 
+  border-radius: var(--r-lg); padding: 1.25rem; 
   display: flex; flex-direction: column; gap: 0.8rem; 
   transition: var(--trans); box-shadow: var(--shadow-sm);
   position: relative; overflow: hidden;
 }
 .peserta-item::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+  content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
   background: var(--hijau); opacity: 0; transition: var(--trans);
 }
-.peserta-item:hover { 
-  border-color: var(--hijau); transform: translateY(-3px); 
-  box-shadow: var(--shadow-md); 
-}
+.peserta-item:hover { border-color: var(--hijau); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 .peserta-item:hover::before { opacity: 1; }
 
 .peserta-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.peserta-no { font-family: 'Plus Jakarta Sans', monospace; font-weight: 800; font-size: 0.85rem; color: var(--hijau); background: var(--hijau-light); padding: 0.3rem 0.6rem; border-radius: 6px; letter-spacing: 0.05em; }
+.peserta-kode { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: var(--rose-light); color: var(--rose-deep); padding: 0.3rem 0.8rem; border-radius: 99px; white-space: nowrap; }
 
-.peserta-no { 
-  font-family: 'Plus Jakarta Sans', monospace; font-weight: 800; font-size: 0.85rem; 
-  color: var(--hijau); background: var(--hijau-light); 
-  padding: 0.3rem 0.6rem; border-radius: 6px; letter-spacing: 0.05em;
+.peserta-info h4 { font-size: 1.15rem; margin: 0 0 0.4rem; color: var(--ink); line-height: 1.3; font-weight: 800; }
+.peserta-meta { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: var(--ink-light); margin-top: 0.5rem;}
+.peserta-meta span { display: flex; align-items: flex-start; gap: 0.5rem; }
+.peserta-meta svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; opacity: 0.7; }
+
+/* Desain Khusus Tim LCP (3 Nama) */
+.team-box {
+  background: #F8FAFC;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+.team-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--hijau);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.team-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.team-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-dark);
+}
+.team-list li .member-num {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--ink-light);
+  background: var(--bg);
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
 }
 
-.peserta-kode { 
-  font-size: 0.7rem; font-weight: 800; text-transform: uppercase; 
-  background: var(--rose-light); color: var(--rose-deep); 
-  padding: 0.3rem 0.6rem; border-radius: 99px; white-space: nowrap;
-}
-
-.peserta-info h4 { 
-  font-size: 1.1rem; margin: 0 0 0.4rem; color: var(--ink); 
-  line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-.peserta-meta { 
-  display: flex; flex-direction: column; gap: 0.3rem; 
-  font-size: 0.8rem; color: var(--ink-light); 
-}
-.peserta-meta span { display: flex; align-items: flex-start; gap: 0.4rem; }
-.peserta-meta svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; opacity: 0.7; }
-
-/* Empty State */
 .empty-state { text-align: center; padding: 4rem 1rem; color: var(--ink-light); grid-column: 1 / -1; }
-.empty-state svg { width: 56px; height: 56px; margin: 0 auto 1rem; opacity: 0.2; }
-.empty-state p { font-size: 0.95rem; }
+.empty-state svg { width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.2; }
+.empty-state p { font-size: 1rem; font-weight: 500; }
+
+/* Responsif Mobile */
+@media (max-width: 768px) {
+  .hide-mobile { display: none; }
+  .hero-title h1 { font-size: 1.8rem; }
+  .hero-title p { font-size: 0.9rem; }
+  /* Fullscreen di HP jadi 1 kolom scroll */
+  body.is-fullscreen .live-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  body.is-fullscreen .fs-title { font-size: 1.3rem; padding: 0.8rem 0 0.5rem 0; }
+}
 </style>
 </head>
 <body>
 
-<header class="appbar">
-  <div class="appbar-brand">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
-    Pemantauan MTQ
+<div class="sticky-wrapper">
+  <header class="appbar">
+    <div class="appbar-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
+      MTQ Bantul 2026
+    </div>
+    <div class="appbar-actions">
+      <button class="btn-action" id="btnFullscreen" title="Mode Layar Penuh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        <span class="hide-mobile">Fullscreen</span>
+      </button>
+      <a href="./index.html" class="btn-action">Beranda</a>
+    </div>
+  </header>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="tab-live">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/><circle cx="12" cy="12" r="2"/></svg>
+      Live Panggung
+    </button>
+    <button class="tab-btn" data-tab="tab-peserta">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Daftar Peserta
+    </button>
   </div>
-  <a href="./index.html" class="btn-home">Beranda</a>
-</header>
+</div>
 
 <div class="container">
   
-  <div class="tabs-nav">
-    <button class="tab-btn active" data-tab="tab-live">🎭 Live Panggung</button>
-    <button class="tab-btn" data-tab="tab-peserta">👥 Daftar Peserta</button>
+  <!-- JUDUL KHUSUS FULLSCREEN (Hanya muncul saat mode Fullscreen) -->
+  <div class="fs-title">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--hijau)" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
+    Pemantauan MTQ 2026
+  </div>
+
+  <!-- JUDUL NORMAL -->
+  <div class="hero-title">
+    <h1>Halaman Pemantauan MTQ 2026</h1>
+    <p>Sistem Informasi Live Panggung & Daftar Peserta<br>MTQ Pelajar Sekolah Dasar Tingkat Kabupaten Bantul</p>
   </div>
 
   <!-- TAB 1: LIVE PANGGUNG -->
   <div id="tab-live" class="tab-pane active">
     <div class="live-grid" id="liveGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;"><span class="spinner"></span><p style="margin-top:1rem;color:var(--ink-light);font-size:0.9rem;">Memuat status panggung...</p></div>
+      <div class="empty-state" style="grid-column:1/-1;"><span class="spinner"></span><p style="margin-top:1rem;">Memuat status panggung...</p></div>
     </div>
   </div>
 
@@ -227,10 +384,10 @@ a { color: inherit; text-decoration: none; }
   <div id="tab-peserta" class="tab-pane">
     <div class="search-bar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="searchPeserta" placeholder="Cari No. Pendaftaran, nama, atau sekolah..." autocomplete="off">
+      <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, atau no. pendaftaran..." autocomplete="off">
     </div>
     <div class="peserta-list" id="pesertaList">
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;"><span class="spinner"></span></div>
+      <div class="empty-state" style="grid-column:1/-1;"><span class="spinner"></span></div>
     </div>
   </div>
 
@@ -240,78 +397,108 @@ a { color: inherit; text-decoration: none; }
 'use strict';
 (() => {
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
+  const POLL_INTERVAL = 15000;
   
-  let allPeserta = [];
-  let isPolling = false;
-  let pollTimeout = null;
+  const state = {
+    activeTab: 'tab-live',
+    isFetchingLive: false,
+    pollTimeout: null,
+    lastLiveDataHash: '',
+    allPeserta: [],
+    isPesertaLoaded: false
+  };
 
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   async function api(action, payload = {}) {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, ...payload })
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, ...payload }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
+    } catch (e) {
+      clearTimeout(timeoutId);
+      throw e;
+    }
   }
 
-  // ── TABS CONTROLLER ──
   $$('.tab-btn').forEach(btn => {
     btn.onclick = () => {
+      const target = btn.dataset.tab;
+      if (state.activeTab === target) return;
+
       $$('.tab-btn').forEach(b => b.classList.remove('active'));
       $$('.tab-pane').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
-      $('#' + btn.dataset.tab).classList.add('active');
+      $('#' + target).classList.add('active');
+      
+      state.activeTab = target;
 
-      if (btn.dataset.tab === 'tab-peserta' && allPeserta.length === 0) {
+      if (target === 'tab-live') {
+        if (!state.isFetchingLive) loadLive();
+      } else if (target === 'tab-peserta' && !state.isPesertaLoaded) {
         loadPeserta();
       }
     };
   });
 
-  // ── 1. LIVE PANGGUNG ──
   async function loadLive() {
-    if (isPolling) return;
-    isPolling = true;
+    if (state.isFetchingLive || document.hidden || state.activeTab !== 'tab-live') return;
+    state.isFetchingLive = true;
     
     try {
       const res = await api('publik_panggung');
       if (res.status === 'success') {
-        renderLive(res.cabang || []);
+        const newHash = JSON.stringify(res.cabang);
+        if (newHash !== state.lastLiveDataHash) {
+          renderLive(res.cabang || [], res.server_time);
+          state.lastLiveDataHash = newHash;
+        }
       }
     } catch (e) {
       console.warn('Gagal load live', e);
-      const grid = $('#liveGrid');
-      if (grid) grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-        <p>Gagal memuat status panggung. Koneksi terputus.</p>
-      </div>`;
+      if ($('#liveGrid').children.length <= 1) {
+        $('#liveGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="10"/></svg>
+          <p>Gagal memuat data live. Menghubungkan ulang...</p>
+        </div>`;
+      }
     } finally {
-      isPolling = false;
-      clearTimeout(pollTimeout);
-      pollTimeout = setTimeout(() => {
-        if (!document.hidden && $('#tab-live').classList.contains('active')) {
-          loadLive();
-        }
-      }, 15000);
+      state.isFetchingLive = false;
+      scheduleNextPoll();
     }
   }
 
-  function renderLive(cabangList) {
+  function scheduleNextPoll() {
+    clearTimeout(state.pollTimeout);
+    state.pollTimeout = setTimeout(() => {
+      if (!document.hidden && state.activeTab === 'tab-live') {
+        loadLive();
+      }
+    }, POLL_INTERVAL);
+  }
+
+  function renderLive(cabangList, serverTime) {
     const grid = $('#liveGrid');
+    const timeOffset = serverTime ? (new Date(serverTime).getTime() - Date.now()) : 0;
     
+    const order = ['MTQ', 'MTtQ', 'MHQ', 'Puitisasi', 'MAz', 'LPP', 'LCP', 'Lukis', 'Menyanyi'];
+    cabangList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+
     grid.innerHTML = cabangList.map(c => {
       const isLive = c.status_lomba === 'berlangsung';
       const cls = isLive ? 'is-live' : '';
-      
-      let badgeCls = 'belum';
-      if (c.status_lomba === 'berlangsung') badgeCls = 'berlangsung';
-      else if (c.status_lomba === 'istirahat') badgeCls = 'istirahat';
-      else if (c.status_lomba === 'selesai') badgeCls = 'selesai';
-      
+      let badgeCls = c.status_lomba || 'belum';
       let bodyHtml = '';
 
       if (c.mode === 'queue') {
@@ -322,32 +509,40 @@ a { color: inherit; text-decoration: none; }
             <div class="live-label">Sedang Tampil</div>
             <div class="live-value">${now ? esc(now.No_Undian) : '—'}</div>
             ${now && now.Nama ? `<small>${esc(now.Nama)}</small>` : ''}
+            ${now && now.Kapanewon ? `<small style="font-size:0.75rem; opacity:0.7;">${esc(now.Kapanewon)}</small>` : ''}
           </div>
           <div class="live-next">
             <span>Berikutnya:</span>
-            <span style="font-weight:800;color:var(--rose-deep)">${next ? esc(next.No_Undian) : '—'}</span>
+            <strong>${next ? esc(next.No_Undian) : '—'}</strong>
           </div>
         `;
       } else if (c.mode === 'timer') {
         let timerStr = '00 : 00 : 00';
-        if (c.timer_start && c.sisa_detik !== undefined) {
-          const h = Math.floor(c.sisa_detik / 3600);
-          const m = Math.floor((c.sisa_detik % 3600) / 60);
-          const s = c.sisa_detik % 60;
+        let isTimeUp = false;
+        if (c.timer_start && c.timer_duration_sec) {
+          const startMs = new Date(c.timer_start).getTime();
+          const durationMs = c.timer_duration_sec * 1000;
+          const elapsedMs = (Date.now() + timeOffset) - startMs;
+          let sisa = Math.max(0, Math.floor((durationMs - elapsedMs) / 1000));
+          isTimeUp = sisa <= 0;
+          
+          const h = Math.floor(sisa / 3600);
+          const m = Math.floor((sisa % 3600) / 60);
+          const s = sisa % 60;
           timerStr = `${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
         }
         bodyHtml = `
           <div class="live-body" style="border-style:solid; border-color:var(--gold); background:var(--gold-light);">
             <div class="live-label" style="color:#92400e;">Sisa Waktu</div>
             <div class="live-timer">${timerStr}</div>
-            ${c.timer_habis ? '<span style="color:var(--danger);font-weight:800;font-size:0.8rem;margin-top:0.5rem;display:block;">WAKTU HABIS</span>' : ''}
+            ${isTimeUp ? `<span style="color:var(--danger);font-weight:800;font-size:0.75rem;margin-top:0.5rem;display:block;">WAKTU HABIS</span>` : ''}
           </div>
         `;
       } else if (c.mode === 'phase') {
         bodyHtml = `
           <div class="live-body">
             <div class="live-label">Fase Saat Ini</div>
-            <div class="live-value" style="font-size:1.3rem">${c.phase_label ? esc(c.phase_label) : '—'}</div>
+            <div class="live-value" style="font-size:1.4rem; margin-top:0.5rem;">${c.phase_label ? esc(c.phase_label) : '—'}</div>
           </div>
         `;
       }
@@ -356,8 +551,8 @@ a { color: inherit; text-decoration: none; }
         <div class="live-card ${cls}">
           <div class="live-header">
             <div class="live-title">
-              <span style="background:var(--hijau-light);color:var(--hijau);padding:0.25rem 0.6rem;border-radius:6px;font-size:0.75rem;letter-spacing:0.05em;">${esc(c.kode)}</span>
-              ${esc(c.label.split('(')[0])}
+              <span class="live-kode">${esc(c.kode)}</span>
+              ${esc(c.label.split('(')[0].trim())}
             </div>
             <span class="live-badge ${badgeCls}">${c.status_lomba}</span>
           </div>
@@ -367,21 +562,21 @@ a { color: inherit; text-decoration: none; }
     }).join('');
   }
 
-  // ── 2. DAFTAR PESERTA ──
   async function loadPeserta() {
     const list = $('#pesertaList');
     try {
       const res = await api('publik_peserta_list');
       if (res.status === 'success') {
-        allPeserta = res.peserta || [];
-        renderPeserta(allPeserta);
+        state.allPeserta = res.peserta || [];
+        state.isPesertaLoaded = true;
+        renderPeserta(state.allPeserta);
       } else {
         throw new Error(res.message || 'Gagal memuat');
       }
     } catch (e) {
       list.innerHTML = `<div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        <p>Gagal memuat data peserta.<br>Silakan coba beberapa saat lagi.</p>
+        <p>Gagal memuat data peserta.<br>Periksa koneksi internet Anda.</p>
       </div>`;
     }
   }
@@ -397,54 +592,104 @@ a { color: inherit; text-decoration: none; }
       return;
     }
 
-    list.innerHTML = data.map(p => `
-      <div class="peserta-item">
-        <div class="peserta-header">
-          <div class="peserta-no">${esc(p.No_Pendaftaran || '-')}</div>
-          <div class="peserta-kode">${esc(p.Cabang)}</div>
-        </div>
-        <div class="peserta-info">
-          <h4>${esc(p.Nama)}</h4>
-          <div class="peserta-meta">
-            <span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              ${esc(p.Kapanewon)}
-            </span>
-            <span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4a3 3 0 0 1 6 0v4"/></svg>
-              ${esc(p.Sekolah)}
-            </span>
+    list.innerHTML = data.map(p => {
+      const isLCP = p.Cabang === 'LCP';
+      
+      let titleHtml = `<h4>${esc(p.Nama)}</h4>`;
+      let teamHtml = '';
+
+      if (isLCP) {
+        titleHtml = `<h4>Tim LCP ${esc(p.Kapanewon)}</h4>`;
+        
+        teamHtml = `
+          <div class="team-box">
+            <div class="team-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Anggota Tim
+            </div>
+            <ul class="team-list">
+              <li><span class="member-num">1</span> ${esc(p.Nama)}</li>
+              ${p.Anggota_2 ? `<li><span class="member-num">2</span> ${esc(p.Anggota_2)}</li>` : ''}
+              ${p.Anggota_3 ? `<li><span class="member-num">3</span> ${esc(p.Anggota_3)}</li>` : ''}
+            </ul>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="peserta-item">
+          <div class="peserta-header">
+            <div class="peserta-no">${esc(p.No_Pendaftaran || '-')}</div>
+            <div class="peserta-kode">${esc(p.Cabang)}</div>
+          </div>
+          <div class="peserta-info">
+            ${titleHtml}
+            ${teamHtml}
+            <div class="peserta-meta">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${esc(p.Kapanewon)}
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4a3 3 0 0 1 6 0v4"/></svg>
+                ${esc(p.Sekolah)}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
+  let searchTimeout;
   $('#searchPeserta').addEventListener('input', (e) => {
-    const q = e.target.value.toUpperCase();
-    const filtered = allPeserta.filter(p => 
-      p.Nama.toUpperCase().includes(q) || 
-      p.Sekolah.toUpperCase().includes(q) || 
-      p.Kapanewon.toUpperCase().includes(q) ||
-      (p.No_Pendaftaran && p.No_Pendaftaran.toUpperCase().includes(q))
-    );
-    renderPeserta(filtered);
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const q = e.target.value.toUpperCase();
+      const filtered = state.allPeserta.filter(p => 
+        (p.Nama && p.Nama.toUpperCase().includes(q)) || 
+        (p.Anggota_2 && p.Anggota_2.toUpperCase().includes(q)) || 
+        (p.Anggota_3 && p.Anggota_3.toUpperCase().includes(q)) ||
+        (p.Sekolah && p.Sekolah.toUpperCase().includes(q)) || 
+        (p.Kapanewon && p.Kapanewon.toUpperCase().includes(q)) ||
+        (p.No_Pendaftaran && p.No_Pendaftaran.toUpperCase().includes(q))
+      );
+      renderPeserta(filtered);
+    }, 300);
   });
 
-  // ── BOOT ──
+  const btnFs = $('#btnFullscreen');
+  btnFs.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => console.warn(err));
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+      document.body.classList.add('is-fullscreen');
+      btnFs.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg> <span class="hide-mobile">Keluar</span>`;
+    } else {
+      document.body.classList.remove('is-fullscreen');
+      btnFs.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> <span class="hide-mobile">Fullscreen</span>`;
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && state.activeTab === 'tab-live' && !state.isFetchingLive) {
+      clearTimeout(state.pollTimeout);
+      loadLive();
+    }
+  });
+
   const hash = window.location.hash.replace('#', '');
   if (hash === 'peserta') {
     $('[data-tab="tab-peserta"]').click();
   } else {
     loadLive();
   }
-
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && $('#tab-live').classList.contains('active') && !isPolling) {
-      clearTimeout(pollTimeout);
-      loadLive();
-    }
-  });
 
 })();
 </script>
