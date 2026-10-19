@@ -38,6 +38,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
 @keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse-save{0%,100%{box-shadow:0 0 0 0 rgba(74,46,63,0.4),0 0 0 3px rgba(74,46,63,0.15)}50%{box-shadow:0 0 0 6px rgba(74,46,63,0),0 0 0 3px rgba(74,46,63,0.15)}}
 
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite}
 .spinner.dark{border-color:var(--border);border-top-color:var(--rose-primary)}
@@ -71,6 +72,12 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .toast.error{background:var(--danger)}
 .toast.info{background:var(--rose-primary)}
 
+/* Auto-save floating indicator */
+.autosave-indicator{position:fixed;bottom:84px;right:1.2rem;background:rgba(74,46,63,0.94);color:#fff;padding:0.45rem 0.95rem;border-radius:99px;font-size:0.72rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;opacity:0;transform:translateY(10px);transition:all 0.22s cubic-bezier(0.4,0,0.2,1);z-index:100;pointer-events:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.autosave-indicator.show{opacity:1;transform:translateY(0)}
+.autosave-indicator.success{background:rgba(42,157,143,0.94)}
+.autosave-indicator.error{background:rgba(229,62,62,0.94)}
+
 /* ============================================================
  * §3 LAYOUT
  * ============================================================ */
@@ -92,7 +99,6 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .state-badge.final{background:var(--hijau-light);color:#065f46}
 
 .content{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:1rem}
-.content.no-pad{padding:0;gap:0;display:flex;flex-direction:column}
 
 /* ============================================================
  * §4 LOGIN
@@ -174,19 +180,33 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .input-table th.th-juri-4{background:#FEF3C7;color:#92400e}
 .input-table th.sticky-l, .input-table td.sticky-l{position:sticky;left:0;text-align:left;padding-left:12px}
 .input-table thead th.sticky-l{z-index:6;background:var(--surface-2);box-shadow:2px 0 4px rgba(0,0,0,0.04)}
-.input-table tbody td.sticky-l{background:var(--surface);z-index:2;box-shadow:2px 0 4px rgba(0,0,0,0.04);min-width:180px}
+.input-table tbody td.sticky-l{background:var(--surface);z-index:2;box-shadow:2px 0 4px rgba(0,0,0,0.04);min-width:200px}
 
 .input-table tbody td{padding:4px 6px;border-bottom:1px solid var(--border);text-align:center;background:var(--surface)}
 .input-table tbody tr:hover td{background:#FAFBFC}
 .input-table tbody tr.complete td{background:#F0FDF4}
 .input-table tbody tr.partial td{background:#FFFBEB}
 
+/* Focus row highlight (active editing) */
+.input-table tbody tr:focus-within td{background:#EFF6FF !important;transition:background 0.12s ease}
+.input-table tbody tr:focus-within td.sticky-l{background:#DBEAFE !important;box-shadow:inset 3px 0 0 var(--rose-primary),2px 0 4px rgba(0,0,0,0.04) !important}
+.input-table tbody tr:focus-within .row-dot{transform:scale(1.25);box-shadow:0 0 0 3px rgba(158,95,123,0.18)}
+
 .row-id{display:flex;align-items:center;gap:0.5rem}
+.row-id > div{flex:1;min-width:0}
 .row-dot{width:10px;height:10px;border-radius:50%;background:var(--border);flex-shrink:0;transition:var(--trans)}
 .row-dot.complete{background:var(--hijau)}
 .row-dot.partial{background:var(--gold)}
 .row-id .nomor{font-family:'Fraunces',serif;font-size:0.9rem;font-weight:800;color:var(--rose-deep)}
 .row-id .nama{font-size:0.72rem;color:var(--ink-light);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+
+/* Row save button */
+.row-save-btn{width:26px;height:26px;border-radius:5px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;padding:0;color:var(--ink-light)}
+.row-save-btn:disabled{cursor:default;opacity:0.35;border-color:transparent;background:transparent}
+.row-save-btn:disabled[data-clean="1"]{opacity:0.6;color:var(--hijau)}
+.row-save-btn.dirty{background:var(--rose-deep);color:#fff;border-color:var(--rose-deep);box-shadow:0 0 0 3px rgba(74,46,63,0.15);animation:pulse-save 1.8s infinite}
+.row-save-btn.dirty:hover{background:var(--rose-primary)}
+.row-save-btn.saving{background:var(--rose-light);color:var(--rose-primary);border-color:var(--rose-primary);animation:none}
 
 .input-cell{width:52px;height:36px;text-align:center;border:1.5px solid var(--border);border-radius:6px;background:#F9FAFB;font-weight:700;font-size:15px;font-family:'Plus Jakarta Sans',monospace;outline:none;transition:var(--trans);-webkit-appearance:none;font-variant-numeric:tabular-nums}
 .input-cell:focus{border-color:var(--rose-primary);background:var(--surface);box-shadow:0 0 0 3px rgba(158,95,123,0.15);transform:scale(1.06);z-index:3;position:relative}
@@ -198,13 +218,14 @@ input[type=number]{-moz-appearance:textfield}
 .row-total{font-weight:800;color:var(--rose-deep);font-size:15px;font-variant-numeric:tabular-nums}
 
 .save-bar{position:sticky;bottom:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:0.75rem 1.2rem;display:flex;gap:0.75rem;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 -4px 12px rgba(0,0,0,0.05);z-index:20}
-.save-bar .info{font-size:0.8rem;color:var(--ink-light)}
+.save-bar .info{font-size:0.8rem;color:var(--ink-light);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
 .save-bar .info strong{color:var(--rose-deep)}
+.save-bar .dirty-badge{display:inline-flex;align-items:center;gap:0.3rem;background:var(--gold-light);color:#92400e;padding:0.2rem 0.6rem;border-radius:99px;font-size:0.72rem;font-weight:800}
+.save-bar .clean-badge{display:inline-flex;align-items:center;gap:0.3rem;background:var(--hijau-light);color:#065f46;padding:0.2rem 0.6rem;border-radius:99px;font-size:0.72rem;font-weight:800}
 .save-bar button{min-width:200px}
 
 .blind-banner{background:#FEF3C7;border-left:4px solid var(--gold);border-radius:var(--r-md);padding:0.7rem 1rem;font-size:0.82rem;color:#92400e;display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem}
 
-/* Live Ranking Panel */
 .rank-panel{display:flex;flex-direction:column;height:100%}
 .rank-head{padding:1rem 1.2rem;border-bottom:1px solid var(--border);background:var(--surface-2)}
 .rank-head h3{font-size:0.95rem;font-weight:800;margin-bottom:0.2rem;display:flex;align-items:center;gap:0.4rem}
@@ -261,7 +282,7 @@ input[type=number]{-moz-appearance:textfield}
 .peserta-card .actions button.active{background:var(--rose-deep);color:#fff;border-color:var(--rose-deep)}
 
 /* ============================================================
- * §8 SERI / KEPUTUSAN
+ * §8 SERI
  * ============================================================ */
 .seri-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-md);padding:1rem;display:grid;grid-template-columns:auto 1fr auto auto;gap:0.8rem;align-items:center}
 .seri-row .nomor{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:900;color:var(--rose-deep)}
@@ -294,7 +315,6 @@ input[type=number]{-moz-appearance:textfield}
 .print-page table.data td.l{text-align:left;font-weight:600}
 .print-page table.data tbody tr:nth-child(even) td{background:#f8f9fa}
 
-.print-page .catatan{background:#fefce8;border-left:4px solid #eab308;padding:8px 12px;margin:10px 0;font-size:9pt;color:#422006}
 .print-page .ttd{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:10pt}
 .print-page .ttd.single{grid-template-columns:1fr}
 .print-page .ttd .cell{text-align:center}
@@ -334,6 +354,7 @@ input[type=number]{-moz-appearance:textfield}
 .lcp-table td.l{text-align:left;font-weight:700}
 .lcp-table td .lcp-input{width:70px;padding:0.4rem;text-align:center;font-weight:800;font-size:0.95rem;border:1.5px solid var(--border);border-radius:6px}
 .lcp-table td .lcp-input:focus{outline:none;border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
+.lcp-table td .lcp-input:disabled{opacity:0.6;cursor:not-allowed}
 .lcp-table .jawaban-input{width:100%;max-width:400px;padding:0.5rem 0.75rem;text-align:center;font-family:monospace;font-weight:700;letter-spacing:0.2em;font-size:0.85rem;text-transform:uppercase;border:1.5px solid var(--border);border-radius:6px}
 
 .tier-badge{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.7rem;font-weight:800}
@@ -351,17 +372,21 @@ input[type=number]{-moz-appearance:textfield}
   .module-grid{grid-template-columns:1fr 1fr}
   .card-grid{grid-template-columns:1fr}
   .table-wrap{max-height:calc(100vh - 320px)}
-  .input-cell{width:44px;height:34px;font-size:14px}
+  .input-cell{width:44px;height:34px;font-size:14px;min-height:38px}
+  .row-save-btn{width:32px;height:32px;font-size:14px}
   .save-bar button{min-width:auto;flex:1}
   .print-page{width:auto;min-height:auto;padding:12mm 8mm}
   .back-home-link{top:1rem;left:1rem}
+}
+@media (max-width: 480px){
+  .autosave-indicator{bottom:76px;right:0.8rem;font-size:0.68rem}
 }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <!-- ══════════════ LOGIN ══════════════ -->
+  <!-- LOGIN -->
   <div id="view-login" class="view active">
     <a href="./index.html" class="back-home-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -382,7 +407,7 @@ input[type=number]{-moz-appearance:textfield}
     </div>
   </div>
 
-  <!-- ══════════════ DASHBOARD ══════════════ -->
+  <!-- DASHBOARD -->
   <div id="view-dashboard" class="view">
     <div class="appbar">
       <div style="display:flex; align-items:center; gap:0.8rem;">
@@ -396,15 +421,13 @@ input[type=number]{-moz-appearance:textfield}
     <div class="content" id="dashContent"></div>
   </div>
 
-  <!-- ══════════════ INPUT NILAI ══════════════ -->
+  <!-- INPUT -->
   <div id="view-input" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
       <h1 id="inputTitle">Input Nilai</h1>
       <span class="state-badge draft" id="inputStateBadge">Draft</span>
     </div>
-    
-    <!-- Workspace with Left (Table) & Right (Live Ranking) -->
     <div class="input-workspace">
       <div class="input-left">
         <div id="inputHeader" style="padding:1rem 0 0.5rem;display:flex;flex-direction:column;gap:0.75rem"></div>
@@ -412,7 +435,6 @@ input[type=number]{-moz-appearance:textfield}
         <div class="save-bar no-print" id="inputSaveBar"></div>
       </div>
       <div class="input-right" id="liveRankPanel">
-        <!-- Live Ranking Panel -->
         <div class="rank-panel">
           <div class="rank-head">
             <h3>🏆 Live Ranking</h3>
@@ -429,7 +451,7 @@ input[type=number]{-moz-appearance:textfield}
     </div>
   </div>
 
-  <!-- ══════════════ KEHADIRAN ══════════════ -->
+  <!-- KEHADIRAN -->
   <div id="view-kehadiran" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -439,7 +461,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="content" id="kehadiranContent"></div>
   </div>
 
-  <!-- ══════════════ SERI ══════════════ -->
+  <!-- SERI -->
   <div id="view-seri" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -449,7 +471,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="content" id="seriContent"></div>
   </div>
 
-  <!-- ══════════════ BERITA ACARA ══════════════ -->
+  <!-- BA -->
   <div id="view-ba" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -463,7 +485,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="preview-scroll" id="baPreview"></div>
   </div>
 
-  <!-- ══════════════ DAFTAR HADIR ══════════════ -->
+  <!-- DH -->
   <div id="view-dh" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -477,7 +499,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="preview-scroll" id="dhPreview"></div>
   </div>
 
-  <!-- ══════════════ LCP PENYISIHAN ══════════════ -->
+  <!-- LCP PENYISIHAN -->
   <div id="view-lcp-penyisihan" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -487,7 +509,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="content" id="lcpPenyisihanContent"></div>
   </div>
 
-  <!-- ══════════════ LCP TETAPKAN FINALIS ══════════════ -->
+  <!-- LCP FINALIS -->
   <div id="view-lcp-finalis" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -497,7 +519,7 @@ input[type=number]{-moz-appearance:textfield}
     <div class="content" id="lcpFinalisContent"></div>
   </div>
 
-  <!-- ══════════════ LCP FINAL ══════════════ -->
+  <!-- LCP FINAL -->
   <div id="view-lcp-final" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
@@ -524,9 +546,24 @@ input[type=number]{-moz-appearance:textfield}
     token: localStorage.getItem(LS_TOKEN) || '',
     login: null,
     dashboard: null,
-    currentView: 'login',
-    dirty: false
+    currentView: 'login'
   };
+
+  /* Module-level state */
+  const _inflight = new Map();
+  const _actionInflight = new Set();
+  const _dirtyRows = new Set();
+  const _savingRows = new Set();
+  const _autoSaveTimers = new Map();
+  const _cellIndex = new Map();
+
+  const AUTOSAVE_ENABLED = true;
+  const AUTOSAVE_DELAY = 1500;
+
+  let _dashFlight = null;
+  let _routeFlight = null;
+  let _globalUpdateTimer = null;
+  let _asTimer = null;
 
   /* ══════════════════════════════════════════════════════════════
    * §2 UTILS
@@ -535,6 +572,7 @@ input[type=number]{-moz-appearance:textfield}
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   function toast(msg, type = 'info') {
     const wrap = $('#toastContainer');
@@ -574,44 +612,117 @@ input[type=number]{-moz-appearance:textfield}
     });
   }
 
-  async function api(action, payload = {}) {
-    const body = { action, token: State.token, ...payload };
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (data.error === 'Unauthorized') {
-      localStorage.removeItem(LS_TOKEN);
-      State.token = '';
-      toast('Sesi berakhir, silakan login ulang', 'error');
-      setTimeout(() => location.reload(), 900);
-      throw new Error('Unauthorized');
+  /* ══════════════════════════════════════════════════════════════
+   * §3 API (timeout + single-flight + retry + dedupe)
+   * ══════════════════════════════════════════════════════════════ */
+  function handleUnauthorized() {
+    localStorage.removeItem(LS_TOKEN);
+    State.token = '';
+    toast('Sesi berakhir, silakan login ulang', 'error');
+    setTimeout(() => location.reload(), 900);
+  }
+
+  async function api(action, payload = {}, opts = {}) {
+    const { timeout = 30000, retries = 0, dedupeKey = null, retryBackoff = 400 } = opts;
+
+    if (dedupeKey) {
+      const existing = _inflight.get(dedupeKey);
+      if (existing) return existing;
     }
-    return data;
+
+    const promise = (async () => {
+      const body = { action, token: State.token, ...payload };
+      let lastErr = null;
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(new Error('TIMEOUT')), timeout);
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(body),
+            signal: ctrl.signal,
+            cache: 'no-store',
+            redirect: 'follow',
+            credentials: 'omit'
+          });
+          clearTimeout(timer);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data.error === 'Unauthorized') {
+            handleUnauthorized();
+            throw new Error('Unauthorized');
+          }
+          return data;
+        } catch (e) {
+          clearTimeout(timer);
+          lastErr = e;
+          if (e.message === 'Unauthorized') throw e;
+          if (attempt < retries) await sleep(retryBackoff * (2 ** attempt));
+        }
+      }
+      throw lastErr || new Error('Request failed');
+    })();
+
+    if (dedupeKey) {
+      _inflight.set(dedupeKey, promise);
+      promise.finally(() => _inflight.delete(dedupeKey));
+    }
+    return promise;
+  }
+
+  function loadDashboard(force = false) {
+    if (_dashFlight && !force) return _dashFlight;
+    _dashFlight = (async () => {
+      const res = await api('dashboard_pewara', {}, {
+        dedupeKey: 'dashboard', timeout: 25000, retries: 1
+      });
+      if (res.error) throw new Error(res.message || 'Error');
+      State.dashboard = res;
+      return res;
+    })();
+    _dashFlight.finally(() => { _dashFlight = null; });
+    return _dashFlight;
+  }
+
+  async function guardAction(key, fn) {
+    if (_actionInflight.has(key)) return;
+    _actionInflight.add(key);
+    try { return await fn(); }
+    finally { _actionInflight.delete(key); }
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §3 ROUTER
+   * §4 ROUTER (single-flight per hash)
    * ══════════════════════════════════════════════════════════════ */
   function showView(name) {
+    if (State.currentView === 'input' && name !== 'input') {
+      clearAutoSaveTimers();
+    }
     State.currentView = name;
     $$('.view').forEach(v => v.classList.remove('active'));
     const el = document.getElementById('view-' + name);
     if (el) el.classList.add('active');
   }
 
-  function route() {
+  async function route() {
     const hash = (location.hash || '#login').slice(1);
     if (!State.token && hash !== 'login') return (location.hash = '#login');
+
+    const key = hash + '|' + (State.token ? 'auth' : 'anon');
+    if (_routeFlight === key) return;
+
     if (State.token && (!State.dashboard || !State.login) && hash !== 'login') {
-      return loadDashboard().then(() => route()).catch(e => {
-        console.warn('Load error', e);
+      _routeFlight = key;
+      try { await loadDashboard(); }
+      catch (e) {
+        _routeFlight = null;
         toast('Gagal memuat data', 'error');
-      });
+        return;
+      }
+      _routeFlight = null;
     }
+
     switch (hash) {
       case 'dashboard': return renderDashboard();
       case 'input': return renderInput();
@@ -630,7 +741,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §4 LOGIN & BOOT
+   * §5 LOGIN
    * ══════════════════════════════════════════════════════════════ */
   function renderLogin() {
     showView('login');
@@ -645,11 +756,8 @@ input[type=number]{-moz-appearance:textfield}
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Memeriksa...';
     try {
-      const res = await api('login_pewara', { token: tok });
-      if (res.error) {
-        toast(res.message || 'Token salah', 'error');
-        return;
-      }
+      const res = await api('login_pewara', { token: tok }, { timeout: 15000 });
+      if (res.error) { toast(res.message || 'Token salah', 'error'); return; }
       State.token = tok;
       State.login = res;
       localStorage.setItem(LS_TOKEN, tok);
@@ -664,14 +772,11 @@ input[type=number]{-moz-appearance:textfield}
     }
   }
 
-  async function loadDashboard() {
-    const res = await api('dashboard_pewara');
-    if (res.error) throw new Error(res.message || 'Error');
-    State.dashboard = res;
-    return res;
-  }
-
   function doLogout() {
+    clearAutoSaveTimers();
+    _dirtyRows.clear();
+    _savingRows.clear();
+    _cellIndex.clear();
     localStorage.removeItem(LS_TOKEN);
     State.token = '';
     State.login = null;
@@ -681,7 +786,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §5 HELPERS
+   * §6 HELPERS
    * ══════════════════════════════════════════════════════════════ */
   const getCab = () => (State.dashboard || {}).cabang;
   const getKode = () => (State.dashboard || {}).kode || '';
@@ -699,7 +804,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §6 DASHBOARD
+   * §7 DASHBOARD
    * ══════════════════════════════════════════════════════════════ */
   function renderDashboard() {
     showView('dashboard');
@@ -850,29 +955,32 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   async function handleTransition(e) {
-    const action = e.currentTarget.dataset.action;
+    const btn = e.currentTarget;
+    const action = btn.dataset.action;
     const labels = {
       lock: 'Kunci semua nilai sekarang?\nSetelah dikunci, nilai tidak bisa diubah kecuali lewat sidang.',
       sidang_open: 'Buka sidang?\nKoreksi nilai dan keputusan seri bisa dilakukan.',
       sidang_close: 'Tutup sidang dan finalkan hasil?\nSetelah final, tidak dapat diubah lagi.'
     };
     if (!(await showConfirm(labels[action] || 'Lanjutkan?', { title: 'Konfirmasi' }))) return;
-    e.currentTarget.disabled = true;
-    const btn = e.currentTarget;
-    btn.innerHTML = '<span class="spinner"></span>';
-    try {
-      let res;
-      if (action === 'lock') res = await api('kunci_nilai');
-      else res = await api('toggle_sidang');
-      if (res.error) throw new Error(res.message);
-      toast(res.message || 'Berhasil', 'success');
-      await loadDashboard();
-      renderDashboard();
-    } catch (err) {
-      toast(err.message || 'Gagal', 'error');
-      btn.disabled = false;
-      renderDashboard();
-    }
+
+    await guardAction('transition_' + action, async () => {
+      const prevHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>';
+      try {
+        const res = action === 'lock'
+          ? await api('kunci_nilai', {}, { timeout: 30000 })
+          : await api('toggle_sidang', {}, { timeout: 30000 });
+        if (res.error) throw new Error(res.message);
+        toast(res.message || 'Berhasil', 'success');
+        await loadDashboard(true);
+        renderDashboard();
+      } catch (err) {
+        toast(err.message || 'Gagal', 'error');
+        if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+      }
+    });
   }
 
   function isRowComplete(r) {
@@ -888,14 +996,16 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §7 INPUT NILAI (non-LCP)
+   * §8 INPUT TABLE
    * ══════════════════════════════════════════════════════════════ */
-  let rankDebounce = null;
-
   function renderInput() {
     showView('input');
     const d = State.dashboard;
     if (!d || isLcp()) return (location.hash = '#dashboard');
+
+    // Reset saving state (dirty dari render sebelumnya sudah tidak relevan)
+    _savingRows.clear();
+    clearAutoSaveTimers();
 
     $('#inputTitle').textContent = `Input Nilai · ${d.kode}`;
     $('#inputStateBadge').textContent = d.state;
@@ -906,17 +1016,13 @@ input[type=number]{-moz-appearance:textfield}
     const rows = d.rows || [];
     const blind = isBlind();
 
-    // Header
     const lengkap = rows.filter(r => isRowComplete(r)).length;
     const pct = rows.length ? Math.round(lengkap / rows.length * 100) : 0;
     const missing = rows.filter(r => !isRowComplete(r)).map(r => r.No_Undian);
 
     const missingHtml = missing.length ? `
       <details class="missing-list">
-        <summary>
-          ⚠ Belum lengkap
-          <span class="badge-count">${missing.length}</span>
-        </summary>
+        <summary>⚠ Belum lengkap <span class="badge-count">${missing.length}</span></summary>
         <div class="items">
           ${missing.map(n => `<button class="missing-item" data-no="${esc(n)}">${esc(n)}</button>`).join('')}
         </div>
@@ -925,7 +1031,7 @@ input[type=number]{-moz-appearance:textfield}
     const blindBanner = blind ? `
       <div class="blind-banner">
         <span>🔒</span>
-        <div>Mode Blind — nama peserta disembunyikan sampai nilai dikunci. Fokus pada nomor undian.</div>
+        <div>Mode Blind — nama peserta disembunyikan sampai nilai dikunci.</div>
       </div>` : '';
 
     const penilaianWarn = !isPenilaianBuka() ? `
@@ -943,26 +1049,28 @@ input[type=number]{-moz-appearance:textfield}
         ${missingHtml}
       </div>`;
 
-    // Table
     $('#inputTableWrap').innerHTML = buildInputTableHtml(crit, juri, rows, blind);
-
-    // Save bar
     $('#inputSaveBar').innerHTML = `
-      <div class="info">Edit nilai → auto-hitung total · <strong>Simpan</strong> untuk commit</div>
+      <div class="info">Semua nilai tersimpan <span class="clean-badge">✓ synced</span></div>
       <button class="btn btn-primary" id="btnSaveNilai" ${!isPenilaianBuka() ? 'disabled' : ''}>
         💾 Simpan Semua
       </button>`;
 
-    // Events
+    // Idempotent bind (only once)
     bindInputTableEvents();
+
     $('#btnSaveNilai').onclick = saveNilai;
 
     $$('.missing-item').forEach(b => {
       b.onclick = () => focusRow(b.dataset.no);
     });
 
-    // Render Live Ranking awal
+    // Build O(1) cell index AFTER DOM is ready
+    buildCellIndex();
+
+    // Init ranking & save bar
     calculateLiveRank();
+    updateSaveBarInfo();
   }
 
   function buildInputTableHtml(crit, juri, rows, blind) {
@@ -980,9 +1088,7 @@ input[type=number]{-moz-appearance:textfield}
           ${groupCols}
           <th rowspan="2">Total</th>
         </tr>
-        <tr>
-          ${critCols}
-        </tr>
+        <tr>${critCols}</tr>
       </thead>`;
 
     const bodyRows = rows.map(r => {
@@ -1007,7 +1113,6 @@ input[type=number]{-moz-appearance:textfield}
         }).join('');
       }).join('');
 
-      // Compute displayed total
       let totalDisplay = '—';
       const totals = [];
       juri.forEach(j => {
@@ -1021,13 +1126,23 @@ input[type=number]{-moz-appearance:textfield}
       });
       if (totals.length) totalDisplay = (totals.reduce((s,v) => s+v, 0) / totals.length).toFixed(2);
 
+      const saveBtnHtml = `<button class="row-save-btn" data-no="${esc(no)}" title="Simpan baris ini">✓</button>`;
+
       const infoHtml = blind
-        ? `<div class="row-id"><span class="row-dot ${dotCls}"></span><div><div class="nomor">${esc(no)}</div></div></div>`
-        : `<div class="row-id"><span class="row-dot ${dotCls}"></span><div>
-            <div class="nomor">${esc(no)}</div>
-            <div class="nama">${esc(r.Nama_Siswa || '')}</div>
-            <div style="font-size:0.66rem;color:var(--ink-light)">${esc(r.Kapanewon || '')}</div>
-          </div></div>`;
+        ? `<div class="row-id">
+            <span class="row-dot ${dotCls}"></span>
+            <div><div class="nomor">${esc(no)}</div></div>
+            ${saveBtnHtml}
+          </div>`
+        : `<div class="row-id">
+            <span class="row-dot ${dotCls}"></span>
+            <div>
+              <div class="nomor">${esc(no)}</div>
+              <div class="nama">${esc(r.Nama_Siswa || '')}</div>
+              <div style="font-size:0.66rem;color:var(--ink-light)">${esc(r.Kapanewon || '')}</div>
+            </div>
+            ${saveBtnHtml}
+          </div>`;
 
       return `<tr data-no="${esc(no)}" class="${complete ? 'complete' : (anyFilled ? 'partial' : '')}">
         <td class="sticky-l">${infoHtml}</td>
@@ -1041,16 +1156,22 @@ input[type=number]{-moz-appearance:textfield}
 
   function bindInputTableEvents() {
     const wrap = $('#inputTableWrap');
-    if (!wrap) return;
+    if (!wrap || wrap.dataset.bound === '1') return;
+    wrap.dataset.bound = '1';
+
     wrap.addEventListener('input', e => {
       const inp = e.target;
-      if (!inp.classList.contains('input-cell')) return;
+      if (!inp.classList || !inp.classList.contains('input-cell')) return;
       handleCellInput(inp);
     });
+
     wrap.addEventListener('focus', e => {
       const inp = e.target;
-      if (inp.classList && inp.classList.contains('input-cell') && inp.select) inp.select();
+      if (inp.classList && inp.classList.contains('input-cell') && inp.select) {
+        try { inp.select(); } catch (_) {}
+      }
     }, true);
+
     wrap.addEventListener('keydown', e => {
       const inp = e.target;
       if (!inp.classList || !inp.classList.contains('input-cell')) return;
@@ -1060,12 +1181,21 @@ input[type=number]{-moz-appearance:textfield}
       else if (e.key === 'ArrowDown') { e.preventDefault(); focusRowDown(inp, 1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); focusRowDown(inp, -1); }
     });
+
+    wrap.addEventListener('click', e => {
+      const btn = e.target.closest('.row-save-btn');
+      if (!btn) return;
+      e.preventDefault();
+      const no = btn.dataset.no;
+      if (no) saveRow(no);
+    });
   }
 
   function handleCellInput(inp) {
     let v = String(inp.value).replace(/[^0-9.]/g, '');
     const parts = v.split('.');
     if (parts.length > 2) v = parts[0] + '.' + parts.slice(1).join('');
+
     const max = parseFloat(inp.dataset.max);
     const min = parseFloat(inp.dataset.min || 0);
 
@@ -1076,36 +1206,35 @@ input[type=number]{-moz-appearance:textfield}
         if (n < min) v = String(min);
       }
     }
-    inp.value = v;
+    if (inp.value !== v) inp.value = v;
+
     inp.classList.toggle('filled', v !== '');
     inp.classList.remove('invalid');
 
     if (v !== '' && v !== '.') {
       const n = parseFloat(v);
-      if (isNaN(n) || n < min || n > max) {
-        inp.classList.add('invalid');
-      }
+      if (isNaN(n) || n < min || n > max) inp.classList.add('invalid');
     }
 
-    // Update row state
     const tr = inp.closest('tr');
-    updateRowState(tr);
+    updateRowOnly(tr);
+    markRowDirty(tr.dataset.no);
+    scheduleAutoSave(tr.dataset.no);
+    scheduleGlobalUpdate();
 
-    // Auto-advance
     const maxLen = inp.maxLength;
     if (v.length >= maxLen && v !== '') {
-      setTimeout(() => focusCellNext(inp), 60);
-    } else if (maxLen === 1 && v !== '') {
-      setTimeout(() => focusCellNext(inp), 60);
+      setTimeout(() => focusCellNext(inp), 50);
     }
   }
 
-  function updateRowState(tr) {
+  function updateRowOnly(tr) {
     const crit = getKriteria();
     const juri = getJuriList();
     const dots = tr.querySelector('.row-dot');
     let completeJuri = 0;
     const totals = [];
+
     juri.forEach(j => {
       let sum = 0, filled = 0;
       crit.forEach(c => {
@@ -1116,26 +1245,29 @@ input[type=number]{-moz-appearance:textfield}
       });
       if (filled === crit.length) { totals.push(sum); completeJuri++; }
     });
+
     const totalCell = tr.querySelector('.row-total');
     if (totalCell) {
-      if (totals.length) {
-        totalCell.textContent = (totals.reduce((s,v) => s+v, 0) / totals.length).toFixed(2);
-      } else {
-        totalCell.textContent = '—';
-      }
+      totalCell.textContent = totals.length
+        ? (totals.reduce((s, v) => s + v, 0) / totals.length).toFixed(2)
+        : '—';
     }
     if (dots) {
-      dots.className = 'row-dot ' + (completeJuri === juri.length ? 'complete' : (completeJuri > 0 ? 'partial' : 'empty'));
+      dots.className = 'row-dot ' +
+        (completeJuri === juri.length ? 'complete' : (completeJuri > 0 ? 'partial' : 'empty'));
     }
     tr.classList.toggle('complete', completeJuri === juri.length);
     tr.classList.toggle('partial', completeJuri > 0 && completeJuri < juri.length);
+  }
 
-    // Update progress
-    updateProgress();
-
-    // Trigger Live Rank calculation (debounce 300ms)
-    clearTimeout(rankDebounce);
-    rankDebounce = setTimeout(calculateLiveRank, 300);
+  let _globalUpdateTimer = null;
+  function scheduleGlobalUpdate() {
+    if (_globalUpdateTimer) clearTimeout(_globalUpdateTimer);
+    _globalUpdateTimer = setTimeout(() => {
+      _globalUpdateTimer = null;
+      updateProgress();
+      calculateLiveRank();
+    }, 150);
   }
 
   function updateProgress() {
@@ -1151,7 +1283,367 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §7b LIVE RANKING ENGINE
+   * §9 ROW DIRTY + AUTO-SAVE
+   * ══════════════════════════════════════════════════════════════ */
+  function markRowDirty(no) {
+    if (!no) return;
+    _dirtyRows.add(no);
+    updateRowSaveBtn(no);
+    updateSaveBarInfo();
+  }
+
+  function updateRowSaveBtn(no) {
+    const tr = document.querySelector(`.input-table tbody tr[data-no="${no}"]`);
+    if (!tr) return;
+    const btn = tr.querySelector('.row-save-btn');
+    if (!btn) return;
+
+    const dirty = _dirtyRows.has(no);
+    const saving = _savingRows.has(no);
+
+    if (saving) {
+      btn.className = 'row-save-btn saving';
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner" style="width:10px;height:10px;border-width:1.5px"></span>';
+      btn.title = 'Menyimpan...';
+      delete btn.dataset.clean;
+    } else if (dirty) {
+      btn.className = 'row-save-btn dirty';
+      btn.disabled = false;
+      btn.innerHTML = '💾';
+      btn.title = 'Klik untuk simpan baris ini';
+      delete btn.dataset.clean;
+    } else {
+      btn.className = 'row-save-btn';
+      btn.disabled = true;
+      btn.innerHTML = '✓';
+      btn.dataset.clean = '1';
+      btn.title = 'Tersimpan';
+    }
+  }
+
+  function updateSaveBarInfo() {
+    const info = $('#inputSaveBar .info');
+    if (!info) return;
+    const n = _dirtyRows.size;
+    if (n > 0) {
+      info.innerHTML = `<strong>${n} baris</strong> belum tersimpan <span class="dirty-badge">💾 ${n} dirty</span>`;
+    } else {
+      info.innerHTML = `Semua nilai tersimpan <span class="clean-badge">✓ synced</span>`;
+    }
+  }
+
+  function scheduleAutoSave(no) {
+    if (!AUTOSAVE_ENABLED || !isPenilaianBuka()) return;
+    if (!_dirtyRows.has(no)) return;
+    if (_savingRows.has(no)) return;
+    if (_autoSaveTimers.has(no)) clearTimeout(_autoSaveTimers.get(no));
+    _autoSaveTimers.set(no, setTimeout(() => {
+      _autoSaveTimers.delete(no);
+      if (_dirtyRows.has(no) && !_savingRows.has(no)) {
+        saveRow(no, { silent: true });
+      }
+    }, AUTOSAVE_DELAY));
+  }
+
+  function clearAutoSaveTimers() {
+    _autoSaveTimers.forEach(t => clearTimeout(t));
+    _autoSaveTimers.clear();
+  }
+
+  function showAutoSaveIndicator(msg, type = '') {
+    let el = document.getElementById('autosaveInd');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'autosaveInd';
+      el.className = 'autosave-indicator';
+      document.body.appendChild(el);
+    }
+    el.className = 'autosave-indicator' + (type ? ' ' + type : '');
+    el.textContent = msg;
+    void el.offsetWidth;
+    el.classList.add('show');
+    if (_asTimer) clearTimeout(_asTimer);
+    _asTimer = setTimeout(() => el.classList.remove('show'), 1800);
+  }
+
+  async function saveRow(no, opts = {}) {
+    const silent = !!opts.silent;
+    if (!no) return;
+    if (_savingRows.has(no)) return;
+    if (!_dirtyRows.has(no)) return;
+    if (!isPenilaianBuka()) {
+      if (!silent) toast('Penilaian sudah ditutup', 'error');
+      return;
+    }
+
+    const tr = document.querySelector(`.input-table tbody tr[data-no="${no}"]`);
+    if (!tr) return;
+
+    const crit = getKriteria();
+    const juri = getJuriList();
+
+    const rows = [];
+    let partialErr = null;
+
+    juri.forEach(j => {
+      const vals = {};
+      let cnt = 0;
+      crit.forEach(c => {
+        const inp = tr.querySelector(`[data-juri="${j.Urutan}"][data-key="${c.key}"]`);
+        if (!inp) return;
+        const raw = inp.value.trim();
+        if (raw === '') return;
+        const n = parseFloat(raw);
+        const min = c.min || 0;
+        if (isNaN(n) || n < min || n > c.max) {
+          if (!partialErr) partialErr = `${c.label} J${j.Urutan}: ${raw} invalid (${min}-${c.max})`;
+          inp.classList.add('invalid');
+          return;
+        }
+        vals[c.key] = n;
+        cnt++;
+      });
+      if (cnt === crit.length) rows.push({ No_Undian: no, juri: j.Urutan, ...vals });
+      else if (cnt > 0 && !partialErr) partialErr = `J${j.Urutan}: ${cnt}/${crit.length} kriteria`;
+    });
+
+    if (partialErr) {
+      if (silent) return;
+      return toast(partialErr, 'error');
+    }
+    if (!rows.length) {
+      if (silent) return;
+      return toast('Belum ada nilai lengkap', 'error');
+    }
+
+    _savingRows.add(no);
+    updateRowSaveBtn(no);
+    if (silent) showAutoSaveIndicator('💾 Menyimpan ' + no + '...');
+
+    try {
+      const res = await api('simpan_nilai', { rows }, {
+        timeout: 30000, dedupeKey: 'save_row_' + no
+      });
+      if (res.error) throw new Error(res.message);
+
+      const target = (State.dashboard.rows || []).find(x => x.No_Undian === no);
+      if (target) {
+        if (!target.nilai) target.nilai = {};
+        rows.forEach(r => {
+          const total = crit.reduce((s, c) => s + (num(r[c.key]) || 0), 0);
+          target.nilai[r.juri] = { K1: r.K1, K2: r.K2, K3: r.K3, K4: r.K4, Total: total };
+        });
+      }
+
+      // CRITICAL: cek apakah user ketik selama API in flight
+      const stillClean = rowValuesMatch(tr, rows, juri, crit);
+      if (stillClean) {
+        _dirtyRows.delete(no);
+        if (silent) showAutoSaveIndicator('✓ ' + no + ' tersimpan', 'success');
+        else toast(`${no} tersimpan`, 'success');
+      } else {
+        if (silent) showAutoSaveIndicator('⟳ ' + no + ' masih ada perubahan');
+        scheduleAutoSave(no);
+      }
+
+      scheduleGlobalUpdate();
+    } catch (e) {
+      if (silent) showAutoSaveIndicator('✗ ' + no + ' gagal', 'error');
+      else toast(`${no}: ${e.message || 'Gagal simpan'}`, 'error');
+    } finally {
+      _savingRows.delete(no);
+      updateRowSaveBtn(no);
+      updateSaveBarInfo();
+    }
+  }
+
+  function rowValuesMatch(tr, sentRows, juri, crit) {
+    const sentMap = new Map();
+    sentRows.forEach(r => sentMap.set(r.juri, r));
+    for (const j of juri) {
+      const sent = sentMap.get(j.Urutan);
+      if (!sent) continue;
+      for (const c of crit) {
+        const inp = tr.querySelector(`[data-juri="${j.Urutan}"][data-key="${c.key}"]`);
+        const cur = inp ? parseFloat(inp.value) : NaN;
+        const was = parseFloat(sent[c.key]);
+        if (cur !== was) return false;
+      }
+    }
+    return true;
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+   * §10 SAVE ALL
+   * ══════════════════════════════════════════════════════════════ */
+  async function saveNilai() {
+    const btn = $('#btnSaveNilai');
+    if (!isPenilaianBuka()) return toast('Penilaian ditutup', 'error');
+
+    const crit = getKriteria();
+    const juri = getJuriList();
+
+    const allTrs = $$('.input-table tbody tr');
+    const targetTrs = _dirtyRows.size > 0
+      ? allTrs.filter(tr => _dirtyRows.has(tr.dataset.no))
+      : allTrs;
+
+    if (!targetTrs.length) return toast('Tidak ada perubahan', 'info');
+
+    const rows = [];
+    const errs = [];
+    const sentSnapshot = new Map();
+
+    targetTrs.forEach(tr => {
+      const no = tr.dataset.no;
+      const snap = {};
+      juri.forEach(j => {
+        const vals = {};
+        let filled = 0;
+        crit.forEach(c => {
+          const inp = tr.querySelector(`[data-juri="${j.Urutan}"][data-key="${c.key}"]`);
+          if (!inp) return;
+          const raw = inp.value.trim();
+          if (raw === '') return;
+          const n = parseFloat(raw);
+          const min = c.min || 0;
+          if (isNaN(n) || n < min || n > c.max) {
+            errs.push(`${no} J${j.Urutan} ${c.label}: ${raw} invalid`);
+            inp.classList.add('invalid');
+            return;
+          }
+          vals[c.key] = n;
+          filled++;
+        });
+        if (filled === crit.length) {
+          rows.push({ No_Undian: no, juri: j.Urutan, ...vals });
+          snap[j.Urutan] = vals;
+        } else if (filled > 0) {
+          errs.push(`${no} J${j.Urutan}: ${filled}/${crit.length}`);
+        }
+      });
+      if (Object.keys(snap).length) sentSnapshot.set(no, snap);
+    });
+
+    if (errs.length) {
+      return toast(errs[0] + (errs.length > 1 ? ` (+${errs.length - 1} lagi)` : ''), 'error');
+    }
+    if (!rows.length) return toast('Tidak ada nilai lengkap', 'info');
+
+    const ok = await showConfirm(`Simpan ${sentSnapshot.size} baris (${rows.length} set)?`, {
+      title: 'Konfirmasi Simpan', okText: 'Simpan'
+    });
+    if (!ok) return;
+
+    await guardAction('save_nilai_all', async () => {
+      const prevHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span> Menyimpan ${sentSnapshot.size} baris...`;
+
+      try {
+        const res = await api('simpan_nilai', { rows }, { timeout: 60000 });
+        if (res.error) throw new Error(res.message);
+
+        sentSnapshot.forEach((juriVals, no) => {
+          const target = (State.dashboard.rows || []).find(x => x.No_Undian === no);
+          if (!target) return;
+          if (!target.nilai) target.nilai = {};
+          Object.entries(juriVals).forEach(([jUri, v]) => {
+            const total = crit.reduce((s, c) => s + (v[c.key] || 0), 0);
+            target.nilai[jUri] = { ...v, Total: total };
+          });
+        });
+
+        targetTrs.forEach(tr => {
+          const no = tr.dataset.no;
+          const snap = sentSnapshot.get(no);
+          if (!snap) { _dirtyRows.delete(no); return; }
+          const sentRows = Object.entries(snap).map(([j, vals]) => ({ juri: parseInt(j, 10), ...vals }));
+          if (rowValuesMatch(tr, sentRows, juri, crit)) _dirtyRows.delete(no);
+          else scheduleAutoSave(no);
+        });
+
+        $$('.row-save-btn').forEach(b => updateRowSaveBtn(b.dataset.no));
+        updateSaveBarInfo();
+        scheduleGlobalUpdate();
+        toast(`${res.saved} nilai tersimpan`, 'success');
+      } catch (e) {
+        toast('Gagal: ' + (e.message || 'Network error'), 'error');
+      } finally {
+        if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+   * §11 O(1) CELL NAVIGATION
+   * ══════════════════════════════════════════════════════════════ */
+  function buildCellIndex() {
+    _cellIndex.clear();
+    const table = document.querySelector('.input-table');
+    if (!table) return;
+    const trs = table.querySelectorAll('tbody tr');
+    trs.forEach((tr, r) => {
+      const inputs = tr.querySelectorAll('.input-cell');
+      inputs.forEach((inp, c) => {
+        _cellIndex.set(`${r}-${c}`, inp);
+        inp.dataset.row = r;
+        inp.dataset.col = c;
+      });
+    });
+  }
+
+  function _getPos(inp) {
+    return { r: parseInt(inp.dataset.row, 10), c: parseInt(inp.dataset.col, 10) };
+  }
+
+  function focusCellNext(inp) {
+    const { r, c } = _getPos(inp);
+    const next = _cellIndex.get(`${r}-${c + 1}`) || _cellIndex.get(`${r + 1}-0`);
+    if (next) {
+      next.focus();
+      try { next.select(); } catch (_) {}
+      next.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  }
+
+  function focusCellPrev(inp) {
+    const { r, c } = _getPos(inp);
+    let prev = c > 0 ? _cellIndex.get(`${r}-${c - 1}`) : null;
+    if (!prev && r > 0) {
+      let lastC = 0;
+      while (_cellIndex.has(`${r - 1}-${lastC + 1}`)) lastC++;
+      prev = _cellIndex.get(`${r - 1}-${lastC}`);
+    }
+    if (prev) {
+      prev.focus();
+      try { prev.select(); } catch (_) {}
+      prev.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  }
+
+  function focusRowDown(inp, dir) {
+    const { r, c } = _getPos(inp);
+    const next = _cellIndex.get(`${r + dir}-${c}`);
+    if (next) {
+      next.focus();
+      try { next.select(); } catch (_) {}
+    }
+  }
+
+  function focusRow(no) {
+    const tr = document.querySelector(`.input-table tbody tr[data-no="${esc(no)}"]`);
+    if (!tr) return;
+    tr.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    tr.style.background = '#FEF3C7';
+    setTimeout(() => tr.style.background = '', 1400);
+    const inp = tr.querySelector('.input-cell');
+    if (inp) setTimeout(() => inp.focus(), 300);
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+   * §12 LIVE RANKING
    * ══════════════════════════════════════════════════════════════ */
   function calculateLiveRank() {
     const rows = $$('.input-table tbody tr');
@@ -1165,7 +1657,6 @@ input[type=number]{-moz-appearance:textfield}
       const inputs = tr.querySelectorAll('.input-cell');
       let totalSum = 0, completeJuri = 0;
 
-      // Group by juri
       const juriMap = {};
       inputs.forEach(inp => {
         const j = inp.dataset.juri;
@@ -1185,31 +1676,19 @@ input[type=number]{-moz-appearance:textfield}
       });
 
       if (completeJuri === juriCount && juriCount > 0) {
-        data.push({
-          no,
-          nama,
-          total: totalSum / juriCount
-        });
+        data.push({ no, nama, total: totalSum / juriCount });
       }
     });
 
-    // Sort descending by total
     data.sort((a, b) => b.total - a.total);
-
-    // Take Top 5
     const top5 = data.slice(0, 5);
     const listEl = $('#liveRankList');
 
     if (!top5.length) {
-      listEl.innerHTML = `
-        <div class="rank-empty">
-          <div class="icon">⏳</div>
-          <div>Menunggu input nilai lengkap...</div>
-        </div>`;
+      listEl.innerHTML = `<div class="rank-empty"><div class="icon">⏳</div><div>Menunggu input nilai lengkap...</div></div>`;
       return;
     }
 
-    // Check for ties
     const tieSet = new Set();
     for (let i = 0; i < top5.length; i++) {
       for (let j = i + 1; j < top5.length; j++) {
@@ -1227,130 +1706,26 @@ input[type=number]{-moz-appearance:textfield}
       if (rank === 1) { badgeCls = 'r1'; itemCls = 'top1'; }
       else if (rank === 2) { badgeCls = 'r2'; itemCls = 'top2'; }
       else if (rank === 3) { badgeCls = 'r3'; itemCls = 'top3'; }
-
       const isTie = tieSet.has(item.no);
       const tieHtml = isTie ? '<span class="rank-tie">TIE</span>' : '';
       const namaHtml = isBlind() ? '' : `<div class="nm">${esc(item.nama)}</div>`;
 
-      return `
-        <div class="rank-item ${itemCls}">
-          <div class="rank-badge ${badgeCls}">${rank}</div>
-          <div class="rank-info">
-            <div class="no">${esc(item.no)} ${tieHtml}</div>
-            ${namaHtml}
-          </div>
-          <div class="rank-score">
-            ${item.total.toFixed(2)}
-            <small>Skor</small>
-          </div>
+      return `<div class="rank-item ${itemCls}">
+        <div class="rank-badge ${badgeCls}">${rank}</div>
+        <div class="rank-info">
+          <div class="no">${esc(item.no)} ${tieHtml}</div>
+          ${namaHtml}
         </div>
-      `;
+        <div class="rank-score">
+          ${item.total.toFixed(2)}
+          <small>Skor</small>
+        </div>
+      </div>`;
     }).join('');
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §8 SAVE NILAI
-   * ══════════════════════════════════════════════════════════════ */
-  function focusCellNext(inp) {
-    const all = Array.from(document.querySelectorAll('.input-table .input-cell'));
-    const i = all.indexOf(inp);
-    if (i >= 0 && i < all.length - 1) {
-      const n = all[i + 1];
-      n.focus();
-      if (n.select) n.select();
-      n.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    }
-  }
-  function focusCellPrev(inp) {
-    const all = Array.from(document.querySelectorAll('.input-table .input-cell'));
-    const i = all.indexOf(inp);
-    if (i > 0) {
-      const p = all[i - 1];
-      p.focus();
-      if (p.select) p.select();
-      p.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    }
-  }
-  function focusRowDown(inp, dir) {
-    const tr = inp.closest('tr');
-    const j = inp.dataset.juri, k = inp.dataset.key;
-    const nextTr = dir > 0 ? tr.nextElementSibling : tr.previousElementSibling;
-    if (nextTr) {
-      const next = nextTr.querySelector(`[data-juri="${j}"][data-key="${k}"]`);
-      if (next) { next.focus(); if (next.select) next.select(); }
-    }
-  }
-  function focusRow(no) {
-    const tr = document.querySelector(`.input-table tbody tr[data-no="${esc(no)}"]`);
-    if (!tr) return;
-    tr.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    tr.style.background = '#FEF3C7';
-    setTimeout(() => tr.style.background = '', 1400);
-    const inp = tr.querySelector('.input-cell');
-    if (inp) setTimeout(() => inp.focus(), 300);
-  }
-
-  async function saveNilai() {
-    const btn = $('#btnSaveNilai');
-    const crit = getKriteria();
-    const juri = getJuriList();
-    const rows = [];
-    const errs = [];
-
-    $$('.input-table tbody tr').forEach(tr => {
-      const no = tr.dataset.no;
-      juri.forEach(j => {
-        const vals = {};
-        let filled = 0;
-        crit.forEach(c => {
-          const inp = tr.querySelector(`[data-juri="${j.Urutan}"][data-key="${c.key}"]`);
-          if (!inp) return;
-          const raw = inp.value.trim();
-          if (raw === '') return;
-          const n = parseFloat(raw);
-          const min = c.min || 0;
-          if (isNaN(n) || n < min || n > c.max) {
-            errs.push(`${no} Juri ${j.Urutan} ${c.label}: ${raw} tidak valid (${min}-${c.max})`);
-            inp.classList.add('invalid');
-            return;
-          }
-          vals[c.key] = n;
-          filled++;
-        });
-        if (filled === crit.length) {
-          rows.push({ No_Undian: no, juri: j.Urutan, ...vals });
-        } else if (filled > 0) {
-          errs.push(`${no} Juri ${j.Urutan}: ${filled}/${crit.length} kriteria`);
-        }
-      });
-    });
-
-    if (errs.length) {
-      toast(errs[0] + (errs.length > 1 ? ` (+${errs.length-1} lagi)` : ''), 'error');
-      return;
-    }
-    if (!rows.length) return toast('Belum ada nilai lengkap untuk disimpan', 'error');
-
-    const ok = await showConfirm(`Simpan ${rows.length} baris nilai?`, { title: 'Konfirmasi Simpan', okText: 'Simpan' });
-    if (!ok) return;
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-    try {
-      const res = await api('simpan_nilai', { rows });
-      if (res.error) throw new Error(res.message);
-      toast(`${res.saved} nilai tersimpan`, 'success');
-      await loadDashboard();
-      renderInput();
-    } catch (e) {
-      toast('Gagal: ' + e.message, 'error');
-      btn.disabled = false;
-      btn.innerHTML = '💾 Simpan Semua';
-    }
-  }
-
-  /* ══════════════════════════════════════════════════════════════
-   * §9 KEHADIRAN
+   * §13 KEHADIRAN
    * ══════════════════════════════════════════════════════════════ */
   function renderKehadiran() {
     showView('kehadiran');
@@ -1405,6 +1780,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   function bindKehadiranActions() {
+    if (!isPenilaianBuka()) return;
     $$('.peserta-card .actions button').forEach(btn => {
       btn.onclick = async () => {
         const card = btn.closest('.peserta-card');
@@ -1416,29 +1792,33 @@ input[type=number]{-moz-appearance:textfield}
           tidak_sportif: 'beri PERINGATAN tidak sportif', cabut: 'CABUT sanksi'
         };
         if (!(await showConfirm(`${labels[jenis]} untuk ${no}?`, { title: 'Konfirmasi' }))) return;
-        btn.disabled = true;
-        try {
-          const res = await api('catat_sanksi', { No_Undian: no, jenis });
-          if (res.error) throw new Error(res.message);
-          toast(res.message || 'Berhasil', 'success');
-          await loadDashboard();
-          renderKehadiran();
-        } catch (e) {
-          toast('Gagal: ' + e.message, 'error');
-          btn.disabled = false;
-        }
+
+        await guardAction(`sanksi_${no}_${jenis}`, async () => {
+          const prevHtml = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner" style="width:12px;height:12px"></span>';
+          try {
+            const res = await api('catat_sanksi', { No_Undian: no, jenis }, { timeout: 20000 });
+            if (res.error) throw new Error(res.message);
+            toast(res.message || 'Berhasil', 'success');
+            await loadDashboard(true);
+            renderKehadiran();
+          } catch (e) {
+            toast('Gagal: ' + e.message, 'error');
+            if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+          }
+        });
       };
     });
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §10 SERI
+   * §14 SERI
    * ══════════════════════════════════════════════════════════════ */
   function renderSeri() {
     showView('seri');
     const d = State.dashboard;
     if (!d) return;
-
     const seri = d.seri_belum_putus || [];
     const rows = d.rows || [];
 
@@ -1471,7 +1851,6 @@ input[type=number]{-moz-appearance:textfield}
       <div style="display:flex;flex-direction:column;gap:0.6rem">${seriRows}</div>
       <button class="btn btn-primary btn-block" id="btnSaveSeri" style="margin-top:0.5rem">💾 Simpan Keputusan</button>`;
 
-    // Pre-fill existing keputusan
     $$('.rank-input').forEach(inp => {
       const no = inp.dataset.no;
       if (manualKep[no] !== undefined) inp.value = manualKep[no];
@@ -1495,24 +1874,26 @@ input[type=number]{-moz-appearance:textfield}
 
       if (!(await showConfirm(`Simpan ${payload.length} keputusan?`, { okText: 'Simpan' }))) return;
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-      try {
-        const res = await api('simpan_keputusan_seri', { rows: payload, tahap: getTahap() });
-        if (res.error) throw new Error(res.message);
-        toast(res.message || 'Tersimpan', 'success');
-        await loadDashboard();
-        renderSeri();
-      } catch (err) {
-        toast('Gagal: ' + err.message, 'error');
-        btn.disabled = false;
-        btn.innerHTML = '💾 Simpan Keputusan';
-      }
+      await guardAction('save_seri', async () => {
+        const prevHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+        try {
+          const res = await api('simpan_keputusan_seri', { rows: payload, tahap: getTahap() }, { timeout: 30000 });
+          if (res.error) throw new Error(res.message);
+          toast(res.message || 'Tersimpan', 'success');
+          await loadDashboard(true);
+          renderSeri();
+        } catch (err) {
+          toast('Gagal: ' + err.message, 'error');
+          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+        }
+      });
     };
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §11 PRINT ENGINE (BA / DH)
+   * §15 PRINT
    * ══════════════════════════════════════════════════════════════ */
   function buildKopHtml(kop) {
     if (!kop) return '';
@@ -1528,10 +1909,9 @@ input[type=number]{-moz-appearance:textfield}
     showView('ba');
     $('#baPreview').innerHTML = '<div style="color:#cbd5e1;text-align:center;padding:3rem"><span class="spinner"></span> Memuat Berita Acara...</div>';
     try {
-      const res = await api('get_ba_data');
+      const res = await api('get_ba_data', {}, { timeout: 25000 });
       if (res.error) throw new Error(res.message);
-      const html = buildBAHtml(res);
-      $('#baPreview').innerHTML = html;
+      $('#baPreview').innerHTML = buildBAHtml(res);
       $('#btnPrintBA').onclick = () => printContent($('#baPreview').innerHTML);
     } catch (e) {
       $('#baPreview').innerHTML = `<div style="color:#fca5a5;padding:2rem;text-align:center">Gagal: ${esc(e.message)}</div>`;
@@ -1544,7 +1924,6 @@ input[type=number]{-moz-appearance:textfield}
     const ttd = d.ttd || {};
     const pewara = d.pewara || {};
     const juri = d.juri || [];
-
     const tanggal = acara.tanggal_teks || acara.tanggal || '';
     const tempat = acara.tempat || '';
 
@@ -1552,21 +1931,16 @@ input[type=number]{-moz-appearance:textfield}
     if (d.mode === 'lcp') {
       bodyHtml = `
         <h3 style="font-size:11pt;margin:14px 0 8px;color:#4A2E3F">PENYISIHAN</h3>
-        ${buildBaTable(d.penyisihan || [], ['No_Undian','Nama_Siswa','Kapanewon','Penyisihan','Tambahan','Total','Rank'], 'Penyisihan')}
+        ${buildBaTable(d.penyisihan || [], ['No_Undian','Nama_Siswa','Kapanewon','Penyisihan','Tambahan','Total','Rank'])}
         <h3 style="font-size:11pt;margin:14px 0 8px;color:#4A2E3F">FINAL</h3>
-        ${buildBaTable(d.final || [], ['No_Undian','Nama_Siswa','Kapanewon','Final_Wajib','Final_Lempar','Final_Rebutan','Total','Rank','Peringkat'], 'Final')}
-      `;
+        ${buildBaTable(d.final || [], ['No_Undian','Nama_Siswa','Kapanewon','Final_Wajib','Final_Lempar','Final_Rebutan','Total','Rank','Peringkat'])}`;
     } else {
       const cols = ['No_Undian','Nama_Siswa','Kapanewon'];
       juri.forEach((j, idx) => cols.push('J' + (idx+1)));
       cols.push('Rata_Rata','Penalti','Total','Peringkat');
 
       const rows = (d.rows || []).map(r => {
-        const out = {
-          No_Undian: r.No_Undian,
-          Nama_Siswa: r.Nama_Siswa,
-          Kapanewon: r.Kapanewon,
-        };
+        const out = { No_Undian: r.No_Undian, Nama_Siswa: r.Nama_Siswa, Kapanewon: r.Kapanewon };
         juri.forEach((j, idx) => {
           const pj = (r.per_juri || []).find(x => x.juri === j.Urutan);
           out['J' + (idx+1)] = pj ? num(pj.total).toFixed(2) : '—';
@@ -1577,7 +1951,7 @@ input[type=number]{-moz-appearance:textfield}
         out.Peringkat = r.Peringkat || '—';
         return out;
       });
-      bodyHtml = buildBaTable(rows, cols, 'Peserta');
+      bodyHtml = buildBaTable(rows, cols);
     }
 
     const ttdHtml = `
@@ -1611,7 +1985,7 @@ input[type=number]{-moz-appearance:textfield}
     </div>`;
   }
 
-  function buildBaTable(rows, cols, label) {
+  function buildBaTable(rows, cols) {
     if (!rows.length) return '<div style="text-align:center;padding:1rem;color:#888;font-style:italic">Belum ada data</div>';
     const head = '<tr><th>No</th>' + cols.map(c => `<th>${esc(c.replace(/_/g, ' '))}</th>`).join('') + '</tr>';
     const body = rows.map((r, i) => {
@@ -1628,10 +2002,9 @@ input[type=number]{-moz-appearance:textfield}
     showView('dh');
     $('#dhPreview').innerHTML = '<div style="color:#cbd5e1;text-align:center;padding:3rem"><span class="spinner"></span> Memuat Daftar Hadir...</div>';
     try {
-      const res = await api('get_daftar_hadir');
+      const res = await api('get_daftar_hadir', {}, { timeout: 25000 });
       if (res.error) throw new Error(res.message);
-      const html = buildDHHtml(res);
-      $('#dhPreview').innerHTML = html;
+      $('#dhPreview').innerHTML = buildDHHtml(res);
       $('#btnPrintDH').onclick = () => printContent($('#dhPreview').innerHTML);
     } catch (e) {
       $('#dhPreview').innerHTML = `<div style="color:#fca5a5;padding:2rem;text-align:center">Gagal: ${esc(e.message)}</div>`;
@@ -1715,7 +2088,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §12 LCP — PENYISIHAN
+   * §16 LCP — PENYISIHAN
    * ══════════════════════════════════════════════════════════════ */
   function renderLcpPenyisihan() {
     showView('lcp-penyisihan');
@@ -1723,6 +2096,7 @@ input[type=number]{-moz-appearance:textfield}
     if (!d || !isLcp()) return (location.hash = '#dashboard');
     const rows = d.rows || [];
     const blind = isBlind();
+    const penilaianBuka = isPenilaianBuka();
 
     if (!rows.length) {
       $('#lcpPenyisihanContent').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-light)">Belum ada regu</div>';
@@ -1730,7 +2104,6 @@ input[type=number]{-moz-appearance:textfield}
     }
 
     const sorted = rows.slice().sort((a, b) => (a.No_Undian || '').localeCompare(b.No_Undian || ''));
-
     const body = sorted.map(r => {
       const fases = r.fases || {};
       const peny = fases.penyisihan || {};
@@ -1740,14 +2113,15 @@ input[type=number]{-moz-appearance:textfield}
       return `<tr data-no="${esc(r.No_Undian)}">
         <td class="l"><strong>${esc(r.No_Undian)}</strong>${!blind && r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
         <td>${esc(r.Kapanewon || '—')}</td>
-        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="25" placeholder="0-25"></td>
-        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="25" placeholder="0-25"></td>
+        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="25" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
+        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="25" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
         <td style="font-weight:800;color:var(--rose-primary)">${skor !== '' ? esc(skor) : '—'}</td>
       </tr>`;
     }).join('');
 
     $('#lcpPenyisihanContent').innerHTML = `
-      ${blind ? '<div class="blind-banner">🔒 Mode Blind aktif — fokus pada nomor undian</div>' : ''}
+      ${blind ? '<div class="blind-banner">🔒 Mode Blind aktif</div>' : ''}
+      ${!penilaianBuka ? '<div class="warn-banner info"><span class="icon">⏸️</span><div>Penilaian belum dibuka.</div></div>' : ''}
       <div class="warn-banner info"><span class="icon">ℹ️</span><div>Isi <strong>jumlah benar</strong> (0-25). Skor = benar × 100.</div></div>
       <div class="table-wrap">
         <table class="lcp-table">
@@ -1761,7 +2135,7 @@ input[type=number]{-moz-appearance:textfield}
           <tbody>${body}</tbody>
         </table>
       </div>
-      <button class="btn btn-primary" id="btnSaveLcpPeny" style="margin-top:0.5rem">💾 Simpan Penyisihan</button>`;
+      <button class="btn btn-primary" id="btnSaveLcpPeny" style="margin-top:0.5rem" ${!penilaianBuka ? 'disabled' : ''}>💾 Simpan Penyisihan</button>`;
 
     $('#btnSaveLcpPeny').onclick = async e => {
       const btn = e.currentTarget;
@@ -1781,22 +2155,34 @@ input[type=number]{-moz-appearance:textfield}
       if (err) return toast(err, 'error');
       if (!payload.length) return toast('Belum ada data', 'error');
       if (!(await showConfirm(`Simpan ${payload.length} regu?`, { okText: 'Simpan' }))) return;
-      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-      try {
-        const res = await api('simpan_lcp', { fase: 'penyisihan', rows: payload });
-        if (res.error) throw new Error(res.message);
-        toast(res.message, 'success');
-        await loadDashboard();
-        renderLcpPenyisihan();
-      } catch (err) {
-        toast('Gagal: ' + err.message, 'error');
-        btn.disabled = false; btn.innerHTML = '💾 Simpan Penyisihan';
-      }
+
+      await guardAction('save_lcp_penyisihan', async () => {
+        const prevHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+        try {
+          const res = await api('simpan_lcp', { fase: 'penyisihan', rows: payload }, { timeout: 45000 });
+          if (res.error) throw new Error(res.message);
+          // Optimistic update
+          payload.forEach(p => {
+            const target = State.dashboard.rows.find(x => x.No_Undian === p.No_Undian);
+            if (target) {
+              if (!target.fases) target.fases = {};
+              target.fases.penyisihan = { benar: p.benar, salah: p.salah, skor: p.benar * 100 };
+            }
+          });
+          toast(res.message, 'success');
+          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+        } catch (e) {
+          toast('Gagal: ' + e.message, 'error');
+          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+        }
+      });
     };
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §13 LCP — TETAPKAN FINALIS
+   * §17 LCP — TETAPKAN FINALIS
    * ══════════════════════════════════════════════════════════════ */
   function renderLcpFinalis() {
     showView('lcp-finalis');
@@ -1836,10 +2222,10 @@ input[type=number]{-moz-appearance:textfield}
 
     let warning = '';
     if (tieBoundary) {
-      warning = `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>Seri di batas 5 besar!</strong> Regu ${grupTambahan.join(', ')} memiliki skor sama. Input soal tambahan atau keputusan juri dulu.</div></div>`;
+      warning = `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>Seri di batas 5 besar!</strong> Regu ${grupTambahan.join(', ')} memiliki skor sama.</div></div>`;
     }
     if (finalis.size > 0) {
-      warning += `<div class="warn-banner info"><span class="icon">✓</span><div>Finalis sudah ditetapkan: <strong>${[...finalis].join(', ')}</strong></div></div>`;
+      warning += `<div class="warn-banner info"><span class="icon">✓</span><div>Finalis: <strong>${[...finalis].join(', ')}</strong></div></div>`;
     }
 
     const canFinalize = !tieBoundary && finalis.size === 0;
@@ -1860,31 +2246,33 @@ input[type=number]{-moz-appearance:textfield}
           <tbody>${body}</tbody>
         </table>
       </div>
-      <button class="btn btn-accent" id="btnTetapkan" style="margin-top:0.5rem" ${!canFinalize ? 'disabled' : ''}>
-        🏆 Tetapkan 5 Finalis
-      </button>`;
+      <button class="btn btn-accent" id="btnTetapkan" style="margin-top:0.5rem" ${!canFinalize ? 'disabled' : ''}>🏆 Tetapkan 5 Finalis</button>`;
 
     const btn = $('#btnTetapkan');
     if (btn && canFinalize) {
       btn.onclick = async e => {
         if (!(await showConfirm('Tetapkan 5 finalis berdasarkan ranking penyisihan?', { title: 'Konfirmasi Finalis', okText: 'Tetapkan' }))) return;
-        btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Memproses...';
-        try {
-          const res = await api('tetapkan_finalis');
-          if (res.error) throw new Error(res.message);
-          toast(res.message || 'Finalis ditetapkan', 'success');
-          await loadDashboard();
-          renderLcpFinalis();
-        } catch (err) {
-          toast('Gagal: ' + err.message, 'error');
-          btn.disabled = false; btn.innerHTML = '🏆 Tetapkan 5 Finalis';
-        }
+        await guardAction('tetapkan_finalis', async () => {
+          const prevHtml = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner"></span> Memproses...';
+          try {
+            const res = await api('tetapkan_finalis', {}, { timeout: 30000 });
+            if (res.error) throw new Error(res.message);
+            toast(res.message || 'Finalis ditetapkan', 'success');
+            await loadDashboard(true);
+            renderLcpFinalis();
+          } catch (err) {
+            toast('Gagal: ' + err.message, 'error');
+            if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+          }
+        });
       };
     }
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §14 LCP — FINAL
+   * §18 LCP — FINAL
    * ══════════════════════════════════════════════════════════════ */
   const LCP_FINAL_TABS = [
     { key: 'final_wajib',   label: 'Wajib Timing', maxBenar: 7 },
@@ -1898,6 +2286,7 @@ input[type=number]{-moz-appearance:textfield}
     if (!d || !isLcp()) return (location.hash = '#dashboard');
     const finalisSet = new Set(d.finalis || []);
     const rows = (d.rows || []).filter(r => finalisSet.has(r.No_Undian));
+    const penilaianBuka = isPenilaianBuka();
 
     if (!rows.length) {
       $('#lcpFinalContent').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-light)">Finalis belum ditetapkan</div>';
@@ -1905,8 +2294,7 @@ input[type=number]{-moz-appearance:textfield}
     }
 
     const tab = LCP_FINAL_TABS.find(t => t.key === tabKey) || LCP_FINAL_TABS[0];
-    const nFinalis = Math.max(1, finalisSet.size);
-    const maxBenar = tab.key === 'final_lempar' ? tab.maxBenar : (tab.key === 'final_rebutan' ? 10 : 7);
+    const maxBenar = tab.maxBenar;
     const maxSalah = maxBenar;
 
     const body = rows.map(r => {
@@ -1917,25 +2305,22 @@ input[type=number]{-moz-appearance:textfield}
       return `<tr data-no="${esc(r.No_Undian)}">
         <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
         <td>${esc(r.Kapanewon || '—')}</td>
-        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxBenar}" placeholder="0-${maxBenar}"></td>
-        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="${maxSalah}" placeholder="0-${maxSalah}"></td>
+        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxBenar}" placeholder="0-${maxBenar}" ${!penilaianBuka ? 'disabled' : ''}></td>
+        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="${maxSalah}" placeholder="0-${maxSalah}" ${!penilaianBuka ? 'disabled' : ''}></td>
         <td style="font-weight:800;color:var(--rose-primary)">${skor !== '' ? esc(skor) : '—'}</td>
       </tr>`;
     }).join('');
 
     const tabsHtml = LCP_FINAL_TABS.map(t => {
-      const fase = t.key;
-      const ready = rows.every(r => (r.fases || {})[fase]);
-      return `<button class="lcp-tab ${fase === tabKey ? 'active' : ''}" data-tab="${fase}">
-        ${esc(t.label)} ${ready ? '✓' : ''}
-      </button>`;
+      const ready = rows.every(r => (r.fases || {})[t.key]);
+      return `<button class="lcp-tab ${t.key === tabKey ? 'active' : ''}" data-tab="${t.key}">${esc(t.label)} ${ready ? '✓' : ''}</button>`;
     }).join('');
 
     $('#lcpFinalContent').innerHTML = `
       <div class="lcp-tabs">${tabsHtml}</div>
       <div class="warn-banner info">
         <span class="icon">ℹ️</span>
-        <div><strong>${esc(tab.label)}</strong> — Isi jumlah benar (0-${maxBenar}) dan salah (0-${maxSalah}) per regu.</div>
+        <div><strong>${esc(tab.label)}</strong> — Isi jumlah benar (0-${maxBenar}) dan salah (0-${maxSalah}).</div>
       </div>
       <div class="table-wrap">
         <table class="lcp-table">
@@ -1949,7 +2334,7 @@ input[type=number]{-moz-appearance:textfield}
           <tbody>${body}</tbody>
         </table>
       </div>
-      <button class="btn btn-primary" id="btnSaveLcpFinal" style="margin-top:0.5rem">💾 Simpan ${esc(tab.label)}</button>`;
+      <button class="btn btn-primary" id="btnSaveLcpFinal" style="margin-top:0.5rem" ${!penilaianBuka ? 'disabled' : ''}>💾 Simpan ${esc(tab.label)}</button>`;
 
     $$('.lcp-tab').forEach(b => b.onclick = () => renderLcpFinal(b.dataset.tab));
 
@@ -1970,22 +2355,41 @@ input[type=number]{-moz-appearance:textfield}
       if (err) return toast(err, 'error');
       if (!payload.length) return toast('Belum ada data', 'error');
       if (!(await showConfirm(`Simpan ${payload.length} regu untuk ${tab.label}?`, { okText: 'Simpan' }))) return;
-      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-      try {
-        const res = await api('simpan_lcp', { fase: tab.key, rows: payload });
-        if (res.error) throw new Error(res.message);
-        toast(res.message, 'success');
-        await loadDashboard();
-        renderLcpFinal(tab.key);
-      } catch (err) {
-        toast('Gagal: ' + err.message, 'error');
-        btn.disabled = false; btn.innerHTML = `💾 Simpan ${tab.label}`;
-      }
+
+      await guardAction('save_lcp_' + tab.key, async () => {
+        const prevHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+        // Disable all inputs during save to prevent race
+        $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = true);
+        try {
+          const res = await api('simpan_lcp', { fase: tab.key, rows: payload }, { timeout: 45000 });
+          if (res.error) throw new Error(res.message);
+          const faseCfg = { final_wajib: [100, 0], final_lempar: [100, -50], final_rebutan: [100, -100] }[tab.key];
+          payload.forEach(p => {
+            const target = State.dashboard.rows.find(x => x.No_Undian === p.No_Undian);
+            if (target) {
+              if (!target.fases) target.fases = {};
+              target.fases[tab.key] = {
+                benar: p.benar, salah: p.salah,
+                skor: p.benar * faseCfg[0] + p.salah * faseCfg[1]
+              };
+            }
+          });
+          toast(res.message, 'success');
+          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+          $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = false);
+        } catch (e) {
+          toast('Gagal: ' + e.message, 'error');
+          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
+          $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = false);
+        }
+      });
     };
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §15 BOOT
+   * §19 GLOBAL EVENT BINDINGS
    * ══════════════════════════════════════════════════════════════ */
   $('#btnLogin').onclick = doLogin;
   $('#inputToken').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
@@ -1994,26 +2398,64 @@ input[type=number]{-moz-appearance:textfield}
     if (await showConfirm('Keluar dari portal pewara?', { okText: 'Keluar' })) doLogout();
   };
 
-  window.addEventListener('hashchange', route);
+  /* Single hashchange handler — guard + route */
+  window.addEventListener('hashchange', e => {
+    const newHash = (location.hash || '').slice(1);
+    const current = State.currentView;
 
+    if (current === 'input' && newHash !== 'input' && _dirtyRows.size > 0) {
+      const ok = window.confirm(`Ada ${_dirtyRows.size} baris belum disimpan. Yakin keluar?`);
+      if (!ok) {
+        history.replaceState(null, '', '#input');
+        return;
+      }
+      _dirtyRows.clear();
+      clearAutoSaveTimers();
+    }
+    route();
+  });
+
+  /* Ctrl+S */
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+      if (State.currentView !== 'input') return;
+      e.preventDefault();
+      if (_dirtyRows.size > 0) saveNilai();
+      else toast('Tidak ada perubahan', 'info');
+    }
+  });
+
+  /* Warn before unload */
+  window.addEventListener('beforeunload', e => {
+    if (_dirtyRows.size > 0) {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    }
+  });
+
+  /* ══════════════════════════════════════════════════════════════
+   * §20 BOOT
+   * ══════════════════════════════════════════════════════════════ */
   (async function boot() {
     if (State.token) {
       try {
-        const res = await api('login_pewara');
+        const res = await api('login_pewara', {}, { timeout: 15000 });
         if (res.error) throw new Error('token invalid');
         State.login = res;
         await loadDashboard();
-        location.hash = location.hash && location.hash !== '#login' ? location.hash : '#dashboard';
-        route();
+        const target = location.hash && location.hash !== '#login' ? location.hash : '#dashboard';
+        if (location.hash === target) route();
+        else location.hash = target;
       } catch (e) {
         localStorage.removeItem(LS_TOKEN);
         State.token = '';
-        location.hash = '#login';
-        route();
+        if (location.hash === '#login') route();
+        else location.hash = '#login';
       }
     } else {
-      location.hash = '#login';
-      route();
+      if (location.hash === '#login') route();
+      else location.hash = '#login';
     }
   })();
 })();
