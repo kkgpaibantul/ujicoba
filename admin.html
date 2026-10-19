@@ -208,6 +208,7 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
       <div class="nav-item" data-target="panel-sekolah"><span class="icon">🏫</span> Sekolah</div>
       <div class="nav-item" data-target="panel-undian"><span class="icon">🎲</span> Undian & Status</div>
       <div class="nav-item" data-target="panel-hasil"><span class="icon">🏆</span> Hasil & Klasemen</div>
+      <div class="nav-item" data-target="panel-dokumen"><span class="icon">📄</span> Dokumen & Surat</div>
       <div class="nav-item" data-target="panel-config"><span class="icon">⚙️</span> Pengaturan</div>
     </aside>
 
@@ -371,7 +372,51 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         </div>
       </div>
 
-      <!-- PANEL 8: CONFIG -->
+      <!-- PANEL 8: DOKUMEN & SURAT (BARU) -->
+      <div id="panel-dokumen" class="panel">
+        <div class="page-title"><span>Administrasi Persuratan & Dokumen</span></div>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+          <!-- Card 1: Setup Template & TTD -->
+          <div class="stat-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">1. Pengaturan Template</h3>
+            <div class="form-group">
+              <label class="label">ID Template Surat (Google Docs)</label>
+              <input type="text" id="cfgTemplateSurat" class="input" placeholder="Contoh: 1A2b3C4d..." onblur="simpanConfig('template_surat_id', this.value)">
+            </div>
+            <div class="form-group">
+              <label class="label">Upload TTD Ketua Panitia (PNG)</label>
+              <input type="file" id="uploadTtdPanitia" accept="image/png" class="input" onchange="uploadTtd('ketua_panitia', this)">
+            </div>
+            <div class="form-group">
+              <label class="label">Upload TTD Ketua KKG (PNG)</label>
+              <input type="file" id="uploadTtdKkg" accept="image/png" class="input" onchange="uploadTtd('ketua_kkg', this)">
+            </div>
+          </div>
+
+          <!-- Card 2: Cetak Surat Edaran -->
+          <div class="stat-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">2. Surat Edaran</h3>
+            <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1rem;">Generate Surat Edaran otomatis untuk 17 Kapanewon (PDF).</p>
+            <button class="btn btn-primary" style="width:100%;" onclick="cetakSurat()">✉️ Cetak Surat Edaran</button>
+          </div>
+
+          <!-- Card 3: Cetak BA & DH -->
+          <div class="stat-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">3. Berita Acara & Daftar Hadir</h3>
+            <div class="form-group">
+              <label class="label">Pilih Cabang</label>
+              <select id="dokCabang" class="select"></select>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-warning" style="flex:1;" onclick="cetakDokumen('BA')">📄 Cetak BA</button>
+              <button class="btn btn-warning" style="flex:1;" onclick="cetakDokumen('DH')">📋 Cetak DH</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 9: CONFIG -->
       <div id="panel-config" class="panel">
         <div class="page-title">
           <span>Pengaturan Sistem</span>
@@ -475,6 +520,7 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
       else if (State.currentPanel === 'sekolah') initSekolah();
       else if (State.currentPanel === 'undian') loadAdminCabang();
       else if (State.currentPanel === 'hasil') loadHasil();
+      else if (State.currentPanel === 'dokumen') initDokumen();
       else if (State.currentPanel === 'config') loadConfig();
     };
   });
@@ -491,7 +537,6 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
       State.token = tok;
       localStorage.setItem(LS_TOKEN, tok);
       
-      // Load initial config
       const opsi = await api('admin_opsi');
       State.cabang = opsi.cabang || [];
       State.kapanewon = opsi.kapanewon || [];
@@ -859,7 +904,81 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
     }
   }
 
-  // ── 8. CONFIG ──
+  // ── 8. DOKUMEN & SURAT ──
+  function initDokumen() {
+    $('#cfgTemplateSurat').value = State.config.template_surat_id || '';
+    
+    const sel = $('#dokCabang');
+    if (sel.options.length === 0) {
+      sel.innerHTML = State.cabang.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
+    }
+  }
+
+  window.uploadTtd = async (jenis, inputEl) => {
+    const file = inputEl.files[0];
+    if (!file) return;
+    
+    // Batasi 1MB untuk gambar
+    if (file.size > 1024 * 1024) return toast('Maksimal 1 MB', 'error');
+    
+    const oldVal = inputEl.value;
+    inputEl.disabled = true;
+    
+    try {
+      const b64 = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result).split(',')[1]);
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+      
+      const res = await api('admin_upload_ttd', { jenis, file_base64: b64, mime_type: file.type });
+      if (res.error) throw new Error(res.message);
+      toast('TTD berhasil diunggah!', 'success');
+    } catch (e) {
+      toast(e.message, 'error');
+      inputEl.value = '';
+    } finally {
+      inputEl.disabled = false;
+    }
+  };
+
+  window.cetakSurat = async (btn) => {
+    if (!confirm('Generate 17 Surat Edaran sekarang? Proses ini memakan waktu beberapa detik.')) return;
+    const btnEl = event.currentTarget;
+    btnEl.disabled = true; btnEl.innerHTML = '<span class="spinner"></span> Memproses...';
+    
+    try {
+      const res = await api('admin_generate_surat');
+      if (res.error) throw new Error(res.message);
+      toast('Surat berhasil dibuat!', 'success');
+      window.open(res.url, '_blank');
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally {
+      btnEl.disabled = false; btnEl.innerHTML = '✉️ Cetak Surat Edaran';
+    }
+  };
+
+  window.cetakDokumen = async (jenis) => {
+    const cabang = $('#dokCabang').value;
+    const btnEl = event.currentTarget;
+    btnEl.disabled = true; btnEl.innerHTML = '<span class="spinner"></span>';
+    
+    try {
+      const res = await api('admin_generate_dokumen', { cabang, jenis });
+      if (res.error) throw new Error(res.message);
+      toast(`${jenis} berhasil dibuat!`, 'success');
+      window.open(res.url, '_blank');
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally {
+      btnEl.disabled = false; 
+      btnEl.innerHTML = jenis === 'BA' ? '📄 Cetak BA' : '📋 Cetak DH';
+    }
+  };
+
+  // ── 9. CONFIG ──
   async function loadConfig() {
     const box = $('#configContainer');
     box.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner dark"></span></div>';
