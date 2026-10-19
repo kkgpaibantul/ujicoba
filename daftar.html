@@ -8,6 +8,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://script.google.com" crossorigin />
+<link rel="dns-prefetch" href="https://script.google.com" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <style>
@@ -67,6 +69,7 @@ a { color: inherit; text-decoration: none; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.15); opacity: 0.15; } }
 
 .spinner {
   display: inline-block; width: 16px; height: 16px;
@@ -89,6 +92,36 @@ a { color: inherit; text-decoration: none; }
 
 #view-dashboard { flex-direction: column; max-width: 1000px; margin: 0 auto; overflow-y: auto; }
 #view-auth { flex-direction: column; justify-content: center; gap: 1rem; position: relative; }
+
+/* Splash screen */
+#view-loading {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  padding: 2rem;
+}
+#view-loading .logo-wrap {
+  position: relative; width: 64px; height: 64px;
+}
+#view-loading .logo-pulse {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: var(--rose-light); opacity: 0.3;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+#view-loading .logo-inner {
+  position: absolute; inset: 8px; border-radius: 50%;
+  background: var(--surface); display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+#view-loading .loading-status {
+  display: flex; align-items: center; gap: 0.6rem;
+  color: var(--ink-light); font-size: 0.8rem; font-weight: 600;
+}
+#view-loading .loading-status .spinner {
+  border-color: var(--border); border-top-color: var(--rose-primary);
+}
 
 .back-home {
   position: absolute; top: 0; left: 0;
@@ -184,6 +217,7 @@ a { color: inherit; text-decoration: none; }
   .auth-container { grid-template-columns: 1fr; max-height: none; }
   html, body { overflow: auto; }
   #app { height: auto; min-height: 100dvh; align-items: flex-start; padding-top: 3rem; padding-bottom: 2rem; }
+  #view-loading { min-height: 70dvh; padding-top: 15dvh; }
 }
 
 .auth-card {
@@ -276,6 +310,16 @@ a { color: inherit; text-decoration: none; }
 .upload-text { flex: 1; font-size: 0.8rem; font-weight: 600; min-width: 0; }
 .upload-text small { display: block; font-size: 0.65rem; color: var(--ink-light); font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* Skeleton */
+.skeleton-card {
+  pointer-events: none;
+  min-height: 110px;
+}
+.skeleton-bar {
+  background: var(--border); border-radius: 4px;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
 /* ============================================================
  * §8 FULL SCREEN FORM
  * ============================================================ */
@@ -367,7 +411,7 @@ a { color: inherit; text-decoration: none; }
 .toast.warn { background: #B7791F; }
 
 /* ============================================================
- * §10 MODAL (pengganti alert/confirm/prompt)
+ * §10 MODAL
  * ============================================================ */
 @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modalIn {
@@ -444,6 +488,7 @@ a { color: inherit; text-decoration: none; }
  * ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop, .modal-box { animation: none !important; }
+  #view-loading .logo-pulse { animation: none !important; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 </style>
@@ -453,6 +498,26 @@ a { color: inherit; text-decoration: none; }
 <div class="connection-banner" id="connBanner" role="alert">⚠ Tidak ada koneksi internet</div>
 
 <div id="app">
+  <!-- SPLASH — visible instantly -->
+  <div id="view-loading" class="screen active">
+    <div class="logo-wrap">
+      <div class="logo-pulse"></div>
+      <div class="logo-inner">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9E5F7B" stroke-width="2.5">
+          <path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <h2 style="font-size:1.4rem;margin:0 0 0.2rem;">MTQ 2026</h2>
+      <p style="color:var(--ink-light);font-size:0.85rem;margin:0;">Portal Pendaftaran Ofisial</p>
+    </div>
+    <div class="loading-status">
+      <span class="spinner" aria-hidden="true"></span>
+      <span id="loadingMsg">Memuat...</span>
+    </div>
+  </div>
+
   <!-- DASHBOARD VIEW -->
   <div id="view-dashboard" class="screen">
     <header class="appbar">
@@ -539,7 +604,7 @@ a { color: inherit; text-decoration: none; }
         <div class="form-row">
           <div class="form-group">
             <label for="regKapanewon">Kapanewon <span>*</span></label>
-            <select id="regKapanewon" class="form-control"><option value="">Memuat...</option></select>
+            <select id="regKapanewon" class="form-control"><option value="">— Pilih —</option></select>
           </div>
           <div class="form-group">
             <label for="regNama">Nama Lengkap <span>*</span></label>
@@ -613,7 +678,24 @@ a { color: inherit; text-decoration: none; }
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
   const LS_TOKEN = 'mtq_token';
   const LS_OFISIAL = 'mtq_ofisial';
+  const LS_CONFIG = 'mtq_config';
+  const CONFIG_TTL_MS = 3600 * 1000; // 1 jam
+
   const KAPANEWON_LIST = ['Bambanglipuro','Banguntapan','Bantul','Dlingo','Imogiri','Jetis','Kasihan','Kretek','Pajangan','Pandak','Piyungan','Pleret','Pundong','Sanden','Sedayu','Sewon','Srandakan'];
+
+  // Fallback cabang list — untuk render instant sebelum config load
+  const CABANG_FALLBACK = [
+    { key: 'MTQ',       kode: 'MTQ',  label: "Musabaqah Tilawatil Qur'an (MTQ)",       slot: 1, mode: 'queue' },
+    { key: 'MTtQ',      kode: 'MTTQ', label: "Musabaqah Tartil Qur'an (MTtQ)",         slot: 1, mode: 'queue' },
+    { key: 'MHQ',       kode: 'MHQ',  label: "Musabaqah Hifdzil Qur'an (MHQ)",         slot: 1, mode: 'queue' },
+    { key: 'Puitisasi', kode: 'MPS',  label: 'Musabaqah Puitisasi Saritilawah (MPS)',  slot: 1, mode: 'queue' },
+    { key: 'MAz',       kode: 'MAZ',  label: 'Musabaqah Adzan (MAz)',                  slot: 1, mode: 'queue', gender: 'L' },
+    { key: 'LPP',       kode: 'LPP',  label: 'Lomba Pidato PAI (LPP)',                 slot: 1, mode: 'queue' },
+    { key: 'LCP',       kode: 'LCP',  label: 'Lomba Cerdas Cermat PAI (LCP)',          slot: 3, mode: 'phase', team: true },
+    { key: 'Lukis',     kode: 'LMI',  label: 'Lomba Melukis Islami (LMI)',             slot: 1, mode: 'timer', durasi: 10800 },
+    { key: 'Menyanyi',  kode: 'LMYI', label: 'Lomba Menyanyi Islami (LMYI)',           slot: 1, mode: 'queue' }
+  ];
+
   const FILE_LIMITS = {
     akta1: { maxMB: 2, accept: 'image/jpeg,image/png,application/pdf' },
     akta2: { maxMB: 2, accept: 'image/jpeg,image/png,application/pdf' },
@@ -644,8 +726,25 @@ a { color: inherit; text-decoration: none; }
     };
   }
 
+  /* Config cache */
+  function getCachedConfig() {
+    try {
+      const raw = localStorage.getItem(LS_CONFIG);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.savedAt) return null;
+      if (Date.now() - parsed.savedAt > CONFIG_TTL_MS) return null;
+      return parsed.data;
+    } catch { return null; }
+  }
+  function setCachedConfig(data) {
+    try {
+      localStorage.setItem(LS_CONFIG, JSON.stringify({ savedAt: Date.now(), data }));
+    } catch {}
+  }
+
   /* ============================================================
-   * §3 TOAST (dengan queue cap)
+   * §3 TOAST
    * ============================================================ */
   const TOAST_TTL = 3200;
   const TOAST_MAX_VISIBLE = 3;
@@ -657,7 +756,6 @@ a { color: inherit; text-decoration: none; }
     el.className = `toast ${type}`;
     el.textContent = String(msg || '');
     wrap.appendChild(el);
-    // Cap visible toasts
     const visible = wrap.querySelectorAll('.toast');
     if (visible.length > TOAST_MAX_VISIBLE) {
       visible[0].remove();
@@ -669,7 +767,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   /* ============================================================
-   * §4 MODAL (pengganti alert/confirm/prompt, dengan focus trap & queue)
+   * §4 MODAL
    * ============================================================ */
   const Modal = (() => {
     let overlay = null;
@@ -814,11 +912,9 @@ a { color: inherit; text-decoration: none; }
       overlay.classList.remove('active');
       document.removeEventListener('keydown', onKeydown);
       document.body.style.overflow = bodyOverflowBefore;
-      // Restore focus safely
       try { if (focusBeforeOpen && focusBeforeOpen.focus) focusBeforeOpen.focus(); } catch {}
       focusBeforeOpen = null;
       resolve(value);
-      // Process queue
       if (queue.length) {
         const next = queue.shift();
         setTimeout(() => display(next.opts, next.resolve), 60);
@@ -851,8 +947,8 @@ a { color: inherit; text-decoration: none; }
     token: lsGet(LS_TOKEN),
     ofisial: lsGet(LS_OFISIAL),
     config: {},
-    cabang: [],
-    cabangMap: {},
+    cabang: CABANG_FALLBACK.slice(),
+    cabangMap: Object.fromEntries(CABANG_FALLBACK.map(c => [c.key, c])),
     sekolah: [],
     peserta: [],
     kapanewon: KAPANEWON_LIST,
@@ -863,17 +959,22 @@ a { color: inherit; text-decoration: none; }
     formId: null
   };
 
-  // Module-level guards (bukan di State supaya tidak serialize)
-  let sekolahFetchSeq = 0;          // anti-race untuk sekolah search
-  let activeDropdown = null;        // singleton dropdown terbuka
-  let saveInFlight = false;         // anti double-submit form
+  // Module-level guards
+  let sekolahFetchSeq = 0;
+  let activeDropdown = null;
+  let saveInFlight = false;
   let loginInFlight = false;
   let registerInFlight = false;
   let resendInFlight = false;
-  const uploadingKeys = new Set();  // `${pesertaId}|${jenis}` yang sedang upload
+  const uploadingKeys = new Set();
+
+  // Boot guards
+  let _authInitialized = false;
+  let _configFlight = null;
+  let _dataLoaded = false;
 
   /* ============================================================
-   * §6 API (dengan retry, timeout, offline check, Unauthorized handler)
+   * §6 API
    * ============================================================ */
   function handleUnauthorized() {
     State.token = null;
@@ -952,8 +1053,8 @@ a { color: inherit; text-decoration: none; }
         return await attempt();
       } catch (e) {
         lastErr = e;
-        if (e.code === 'UNAUTHORIZED') throw e;   // no retry on auth
-        if (e.name === 'AbortError' && !e.code) throw e; // external abort
+        if (e.code === 'UNAUTHORIZED') throw e;
+        if (e.name === 'AbortError' && !e.code) throw e;
         if (i < retries) await sleep(400 * (2 ** i));
       }
     }
@@ -967,6 +1068,13 @@ a { color: inherit; text-decoration: none; }
     $$('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
     if (el) el.classList.add('active');
+    // Remove splash after real view
+    const splash = document.getElementById('view-loading');
+    if (splash && id !== 'view-loading') {
+      splash.style.transition = 'opacity 0.15s ease';
+      splash.style.opacity = '0';
+      setTimeout(() => { if (splash.parentNode) splash.remove(); }, 180);
+    }
   }
 
   function setBtnLoading(btn, text = 'Memproses...') {
@@ -981,11 +1089,93 @@ a { color: inherit; text-decoration: none; }
     btn.disabled = false;
   }
 
+  function setLoadingMsg(msg) {
+    const el = $('#loadingMsg');
+    if (el) el.textContent = msg;
+  }
+
+  /* Config application (idempotent) */
+  function applyConfig(res) {
+    if (!res) return;
+    const cfg = res.config || {};
+    State.config = cfg;
+
+    if (Array.isArray(res.cabang) && res.cabang.length) {
+      State.cabang = res.cabang;
+    }
+    // If nothing provided, State.cabang stays at fallback
+
+    State.cabangMap = {};
+    State.cabang.forEach(c => { State.cabangMap[c.key] = c; });
+
+    if (Array.isArray(res.kapanewon) && res.kapanewon.length) {
+      State.kapanewon = res.kapanewon;
+    }
+
+    State.kuota = parseInt(cfg.kuota_per_kapanewon, 10) || State.kuota || 11;
+    State.wajibSekolah = String(cfg.wajib_sekolah_terdaftar || '').toLowerCase() === 'true';
+  }
+
+  /* Background config fetch (non-blocking) */
+  async function loadConfigInBackground() {
+    if (_configFlight) return _configFlight;
+    _configFlight = (async () => {
+      try {
+        const res = await api('config', {}, NETWORK_RETRY);
+        if (res && res.status === 'success') {
+          applyConfig(res);
+          setCachedConfig({
+            config: res.config || {},
+            cabang: res.cabang || [],
+            kapanewon: res.kapanewon || []
+          });
+          // If dashboard is showing AND data loaded, refresh to use new config
+          if (_dataLoaded && State.ofisial && $('#view-dashboard.active')) {
+            renderDashboard();
+          }
+        }
+      } catch (e) {
+        if (!getCachedConfig()) console.warn('Config fetch failed:', e);
+      } finally {
+        _configFlight = null;
+      }
+    })();
+    return _configFlight;
+  }
+
+  /* Dashboard skeleton — instant paint before data loads */
+  function renderDashboardSkeleton() {
+    const grid = $('#branchGrid');
+    if (!grid) return;
+
+    if (State.ofisial) {
+      $('#dashKapanewon').textContent = State.ofisial.Kapanewon || '-';
+      $('#dashNama').textContent = State.ofisial.Nama || '-';
+    }
+    $('#dashKuotaText').textContent = '— / ' + State.kuota;
+    $('#dashProgress').style.width = '0%';
+
+    const skel = Array.from({ length: 6 }, () => `
+      <div class="branch-card skeleton-card">
+        <div class="skeleton-bar" style="height:14px;width:40%;margin-bottom:0.6rem;"></div>
+        <div class="skeleton-bar" style="height:12px;width:70%;margin-bottom:0.4rem;opacity:0.6;"></div>
+        <div class="skeleton-bar" style="height:12px;width:55%;opacity:0.4;"></div>
+      </div>
+    `).join('');
+
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:1rem 0;color:var(--ink-light);font-size:0.85rem;font-weight:600;">
+        <span class="spinner" style="border-color:var(--border);border-top-color:var(--rose-primary);margin-right:0.4rem;"></span>
+        Memuat data peserta...
+      </div>
+      ${skel}`;
+  }
+
   /* ============================================================
    * §8 BOOT
    * ============================================================ */
   async function boot() {
-    // Connection banner
+    /* 1. Connection banner */
     const banner = $('#connBanner');
     const updateConn = () => {
       if (!banner) return;
@@ -996,41 +1186,59 @@ a { color: inherit; text-decoration: none; }
     window.addEventListener('online', () => { updateConn(); toast('Koneksi pulih', 'success'); });
     window.addEventListener('offline', updateConn);
 
-    // Load config
-    try {
-      const res = await api('config', {}, NETWORK_RETRY);
-      if (res.status === 'success') {
-        State.config = res.config || {};
-        State.cabang = Array.isArray(res.cabang) ? res.cabang : [];
-        State.cabangMap = {};
-        State.cabang.forEach(c => { State.cabangMap[c.key] = c; });
-        State.kapanewon = Array.isArray(res.kapanewon) && res.kapanewon.length ? res.kapanewon : KAPANEWON_LIST;
-        State.kuota = parseInt(State.config.kuota_per_kapanewon, 10) || 11;
-        State.wajibSekolah = String(State.config.wajib_sekolah_terdaftar || '').toLowerCase() === 'true';
-      }
-    } catch (e) {
-      console.warn('Config load failed:', e);
+    /* 2. Apply cached config instantly */
+    const cachedCfg = getCachedConfig();
+    if (cachedCfg) {
+      try { applyConfig(cachedCfg); } catch (e) { /* corrupted cache — ignore */ }
     }
 
-    if (State.token && State.ofisial) {
-      try {
-        await loadData();
-        showView('view-dashboard');
-        renderDashboard();
-      } catch (e) {
-        if (e.code === 'UNAUTHORIZED') return;
-        showAlert(e.message || 'Gagal memuat data. Coba refresh halaman.', {
-          type: 'error', title: 'Gagal Memuat', okText: 'Refresh'
-        }).then(() => location.reload());
-      }
+    /* 3. Decide view — instantly */
+    const hasToken = !!(State.token && State.ofisial);
+
+    if (hasToken) {
+      showView('view-dashboard');
+      renderDashboardSkeleton();
+      setLoadingMsg('Memuat data peserta...');
     } else {
       showView('view-auth');
       initAuth();
+      setLoadingMsg('Menyiapkan formulir...');
+    }
+
+    /* 4. Fire-and-forget config fetch */
+    loadConfigInBackground().catch(() => {});
+
+    /* 5. Load data if logged in */
+    if (hasToken) {
+      try {
+        await loadData();
+        _dataLoaded = true;
+        renderDashboard();
+      } catch (e) {
+        if (e.code === 'UNAUTHORIZED') return;
+        const grid = $('#branchGrid');
+        if (grid) {
+          grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:2rem;">
+              <p style="color:var(--danger);margin-bottom:1rem;font-weight:600;">${esc(e.message || 'Gagal memuat data.')}</p>
+              <button type="button" class="btn btn-primary" onclick="location.reload()">Coba Lagi</button>
+            </div>`;
+        }
+      }
     }
   }
 
+  /* Parallel loadData */
   async function loadData() {
-    const res = await api('list_peserta', {}, NETWORK_RETRY);
+    const ofisialKapanewon = (State.ofisial || {}).Kapanewon;
+
+    const [pesertaRes, sekolahRes] = await Promise.allSettled([
+      api('list_peserta', {}, NETWORK_RETRY),
+      api('sekolah_list', { kapanewon: ofisialKapanewon }, NETWORK_RETRY)
+    ]);
+
+    if (pesertaRes.status !== 'fulfilled') throw pesertaRes.reason;
+    const res = pesertaRes.value;
     if (res.status !== 'success') throw new Error(res.message || 'Gagal memuat data peserta.');
 
     State.ofisial = res.ofisial;
@@ -1039,14 +1247,11 @@ a { color: inherit; text-decoration: none; }
     State.kuota = res.kuota || State.kuota;
     lsSet(LS_OFISIAL, State.ofisial);
 
-    // Fetch sekolah
-    try {
-      const sch = await api('sekolah_list', { kapanewon: State.ofisial.Kapanewon }, NETWORK_RETRY);
-      if (sch.status === 'success') State.sekolah = sch.sekolah || [];
-    } catch (e) {
-      if (e.code === 'UNAUTHORIZED') throw e;
-      // non-fatal
-      console.warn('Sekolah fetch failed:', e);
+    if (sekolahRes.status === 'fulfilled') {
+      const sch = sekolahRes.value;
+      if (sch && sch.status === 'success') State.sekolah = sch.sekolah || [];
+    } else if (sekolahRes.reason && sekolahRes.reason.code === 'UNAUTHORIZED') {
+      throw sekolahRes.reason;
     }
   }
 
@@ -1054,11 +1259,13 @@ a { color: inherit; text-decoration: none; }
    * §9 AUTH FLOW
    * ============================================================ */
   function initAuth() {
+    if (_authInitialized) return;
+    _authInitialized = true;
+
     const loginInput = $('#loginToken');
     const btnLogin = $('#btnLogin');
     const btnLupa = $('#btnLupaToken');
 
-    // Login: uppercase + Enter
     loginInput.addEventListener('input', e => {
       const start = e.target.selectionStart;
       e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -1082,18 +1289,18 @@ a { color: inherit; text-decoration: none; }
           await showAlert(res.message || 'Token tidak valid.', { type: 'error', title: 'Login Gagal' });
           return;
         }
-        // Login OK — now load data BEFORE persisting token
         const prevToken = State.token;
         State.token = tok;
         try {
           await loadData();
+          _dataLoaded = true;
           lsSet(LS_TOKEN, tok);
           lsSet(LS_OFISIAL, State.ofisial);
           showView('view-dashboard');
           renderDashboard();
           toast('Login berhasil', 'success');
         } catch (loadErr) {
-          State.token = prevToken; // rollback
+          State.token = prevToken;
           if (loadErr.code !== 'UNAUTHORIZED') {
             await showAlert(loadErr.message || 'Token valid tetapi gagal memuat data. Coba lagi.', {
               type: 'error', title: 'Gagal Memuat'
@@ -1154,31 +1361,30 @@ a { color: inherit; text-decoration: none; }
     const wrapSekolah = $('#regSekolahContainer');
     let selectedSekolah = '';
 
-    // Load kapanewon status
-    (async () => {
-      try {
-        const res = await api('kapanewon_status', {}, NETWORK_RETRY);
-        if (res.status === 'success' && Array.isArray(res.kapanewon)) {
+    // ⚡ INSTANT: populate fallback kapanewon list synchronously
+    selKap.innerHTML = '<option value="">— Pilih —</option>' + KAPANEWON_LIST.map(k =>
+      `<option value="${esc(k)}">${esc(k)}</option>`
+    ).join('');
+
+    // ⚡ BACKGROUND: enrich with "sudah ada ofisial" status
+    api('kapanewon_status', {}, NETWORK_RETRY)
+      .then(res => {
+        if (res && res.status === 'success' && Array.isArray(res.kapanewon)) {
+          const currentVal = selKap.value;
           selKap.innerHTML = '<option value="">— Pilih —</option>' + res.kapanewon.map(k =>
             `<option value="${esc(k.nama)}" ${k.terisi ? 'disabled' : ''}>${esc(k.nama)}${k.terisi ? ' (Sudah ada ofisial)' : ''}</option>`
           ).join('');
-        } else throw new Error('fallback');
-      } catch (e) {
-        if (e.code === 'UNAUTHORIZED') return;
-        selKap.innerHTML = '<option value="">— Pilih —</option>' + KAPANEWON_LIST.map(k =>
-          `<option value="${esc(k)}">${esc(k)}</option>`
-        ).join('');
-      }
-    })();
+          if (currentVal) selKap.value = currentVal;
+        }
+      })
+      .catch(() => { /* silent — fallback list already usable */ });
 
-    // WA: digits only
     inpWA.addEventListener('input', e => {
       const start = e.target.selectionStart;
       e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15);
       e.target.setSelectionRange(start, start);
     });
 
-    // Kapanewon change — race-safe sekolah fetch
     selKap.addEventListener('change', async e => {
       const kap = e.target.value;
       selectedSekolah = '';
@@ -1190,7 +1396,7 @@ a { color: inherit; text-decoration: none; }
       wrapSekolah.innerHTML = '<div class="form-control" style="display:flex;align-items:center;gap:0.5rem;"><span class="spinner" style="border-color:var(--rose-light);border-top-color:var(--rose-primary);"></span> Memuat sekolah...</div>';
       try {
         const res = await api('sekolah_list', { kapanewon: kap }, NETWORK_RETRY);
-        if (mySeq !== sekolahFetchSeq) return; // stale, ignore
+        if (mySeq !== sekolahFetchSeq) return;
         const list = res.status === 'success' && Array.isArray(res.sekolah) ? res.sekolah : [];
         renderSearchSelect(wrapSekolah, list, '', (val, isManual) => {
           selectedSekolah = val;
@@ -1202,7 +1408,6 @@ a { color: inherit; text-decoration: none; }
       }
     });
 
-    // Enter submits
     [inpNama, inpEmail, inpWA].forEach(inp => {
       inp.addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); btnReg.click(); }
@@ -1212,7 +1417,6 @@ a { color: inherit; text-decoration: none; }
     btnReg.addEventListener('click', async () => {
       if (registerInFlight) return;
 
-      // Client-side validation
       if (!selKap.value) return showAlert('Pilih Kapanewon terlebih dahulu.', { type: 'error', title: 'Data Belum Lengkap' });
       if (!inpNama.value.trim() || inpNama.value.trim().length < 3) return showAlert('Nama lengkap minimal 3 karakter.', { type: 'error', title: 'Data Belum Lengkap' });
       if (!selectedSekolah) return showAlert('Pilih Asal Sekolah.', { type: 'error', title: 'Data Belum Lengkap' });
@@ -1240,7 +1444,6 @@ a { color: inherit; text-decoration: none; }
           return;
         }
 
-        // Success! Check email delivery
         const emailAddr = inpEmail.value.trim();
         const emailSent = res.email_sent !== false;
 
@@ -1269,13 +1472,23 @@ a { color: inherit; text-decoration: none; }
           });
         }
 
-        // Reset form after user dismisses
         inpNama.value = '';
         inpEmail.value = '';
         inpWA.value = '';
         selKap.value = '';
         wrapSekolah.innerHTML = '<input type="text" class="form-control" placeholder="Pilih Kapanewon dulu" disabled>';
         selectedSekolah = '';
+
+        // Refresh enrichment after registration
+        api('kapanewon_status', {}, NETWORK_RETRY)
+          .then(r2 => {
+            if (r2 && r2.status === 'success' && Array.isArray(r2.kapanewon)) {
+              selKap.innerHTML = '<option value="">— Pilih —</option>' + r2.kapanewon.map(k =>
+                `<option value="${esc(k.nama)}" ${k.terisi ? 'disabled' : ''}>${esc(k.nama)}${k.terisi ? ' (Sudah ada ofisial)' : ''}</option>`
+              ).join('');
+            }
+          })
+          .catch(() => {});
       } catch (e) {
         if (e.code === 'UNAUTHORIZED') return;
         const msg = e.code === 'OFFLINE'
@@ -1290,7 +1503,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   /* ============================================================
-   * §10 SEARCH SELECT (singleton document listener)
+   * §10 SEARCH SELECT
    * ============================================================ */
   document.addEventListener('click', e => {
     if (!activeDropdown) return;
@@ -1413,7 +1626,6 @@ a { color: inherit; text-decoration: none; }
       }
     });
 
-    // Debounced filter for perf
     searchInp.addEventListener('input', debounce(e => filterList(e.target.value), 120));
 
     if (manualInp) {
@@ -1435,7 +1647,6 @@ a { color: inherit; text-decoration: none; }
     const grid = $('#branchGrid');
     if (!grid) return;
 
-    // Guard: config missing
     if (!State.cabang.length) {
       grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--ink-light);">
         <p style="margin-bottom:1rem;">Gagal memuat daftar cabang. Periksa koneksi Anda.</p>
@@ -1453,7 +1664,6 @@ a { color: inherit; text-decoration: none; }
     prog.style.width = pct + '%';
     prog.style.background = State.slotTerpakai >= State.kuota ? 'var(--danger)' : 'var(--hijau)';
 
-    // Build cards
     const byCabang = {};
     State.peserta.forEach(p => { byCabang[p.Cabang] = p; });
 
@@ -1532,7 +1742,6 @@ a { color: inherit; text-decoration: none; }
           </div>`;
       }
 
-      // Empty card
       const canAdd = State.slotTerpakai + c.slot <= State.kuota;
       return `
         <div class="branch-card empty ${canAdd ? 'clickable' : 'disabled'}" data-key="${esc(c.key)}">
@@ -1548,7 +1757,6 @@ a { color: inherit; text-decoration: none; }
 
     grid.innerHTML = html;
 
-    // Bind events (using event delegation for scale)
     grid.querySelectorAll('.branch-card.empty.clickable').forEach(card => {
       card.addEventListener('click', () => openForm(card.dataset.key));
     });
@@ -1624,7 +1832,6 @@ a { color: inherit; text-decoration: none; }
       await loadData();
       renderDashboard();
 
-      // Re-open upload area after re-render
       requestAnimationFrame(() => {
         const sec = document.getElementById('upload-' + id);
         if (sec) sec.classList.add('active');
@@ -1632,12 +1839,10 @@ a { color: inherit; text-decoration: none; }
     } catch (e) {
       if (e.code === 'UNAUTHORIZED') return;
       toast(e.code === 'OFFLINE' ? 'Tidak ada koneksi.' : (e.message || 'Gagal upload.'), 'error');
-      // Restore old box
       if (boxEl && boxEl.isConnected) {
         boxEl.innerHTML = oldHTML;
         boxEl.classList.remove('uploading');
         delete boxEl.dataset.uploading;
-        // Re-bind (since we replaced innerHTML, input is gone — but next render will fix it)
         const newInput = boxEl.querySelector('.file-input');
         if (newInput) {
           boxEl.addEventListener('click', () => { newInput.value = ''; newInput.click(); }, { once: true });
@@ -1674,7 +1879,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   /* ============================================================
-   * §12 FORM (ADD/EDIT)
+   * §12 FORM
    * ============================================================ */
   function hasFormData() {
     const f = State.form;
@@ -1743,7 +1948,6 @@ a { color: inherit; text-decoration: none; }
     renderFormMembers();
     renderFormUploads();
 
-    // Close handler
     $('#btnCloseForm').onclick = async () => {
       if (hasFormData()) {
         const ok = await showConfirm(
@@ -1755,7 +1959,6 @@ a { color: inherit; text-decoration: none; }
       closeForm();
     };
 
-    // Save handler
     $('#btnSaveData').onclick = saveForm;
   }
 
@@ -1765,7 +1968,6 @@ a { color: inherit; text-decoration: none; }
     document.body.style.overflow = '';
     State.form = null;
     State.formId = null;
-    // Clear references to stale elements
     const saveBtn = $('#btnSaveData');
     if (saveBtn) { delete saveBtn._origHTML; saveBtn.disabled = false; saveBtn.textContent = 'Simpan Data & Unggah'; }
   }
@@ -1815,7 +2017,6 @@ a { color: inherit; text-decoration: none; }
       </div>
     `).join('');
 
-    // Bind inputs with correct index typing
     box.querySelectorAll('.m-nama').forEach(inp => {
       inp.addEventListener('input', e => {
         const start = e.target.selectionStart;
@@ -1871,7 +2072,6 @@ a { color: inherit; text-decoration: none; }
     const box = $('#formUploadsArea');
     if (!box || !State.form) return;
 
-    // Preserve scroll position
     const scroller = document.querySelector('.full-form');
     const scrollPos = scroller ? scroller.scrollTop : 0;
 
@@ -1934,7 +2134,6 @@ a { color: inherit; text-decoration: none; }
       });
     });
 
-    // Restore scroll
     if (scroller) scroller.scrollTop = scrollPos;
   }
 
@@ -1946,12 +2145,10 @@ a { color: inherit; text-decoration: none; }
     const cab = State.cabangMap[f.cabang];
     if (!cab) return toast('Konfigurasi cabang tidak tersedia.', 'error');
 
-    // Validate school
     if (!f.asalSekolah || f.asalSekolah.trim().length < 3) {
       return showAlert('Asal sekolah wajib diisi (minimal 3 karakter).', { type: 'error', title: 'Data Belum Lengkap' });
     }
 
-    // Validate members
     for (let i = 0; i < f.members.length; i++) {
       const m = f.members[i];
       const label = f.members.length > 1 ? (i === 0 ? 'Ketua' : `Anggota ${i + 1}`) : 'Peserta';
@@ -1969,7 +2166,6 @@ a { color: inherit; text-decoration: none; }
       if (new Set(nisns).size !== nisns.length) return showAlert('NISN ketiga anggota harus berbeda.', { type: 'error', title: 'Data Belum Lengkap' });
     }
 
-    // Build payload
     const payload = {
       Cabang: f.cabang,
       Asal_Sekolah: f.asalSekolah.trim().toUpperCase(),
@@ -2001,7 +2197,6 @@ a { color: inherit; text-decoration: none; }
     setBtnLoading(btn, f.mode === 'edit' ? 'Menyimpan...' : 'Mendaftarkan...');
 
     try {
-      // Step 1: Save data
       const endpoint = f.mode === 'edit' ? 'update_peserta' : 'daftar_peserta';
       const body = f.mode === 'edit' ? { id: State.formId, payload } : { payload };
       const res = await api(endpoint, body, WRITE_OPTS);
@@ -2014,7 +2209,6 @@ a { color: inherit; text-decoration: none; }
       const pId = f.mode === 'edit' ? State.formId : res.id;
       if (!pId) throw new Error('Server tidak mengembalikan ID peserta.');
 
-      // Step 2: Upload files (queue, sequential)
       const fileKeys = Object.keys(f.files || {});
       for (let i = 0; i < fileKeys.length; i++) {
         const jenis = fileKeys[i];
@@ -2041,15 +2235,13 @@ a { color: inherit; text-decoration: none; }
         } catch (fileErr) {
           if (fileErr.code === 'UNAUTHORIZED') throw fileErr;
           toast(`${label}: ${fileErr.message || 'gagal'}`, 'error');
-          // Continue uploading other files
         }
       }
 
-      // Success
       toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta berhasil ditambahkan', 'success');
       await loadData();
+      _dataLoaded = true;
 
-      // Close without prompt
       State.form.dirty = false;
       closeForm();
       renderDashboard();
@@ -2083,7 +2275,6 @@ a { color: inherit; text-decoration: none; }
         prepared = await compressImage(file, Math.floor(maxMB * 1024 * 1024 * 0.9));
       } catch (e) {
         console.warn('Compression failed, using original:', e);
-        // Fall through with original
       }
     }
 
@@ -2138,7 +2329,6 @@ a { color: inherit; text-decoration: none; }
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 attempt(0.75, shrinks + 1);
               } else {
-                // Best effort
                 if (settled) return;
                 settled = true;
                 clearTimeout(timeout);
@@ -2174,7 +2364,6 @@ a { color: inherit; text-decoration: none; }
    * §14 LOGOUT
    * ============================================================ */
   async function handleLogout() {
-    // Check if form open with unsaved data
     if (State.form && hasFormData()) {
       const ok = await showConfirm(
         'Ada data form yang belum disimpan. Keluar sekarang akan menghilangkan data tersebut.',
@@ -2191,6 +2380,7 @@ a { color: inherit; text-decoration: none; }
     State.ofisial = null;
     lsDel(LS_TOKEN);
     lsDel(LS_OFISIAL);
+    // Keep config cache — avoids re-fetch after re-login
     location.reload();
   }
 
@@ -2198,12 +2388,10 @@ a { color: inherit; text-decoration: none; }
    * §15 LIFECYCLE
    * ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
-    // Logout handler
     const btnLogout = document.getElementById('btnLogout');
     if (btnLogout) btnLogout.addEventListener('click', handleLogout);
   });
 
-  // Warn on unload during critical operations
   window.addEventListener('beforeunload', (e) => {
     if (saveInFlight || uploadingKeys.size > 0) {
       e.preventDefault();
@@ -2212,10 +2400,9 @@ a { color: inherit; text-decoration: none; }
     }
   });
 
-  // Ignore stale closure on rapid sekolah selects — using seq counter
-  // (already implemented in selKap change handler)
-
-  // ── START ──
+  /* ============================================================
+   * START
+   * ============================================================ */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => boot());
   } else {
