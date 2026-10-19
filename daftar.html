@@ -481,6 +481,15 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 800px) {
   html, body { overflow: auto; }
   #app { height: auto; min-height: 100dvh; align-items: flex-start; padding: 1.5rem 1rem; }
+  
+  /* FIX: Tabrakan Beranda dan Judul */
+  .back-home {
+    position: static; /* Ubah dari absolute ke static */
+    align-self: flex-start; /* Agar rata kiri di flex container */
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+  }
+
   #view-loading { min-height: 70dvh; padding-top: 15dvh; }
   .auth-container { grid-template-columns: 1fr; max-height: none; gap: 1.2rem; }
   .branch-grid { grid-template-columns: 1fr; }
