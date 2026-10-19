@@ -45,7 +45,7 @@
             --topbar-h: 64px;
             --max-width: 1100px;
             --section-pad-x: clamp(1rem, 4vw, 2rem);
-            --section-pad-y: clamp(3rem, 8vh, 5rem);
+            --section-pad-y: clamp(3rem, 6vh, 4rem);
         }
 
         /* ============================================================
@@ -111,9 +111,9 @@
             background-color: var(--cream);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; position: relative; overflow: hidden;
-            padding: calc(var(--topbar-h) + 1.5rem) var(--section-pad-x) 2rem;
+            padding: calc(var(--topbar-h) + 1rem) var(--section-pad-x) 2rem;
             border-bottom: 2px solid var(--border-dark);
-            gap: clamp(0.8rem, 2.5vh, 2rem); 
+            gap: clamp(0.8rem, 2.5vh, 1.5rem); 
         }
 
         .hero::before {
@@ -135,19 +135,19 @@
         }
         
         .hero h1 {
-            font-size: clamp(2.2rem, 6vw, 4rem);
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
             font-weight: 900; line-height: 1.05; letter-spacing: -0.03em;
             margin: 0;
         }
         
         .hero .lokasi {
             font-family: 'Fraunces', serif; font-weight: 700; font-style: italic;
-            font-size: clamp(1rem, 2vw, 1.4rem); color: var(--rose-primary);
+            font-size: clamp(1rem, 2vw, 1.3rem); color: var(--rose-primary);
             margin: 0;
         }
 
         .tagline {
-            font-size: clamp(0.85rem, 1.5vw, 1.1rem); font-weight: 600;
+            font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 600;
             color: var(--ink); display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
             gap: 0.4rem; 
             max-width: 600px; margin: 0 auto;
@@ -159,8 +159,8 @@
 
         .status-banner {
             display: none; margin: 0;
-            padding: 0.6rem 1.2rem; border-radius: var(--r-sm);
-            font-size: clamp(0.75rem, 1vw, 0.9rem); font-weight: 700;
+            padding: 0.5rem 1.2rem; border-radius: var(--r-sm);
+            font-size: clamp(0.75rem, 1vw, 0.85rem); font-weight: 700;
             align-items: center; gap: 0.5rem;
             border: 2px solid transparent;
         }
@@ -177,8 +177,8 @@
         }
         .waktu-box {
             background: var(--surface); color: var(--rose-deep);
-            min-width: clamp(60px, 9vw, 85px);
-            padding: clamp(0.6rem, 1.2vw, 1rem) clamp(0.5rem, 1vw, 0.8rem);
+            min-width: clamp(60px, 9vw, 80px);
+            padding: clamp(0.6rem, 1.2vw, 0.8rem) clamp(0.5rem, 1vw, 0.8rem);
             border-radius: var(--r-md); border: 2px solid var(--rose-deep);
             box-shadow: 3px 3px 0 var(--rose-light);
             flex: 1 0 auto; max-width: 100px;
@@ -187,11 +187,12 @@
         .waktu-box:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--rose-light); }
         .waktu-box span {
             display: block; font-family: 'Fraunces', serif;
-            font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.2rem);
             line-height: 1; letter-spacing: 0.02em; color: var(--rose-deep);
+            font-variant-numeric: tabular-nums;
         }
         .waktu-box small {
-            display: block; margin-top: 0.2rem; font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            display: block; margin-top: 0.2rem; font-size: clamp(0.55rem, 0.9vw, 0.65rem);
             font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--rose-primary);
         }
 
@@ -200,7 +201,7 @@
         .scroll-cue {
             display: inline-flex; align-items: center; gap: 0.5rem;
             color: #fff; background: var(--rose-deep); text-decoration: none; font-weight: 700;
-            font-size: clamp(0.85rem, 1.1vw, 0.95rem); padding: 0.8rem 1.5rem;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem); padding: 0.7rem 1.5rem;
             border-radius: var(--r-md); border: 2px solid var(--rose-deep);
             box-shadow: 3px 3px 0 var(--rose-primary);
             transition: var(--trans); cursor: pointer;
@@ -220,7 +221,7 @@
         }
 
         /* ============================================================
-         * §5 PORTAL SECTION (Proporsional)
+         * §5 PORTAL SECTION
          * ============================================================ */
         .portal-section {
             background: var(--surface);
@@ -228,7 +229,7 @@
             border-bottom: 2px solid var(--border-dark);
         }
         .portal-inner { max-width: 900px; margin: 0 auto; }
-        .portal-head { text-align: center; margin-bottom: 2.5rem; }
+        .portal-head { text-align: center; margin-bottom: 2rem; }
         .portal-head .eyebrow {
             display: inline-block; font-size: .75rem; font-weight: 800;
             letter-spacing: .1em; color: var(--rose-deep);
@@ -239,56 +240,53 @@
         .portal-head h2 { font-size: clamp(1.5rem, 3.6vw, 2.2rem); font-weight: 900; margin: 0 0 .5rem; }
         .portal-head p { font-size: .95rem; color: var(--ink-light); margin: 0; }
 
-        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
         @media (max-width: 640px) { .portal-grid { grid-template-columns: 1fr; gap: 1rem; } }
 
         .portal-card {
             display: flex; flex-direction: column;
-            padding: 1.5rem; border-radius: var(--r-lg);
+            padding: 1.2rem; border-radius: var(--r-lg);
             text-decoration: none; 
             transition: var(--trans); position: relative; overflow: hidden;
             min-height: 160px; 
             border: 2px solid var(--border-dark);
             box-shadow: 4px 4px 0 var(--border);
-            justify-content: space-between;
         }
         .portal-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--border-dark); }
         
-        /* Warna Background */
         .portal-card.primary { background: #4F46E5; border-color: #4338CA; box-shadow: 4px 4px 0 #C7D2FE; }
         .portal-card.primary:hover { box-shadow: 6px 6px 0 #C7D2FE; }
         
         .portal-card.accent { background: #059669; border-color: #047857; box-shadow: 4px 4px 0 #A7F3D0; }
         .portal-card.accent:hover { box-shadow: 6px 6px 0 #A7F3D0; }
 
-        .portal-header-flex { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .portal-icon {
-            width: 48px; height: 48px; border-radius: var(--r-sm);
+            width: 42px; height: 42px; border-radius: var(--r-sm);
             background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.3);
         }
-        .portal-icon svg { width: 26px; height: 26px; color: #fff; }
+        .portal-icon svg { width: 22px; height: 22px; color: #fff; }
 
         .portal-card h3 {
-            font-size: 1.35rem; font-weight: 800; margin: 0;
+            font-size: 1.25rem; font-weight: 800; margin: 0 0 .3rem;
             display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
             color: #ffffff !important; 
         }
         .portal-card p {
-            font-size: .85rem; line-height: 1.5; margin: 0 0 1.2rem;
+            font-size: .85rem; line-height: 1.4; margin: 0 0 1rem;
             flex: 1; color: rgba(255,255,255,.9) !important;
         }
 
         .portal-btn {
-            display: inline-flex; align-items: center; gap: .5rem;
-            background: #fff; color: #1E293B; font-size: .85rem; font-weight: 800;
-            padding: .6rem 1.2rem; border-radius: var(--r-sm);
-            transition: var(--trans); width: fit-content;
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: #fff; color: #1E293B; font-size: .8rem; font-weight: 800;
+            padding: .5rem 1rem; border-radius: var(--r-sm);
+            transition: var(--trans); margin-top: auto; width: fit-content;
             border: 1.5px solid transparent;
         }
         .portal-card:hover .portal-btn { transform: translateX(4px); }
-        .portal-btn svg { width: 16px; height: 16px; }
+        .portal-btn svg { width: 14px; height: 14px; }
 
         .portal-card.disabled { opacity: .6; cursor: not-allowed; pointer-events: none; filter: grayscale(1); }
 
@@ -463,11 +461,14 @@
             .panel { max-height: none; overflow-y: visible; }
         }
         @media (max-width: 680px) {
-            .hero h1 { font-size: 2.5rem; }
+            .hero h1 { font-size: 2.2rem; }
             .topbar .brand span.sub { display: none; }
             .lomba-item { flex: 1 1 100%; }
             .back-to-top { bottom: calc(56px + 20px + 16px); right: 20px; }
-            .portal-header-flex { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .portal-grid { gap: 0.8rem; }
+            .portal-card { min-height: 130px; padding: 1rem; }
+            .portal-icon { width: 36px; height: 36px; margin-bottom: 0.6rem; }
+            .portal-card h3 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -504,10 +505,10 @@
     </div>
 
     <div class="countdown" id="timer" role="timer" aria-label="Countdown menuju acara">
-        <div class="waktu-box"><span data-time="hari">--</span><small>Hari</small></div>
-        <div class="waktu-box"><span data-time="jam">--</span><small>Jam</small></div>
-        <div class="waktu-box"><span data-time="menit">--</span><small>Menit</small></div>
-        <div class="waktu-box"><span data-time="detik">--</span><small>Detik</small></div>
+        <div class="waktu-box"><span data-time="hari">00</span><small>Hari</small></div>
+        <div class="waktu-box"><span data-time="jam">00</span><small>Jam</small></div>
+        <div class="waktu-box"><span data-time="menit">00</span><small>Menit</small></div>
+        <div class="waktu-box"><span data-time="detik">00</span><small>Detik</small></div>
     </div>
 
     <div class="hero-cta">
@@ -522,7 +523,7 @@
     </div>
 </section>
 
-<!-- ===== PORTAL AKSES (PUBLIK & OFISIAL) ===== -->
+<!-- ===== PORTAL AKSES ===== -->
 <section class="portal-section" id="portal">
     <div class="portal-inner">
         <div class="portal-head">
@@ -534,17 +535,15 @@
         <div class="portal-grid">
 
             <a href="./daftar.html" class="portal-card primary" id="btnDaftar">
-                <div class="portal-header-flex">
-                    <div class="portal-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="8.5" cy="7" r="4"/>
-                            <line x1="20" y1="8" x2="20" y2="14"/>
-                            <line x1="23" y1="11" x2="17" y2="11"/>
-                        </svg>
-                    </div>
-                    <h3>Daftar Peserta</h3>
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <line x1="20" y1="8" x2="20" y2="14"/>
+                        <line x1="23" y1="11" x2="17" y2="11"/>
+                    </svg>
                 </div>
+                <h3>Daftar Peserta</h3>
                 <p>Portal ofisial kapanewon untuk mendaftarkan 11 peserta cabang lomba.</p>
                 <span class="portal-btn">
                     Masuk Portal
@@ -553,15 +552,13 @@
             </a>
 
             <a href="./pemantauan.html" class="portal-card accent" id="btnPemantauan">
-                <div class="portal-header-flex">
-                    <div class="portal-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </div>
-                    <h3>Pemantauan Live</h3>
+                <div class="portal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
                 </div>
+                <h3>Pemantauan Live</h3>
                 <p>Papan informasi publik: status lomba, nomor undian, antrian tampil, countdown timer.</p>
                 <span class="portal-btn">
                     Lihat Live
@@ -648,7 +645,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                 Pemantauan
             </a>
-            <!-- Link Petugas disembunyikan di footer, agar tidak mengotori halaman utama -->
             <a href="./pewara.html" class="footer-link" style="opacity: 0.6; font-size: 0.7rem; padding: 0.3rem 0.6rem;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
                 Login Pewara
@@ -690,13 +686,17 @@
  * ============================================================ */
 const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
 
+// Fallback Target Date (2026-11-11 00:00:00 WIB)
+const FALLBACK_TARGET = new Date('2026-11-11T00:00:00+07:00').getTime();
+
 const STATE = { 
   config: null, 
   cabang: null, 
   panggung: null, 
-  countdownTarget: null,
+  countdownTarget: FALLBACK_TARGET, // Langsung set target
   activeTab: 'MTQ',
-  isPolling: false
+  isPolling: false,
+  timerInterval: null
 };
 
 const FALLBACK_CONFIG = {
@@ -743,7 +743,46 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ============================================================
- * CONFIG LOADER & INITIAL RENDER
+ * 1. TIMER (LANGSUNG JALAN SAAT BOOT)
+ * ============================================================ */
+function startTimer() {
+  const elHari = $('[data-time="hari"]');
+  const elJam = $('[data-time="jam"]');
+  const elMenit = $('[data-time="menit"]');
+  const elDetik = $('[data-time="detik"]');
+  const wrap = $('#timer');
+  
+  if (!elHari) return;
+
+  const pad = n => String(Math.max(0, n)).padStart(2, '0');
+
+  function tick() {
+    const diff = STATE.countdownTarget - Date.now();
+    if (diff <= 0) {
+      if (wrap) wrap.innerHTML = '<h2 style="font-family:\'Fraunces\',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);color:var(--rose-deep);">Acara MTQ telah dimulai!</h2>';
+      if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+      return;
+    }
+    
+    const d = Math.floor(diff / 864e5);
+    const h = Math.floor((diff % 864e5) / 36e5);
+    const m = Math.floor((diff % 36e5) / 6e4);
+    const s = Math.floor((diff % 6e4) / 1e3);
+
+    // Hanya update DOM jika ada perubahan (mencegah reflow berlebih)
+    if (elHari.textContent !== pad(d)) elHari.textContent = pad(d);
+    if (elJam.textContent !== pad(h)) elJam.textContent = pad(h);
+    if (elMenit.textContent !== pad(m)) elMenit.textContent = pad(m);
+    if (elDetik.textContent !== pad(s)) elDetik.textContent = pad(s);
+  }
+
+  tick(); // Panggil langsung agar tidak ada jeda "--"
+  if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+  STATE.timerInterval = setInterval(tick, 1000);
+}
+
+/* ============================================================
+ * 2. KONFIGURASI LOADER
  * ============================================================ */
 async function loadConfig() {
   try {
@@ -751,6 +790,11 @@ async function loadConfig() {
     if (res.status === 'success') {
       STATE.config = Object.assign({}, FALLBACK_CONFIG, res.config || {});
       STATE.cabang = res.cabang && res.cabang.length ? res.cabang : FALLBACK_CABANG;
+      
+      // Update target countdown jika dari server berbeda dengan fallback
+      if (STATE.config.tanggal_lomba) {
+        STATE.countdownTarget = new Date(STATE.config.tanggal_lomba + 'T00:00:00+07:00').getTime();
+      }
     } else throw new Error('bad_response');
   } catch (e) {
     console.warn('[config] fallback:', e);
@@ -762,8 +806,6 @@ async function loadConfig() {
 
 function renderDynamicFromConfig() {
   const c = STATE.config;
-  const targetDate = String(c.tanggal_lomba || '2026-11-11');
-  STATE.countdownTarget = new Date(targetDate + 'T00:00:00+07:00').getTime();
 
   const kicker = $('#heroKicker');
   if (kicker) {
@@ -871,38 +913,7 @@ function updatePortalButtons() {
 }
 
 /* ============================================================
- * COUNTDOWN
- * ============================================================ */
-let countdownInterval = null;
-function startCountdown() {
-  if (!STATE.countdownTarget) return;
-  const el = {
-    hari: $('[data-time="hari"]'), jam: $('[data-time="jam"]'),
-    menit: $('[data-time="menit"]'), detik: $('[data-time="detik"]'),
-    wrap: $('#timer')
-  };
-  if (!el.hari) return;
-  const pad = n => String(Math.max(0, n)).padStart(2, '0');
-
-  function tick() {
-    const diff = STATE.countdownTarget - Date.now();
-    if (diff <= 0) {
-      if (el.wrap) el.wrap.innerHTML = '<h2 style="font-family:\'Fraunces\',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);color:var(--rose-deep);">Acara MTQ telah dimulai!</h2>';
-      if (countdownInterval) clearInterval(countdownInterval);
-      return;
-    }
-    el.hari.textContent = pad(Math.floor(diff / 864e5));
-    el.jam.textContent = pad(Math.floor((diff % 864e5) / 36e5));
-    el.menit.textContent = pad(Math.floor((diff % 36e5) / 6e4));
-    el.detik.textContent = pad(Math.floor((diff % 6e4) / 1e3));
-  }
-  tick();
-  if (countdownInterval) clearInterval(countdownInterval);
-  countdownInterval = setInterval(tick, 1000);
-}
-
-/* ============================================================
- * PANGGUNG POLLING (ANTI BOTTLENECK & RACE CONDITION)
+ * 3. PANGGUNG POLLING (ANTI BOTTLENECK & RACE CONDITION)
  * ============================================================ */
 async function pollPanggung() {
   if (STATE.isPolling) return; 
@@ -959,7 +970,7 @@ function updateCabangStatusDots() {
 }
 
 /* ============================================================
- * CABANG — ICONS + DETAILS
+ * 4. CABANG — ICONS & DETAILS
  * ============================================================ */
 const CABANG_ICONS = {
   MTQ: '<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0V5z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0V5z"/><path d="M12 9c1-.4 2-.4 3 0M12 13c1-.4 2-.4 3 0"/>',
@@ -1227,15 +1238,24 @@ function renderDetailPanels() {
 }
 
 /* ============================================================
- * BOOT
+ * 5. BOOT
  * ============================================================ */
 async function boot() {
-  await loadConfig();
+  // 1. Jalankan Timer Langsung (anti-delay)
+  startTimer();
+
+  // 2. Render UI dengan data fallback
   renderCabangList();
   renderDetailPanels();
-  startCountdown();
+  renderDynamicFromConfig(); // Render fallback UI
+
+  // 3. Fetch config asli (Update UI jika ada perubahan)
+  await loadConfig();
+
+  // 4. Mulai polling panggung
   pollPanggung();
-  
+
+  // 5. Event listener visibility (hemat kuota saat tab tidak aktif)
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       updateStatusBanner();
