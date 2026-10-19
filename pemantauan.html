@@ -82,7 +82,7 @@ a { color: inherit; text-decoration: none; }
 .btn-home { font-size: 0.85rem; font-weight: 700; color: var(--ink); padding: 0.4rem 0.8rem; border-radius: var(--r-sm); border: 1.5px solid var(--border); transition: var(--trans); }
 .btn-home:hover { border-color: var(--hijau); color: var(--hijau); background: var(--hijau-light); }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; }
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem; }
 
 /* Tabs Navigation */
 .tabs-nav { 
@@ -105,7 +105,7 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
  * §4 TAB 1: LIVE PANGGUNG
  * ============================================================ */
-.live-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.live-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
 @media (min-width: 768px) { .live-grid { grid-template-columns: 1fr 1fr; } }
 
 .live-card { 
@@ -115,37 +115,88 @@ a { color: inherit; text-decoration: none; }
 }
 .live-card.is-live { border-color: var(--hijau); box-shadow: 0 4px 15px rgba(42,157,143,0.15); }
 .live-header { display: flex; justify-content: space-between; align-items: center; }
-.live-title { font-size: 1.1rem; font-weight: 800; color: var(--rose-deep); display: flex; align-items: center; gap: 0.5rem; }
-.live-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 99px; letter-spacing: 0.05em; }
+.live-title { font-size: 1.05rem; font-weight: 800; color: var(--rose-deep); display: flex; align-items: center; gap: 0.5rem; }
+.live-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 99px; letter-spacing: 0.05em; }
 .live-badge.belum { background: var(--border); color: var(--ink-light); }
 .live-badge.berlangsung { background: var(--hijau); color: #fff; animation: pulse 1.5s infinite; }
 .live-badge.istirahat { background: var(--gold); color: var(--rose-deep); }
 .live-badge.selesai { background: var(--rose-deep); color: #fff; }
 
-.live-body { background: var(--bg); border-radius: var(--r-md); padding: 1rem; text-align: center; border: 1px dashed var(--border-dark); }
-.live-label { font-size: 0.75rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-.live-value { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--hijau); line-height: 1.1; }
-.live-value small { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; color: var(--ink-light); font-weight: 600; margin-top: 0.2rem; }
-.live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; }
-.live-timer { font-size: 2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
+.live-body { background: var(--bg); border-radius: var(--r-md); padding: 1.2rem 1rem; text-align: center; border: 1.5px dashed var(--border-dark); }
+.live-label { font-size: 0.75rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+.live-value { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--hijau); line-height: 1.1; }
+.live-value small { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-top: 0.3rem; }
+.live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; background: var(--surface); padding: 0.6rem 0.8rem; border-radius: var(--r-sm); border: 1px solid var(--border); }
+.live-timer { font-size: 2.2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
 
 /* ============================================================
- * §5 TAB 2: DAFTAR PESERTA
+ * §5 TAB 2: DAFTAR PESERTA (CARD GRID)
  * ============================================================ */
-.search-bar { margin-bottom: 1rem; }
-.search-bar input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: var(--r-md); font-size: 1rem; outline: none; transition: var(--trans); }
-.search-bar input:focus { border-color: var(--hijau); box-shadow: 0 0 0 3px var(--hijau-light); }
-.peserta-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.peserta-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: var(--trans); }
-.peserta-item:hover { border-color: var(--hijau); transform: translateX(2px); }
-.peserta-item .no { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.1rem; color: var(--hijau); min-width: 90px; }
-.peserta-item .info { flex: 1; min-width: 0; }
-.peserta-item .info h4 { font-size: 0.95rem; margin: 0 0 0.1rem; color: var(--ink); }
-.peserta-item .info p { font-size: 0.75rem; color: var(--ink-light); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.peserta-item .kode { font-size: 0.7rem; font-weight: 800; background: var(--hijau-light); color: var(--hijau); padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+.search-bar { margin-bottom: 1.5rem; position: relative; }
+.search-bar input { 
+  width: 100%; padding: 0.9rem 1rem 0.9rem 2.8rem; 
+  border: 1.5px solid var(--border); border-radius: var(--r-md); 
+  font-size: 1rem; outline: none; transition: var(--trans);
+  box-shadow: var(--shadow-sm);
+}
+.search-bar input:focus { border-color: var(--hijau); box-shadow: 0 0 0 4px var(--hijau-light); }
+.search-bar svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-light); }
 
-.empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-light); }
-.empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.3; }
+/* Grid Layout for Cards */
+.peserta-list { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  gap: 1rem; 
+}
+
+/* Individual Card */
+.peserta-item { 
+  background: var(--surface); border: 1px solid var(--border); 
+  border-radius: var(--r-lg); padding: 1.2rem; 
+  display: flex; flex-direction: column; gap: 0.8rem; 
+  transition: var(--trans); box-shadow: var(--shadow-sm);
+  position: relative; overflow: hidden;
+}
+.peserta-item::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+  background: var(--hijau); opacity: 0; transition: var(--trans);
+}
+.peserta-item:hover { 
+  border-color: var(--hijau); transform: translateY(-3px); 
+  box-shadow: var(--shadow-md); 
+}
+.peserta-item:hover::before { opacity: 1; }
+
+.peserta-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+
+.peserta-no { 
+  font-family: 'Plus Jakarta Sans', monospace; font-weight: 800; font-size: 0.85rem; 
+  color: var(--hijau); background: var(--hijau-light); 
+  padding: 0.3rem 0.6rem; border-radius: 6px; letter-spacing: 0.05em;
+}
+
+.peserta-kode { 
+  font-size: 0.7rem; font-weight: 800; text-transform: uppercase; 
+  background: var(--rose-light); color: var(--rose-deep); 
+  padding: 0.3rem 0.6rem; border-radius: 99px; white-space: nowrap;
+}
+
+.peserta-info h4 { 
+  font-size: 1.1rem; margin: 0 0 0.4rem; color: var(--ink); 
+  line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.peserta-meta { 
+  display: flex; flex-direction: column; gap: 0.3rem; 
+  font-size: 0.8rem; color: var(--ink-light); 
+}
+.peserta-meta span { display: flex; align-items: flex-start; gap: 0.4rem; }
+.peserta-meta svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; opacity: 0.7; }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 4rem 1rem; color: var(--ink-light); grid-column: 1 / -1; }
+.empty-state svg { width: 56px; height: 56px; margin: 0 auto 1rem; opacity: 0.2; }
+.empty-state p { font-size: 0.95rem; }
 </style>
 </head>
 <body>
@@ -175,10 +226,11 @@ a { color: inherit; text-decoration: none; }
   <!-- TAB 2: DAFTAR PESERTA -->
   <div id="tab-peserta" class="tab-pane">
     <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <input type="text" id="searchPeserta" placeholder="Cari No. Pendaftaran, nama, atau sekolah..." autocomplete="off">
     </div>
     <div class="peserta-list" id="pesertaList">
-      <div style="text-align:center;padding:3rem;"><span class="spinner"></span></div>
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;"><span class="spinner"></span></div>
     </div>
   </div>
 
@@ -269,7 +321,7 @@ a { color: inherit; text-decoration: none; }
           <div class="live-body">
             <div class="live-label">Sedang Tampil</div>
             <div class="live-value">${now ? esc(now.No_Undian) : '—'}</div>
-            ${now && now.Nama ? `<small style="color:var(--ink-light);font-size:0.8rem;">${esc(now.Nama)}</small>` : ''}
+            ${now && now.Nama ? `<small>${esc(now.Nama)}</small>` : ''}
           </div>
           <div class="live-next">
             <span>Berikutnya:</span>
@@ -285,8 +337,8 @@ a { color: inherit; text-decoration: none; }
           timerStr = `${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
         }
         bodyHtml = `
-          <div class="live-body">
-            <div class="live-label">Sisa Waktu</div>
+          <div class="live-body" style="border-style:solid; border-color:var(--gold); background:var(--gold-light);">
+            <div class="live-label" style="color:#92400e;">Sisa Waktu</div>
             <div class="live-timer">${timerStr}</div>
             ${c.timer_habis ? '<span style="color:var(--danger);font-weight:800;font-size:0.8rem;margin-top:0.5rem;display:block;">WAKTU HABIS</span>' : ''}
           </div>
@@ -295,7 +347,7 @@ a { color: inherit; text-decoration: none; }
         bodyHtml = `
           <div class="live-body">
             <div class="live-label">Fase Saat Ini</div>
-            <div class="live-value" style="font-size:1.2rem">${c.phase_label ? esc(c.phase_label) : '—'}</div>
+            <div class="live-value" style="font-size:1.3rem">${c.phase_label ? esc(c.phase_label) : '—'}</div>
           </div>
         `;
       }
@@ -304,7 +356,7 @@ a { color: inherit; text-decoration: none; }
         <div class="live-card ${cls}">
           <div class="live-header">
             <div class="live-title">
-              <span style="background:var(--hijau-light);color:var(--hijau);padding:0.2rem 0.6rem;border-radius:6px;font-size:0.75rem;">${esc(c.kode)}</span>
+              <span style="background:var(--hijau-light);color:var(--hijau);padding:0.25rem 0.6rem;border-radius:6px;font-size:0.75rem;letter-spacing:0.05em;">${esc(c.kode)}</span>
               ${esc(c.label.split('(')[0])}
             </div>
             <span class="live-badge ${badgeCls}">${c.status_lomba}</span>
@@ -347,12 +399,23 @@ a { color: inherit; text-decoration: none; }
 
     list.innerHTML = data.map(p => `
       <div class="peserta-item">
-        <div class="no">${esc(p.No_Pendaftaran || '-')}</div>
-        <div class="info">
-          <h4>${esc(p.Nama)}</h4>
-          <p>${esc(p.Kapanewon)} · ${esc(p.Sekolah)}</p>
+        <div class="peserta-header">
+          <div class="peserta-no">${esc(p.No_Pendaftaran || '-')}</div>
+          <div class="peserta-kode">${esc(p.Cabang)}</div>
         </div>
-        <div class="kode">${esc(p.Cabang)}</div>
+        <div class="peserta-info">
+          <h4>${esc(p.Nama)}</h4>
+          <div class="peserta-meta">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${esc(p.Kapanewon)}
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4a3 3 0 0 1 6 0v4"/></svg>
+              ${esc(p.Sekolah)}
+            </span>
+          </div>
+        </div>
       </div>
     `).join('');
   }
