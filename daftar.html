@@ -44,12 +44,11 @@
 }
 
 /* ============================================================
- * §2 RESET & BASE (ANTI-SCROLL)
+ * §2 RESET & BASE
  * ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { 
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background-color: var(--bg);
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
@@ -77,34 +76,39 @@ a { color: inherit; text-decoration: none; }
  * §3 APP SHELL & AUTH LAYOUT
  * ============================================================ */
 #app { 
-  width: 100%; height: 100dvh; 
-  display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem;
+  width: 100%; min-height: 100dvh; 
+  display: block; 
+  padding: 4rem 1.5rem 2rem; 
 }
-.screen { display: none; width: 100%; height: 100%; }
-.screen.active { display: flex; animation: fadeIn 0.4s ease; }
 
-#view-dashboard { flex-direction: column; max-width: 1000px; margin: 0 auto; overflow-y: auto; }
-#view-auth { flex-direction: column; max-width: 1000px; margin: 0 auto; justify-content: center; gap: 1.5rem; position: relative; }
+#view-dashboard { 
+  display: none; flex-direction: column; width: 100%; 
+  max-width: 1000px; margin: 0 auto; 
+}
+#view-dashboard.active { display: flex; animation: fadeIn 0.4s ease; }
 
-/* Tombol kembali ke beranda */
+#view-auth { 
+  display: none; flex-direction: column; width: 100%; 
+  max-width: 1000px; margin: 0 auto; 
+  justify-content: flex-start; 
+  gap: 1.5rem; position: relative;
+}
+#view-auth.active { display: flex; animation: fadeIn 0.4s ease; }
+
 .back-home {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--ink-light);
-  text-decoration: none;
+  position: fixed;
+  top: 1rem; left: 1rem;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.85rem; font-weight: 700; color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.8rem; border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
   transition: var(--trans);
-  z-index: 10;
-  padding: 0.5rem;
+  z-index: 100;
 }
-.back-home:hover { color: var(--rose-primary); }
-.back-home svg { width: 18px; height: 18px; }
+.back-home:hover { color: var(--rose-primary); border-color: var(--rose-primary); }
+.back-home svg { width: 16px; height: 16px; }
 
 /* ============================================================
  * §4 UI COMPONENTS
@@ -157,33 +161,31 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(0.9rem, 1.5vw, 1.05rem); font-weight: 600; color: var(--ink-light); margin: 0;
 }
 
-/* Panduan Langkah Horizontal */
 .guide-steps { 
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; 
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
-  padding: 0.6rem 1.5rem; box-shadow: var(--shadow-sm); width: fit-content; margin: 0 auto;
+  padding: 0.6rem 1rem; box-shadow: var(--shadow-sm); width: fit-content; margin: 0 auto;
 }
-.guide-step { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--ink-light); }
+.guide-step { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; color: var(--ink-light); }
 .guide-step b { color: var(--rose-deep); }
 .guide-step-num { 
   display: inline-flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; border-radius: 50%; background: var(--rose-deep); color: #fff;
-  font-size: 0.65rem; font-weight: 800;
+  width: 18px; height: 18px; border-radius: 50%; background: var(--rose-deep); color: #fff;
+  font-size: 0.6rem; font-weight: 800;
 }
 .guide-arrow { display: flex; align-items: center; justify-content: center; color: var(--border); }
-.guide-arrow svg { width: 14px; height: 14px; }
+.guide-arrow svg { width: 12px; height: 12px; }
 
 /* ============================================================
- * §6 AUTH CARDS (SPLIT)
+ * §6 AUTH CARDS
  * ============================================================ */
 .auth-container { 
   display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; 
   max-width: 950px; margin: 0 auto; width: 100%;
-  align-items: stretch; 
+  align-items: stretch;
 }
 @media (max-width: 800px) { 
   .auth-container { grid-template-columns: 1fr; } 
-  #view-auth { overflow-y: auto; justify-content: flex-start; padding-top: 2rem; } 
 }
 
 .auth-card { 
@@ -196,14 +198,13 @@ a { color: inherit; text-decoration: none; }
 .link-btn { font-size: 0.8rem; font-weight: 700; color: var(--rose-primary); }
 .link-btn:hover { text-decoration: underline; }
 
-/* Login Spesifik */
 .login-form-wrap { margin: auto 0; }
 .token-input { text-align:center; letter-spacing:0.2em; font-weight:800; font-size:1.2rem; text-transform:uppercase; }
 
 /* ============================================================
- * §7 DASHBOARD (BRANCH GRID)
+ * §7 DASHBOARD
  * ============================================================ */
-.appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.2rem; margin-bottom: 1.2rem; }
+.appbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.2rem; margin-bottom: 1.2rem; border-radius: var(--r-md); }
 .appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem; text-decoration: none; }
 .appbar-brand svg { width: 22px; height: 22px; color: var(--accent); }
 
@@ -340,10 +341,9 @@ a { color: inherit; text-decoration: none; }
     <div class="branch-grid" id="branchGrid"></div>
   </div>
 
-  <!-- AUTH VIEW (FULL SCREEN NO SCROLL) -->
+  <!-- AUTH VIEW -->
   <div id="view-auth" class="screen">
     
-    <!-- Tombol Kembali ke Beranda -->
     <a href="./index.html" class="back-home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Beranda
@@ -355,7 +355,6 @@ a { color: inherit; text-decoration: none; }
       <p class="title-sub">MTQ Pelajar SD Tingkat Kabupaten Bantul Tahun 2026</p>
     </div>
 
-    <!-- Compact Guide Box -->
     <div class="guide-steps">
       <div class="guide-step"><span class="guide-step-num">1</span> Isi <b>Daftar Offisial</b></div>
       <span class="guide-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -384,7 +383,7 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- Register (2-Column Grid) -->
+      <!-- Register -->
       <div class="auth-card">
         <h2>Daftar Offisial</h2>
         <p class="desc">Belum punya token? Daftarkan Offisial kapanewon Anda di sini.</p>
@@ -793,7 +792,7 @@ a { color: inherit; text-decoration: none; }
 
   async function handleUpload(file, jenis, id, boxEl, inputEl) {
     if (!file) return;
-    const LIMITS = { akta1: 2, akta2: 2, akta3: 2, karaoke: 10 }; // MB, sesuai backend BERKAS
+    const LIMITS = { akta1: 2, akta2: 2, akta3: 2, karaoke: 10 }; 
     const maxMB = LIMITS[jenis] || 2;
     if (file.size > maxMB * 1024 * 1024) return toast(`Maksimal ${maxMB} MB`, 'error');
 
@@ -1017,7 +1016,6 @@ a { color: inherit; text-decoration: none; }
     if (!container) return;
     const wajib = State.wajibSekolah === true;
 
-    // Kasus: tidak ada sekolah di master
     if (list.length === 0) {
       if (wajib) {
         container.innerHTML = `<div class="form-control" style="background:var(--danger-light);color:var(--danger);border-color:var(--danger);text-align:center;font-weight:600;">⚠ Belum ada sekolah terdaftar untuk kapanewon ini.<br><small style="font-weight:400;">Hubungi panitia untuk pendaftaran sekolah.</small></div>`;
@@ -1205,7 +1203,6 @@ a { color: inherit; text-decoration: none; }
     });
   }
 
-  // ── Tombol Keluar ────────────────────────────────────
   document.getElementById('btnLogout').addEventListener('click', () => {
     if (!confirm('Keluar dari portal ofisial?\nAnda harus login ulang untuk mengakses kembali.')) return;
     lsDel(LS_TOKEN);
@@ -1213,7 +1210,6 @@ a { color: inherit; text-decoration: none; }
     location.reload();
   });
 
-  // Start
   boot();
 })();
 </script>
