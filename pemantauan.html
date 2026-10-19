@@ -101,22 +101,46 @@ a { color: inherit; text-decoration: none; }
 .btn-action:hover { border-color: var(--hijau); color: var(--hijau); background: var(--hijau-light); }
 .btn-action svg { width: 16px; height: 16px; }
 
-/* Tabs Navigation */
-.tabs-nav { 
-  display: flex; gap: 0.5rem; background: var(--surface); 
-  padding: 0.4rem 1.2rem 0.8rem 1.2rem; 
-  overflow-x: auto; scrollbar-width: none; 
+/* ============================================================
+ * §3 SEGMENTED CONTROL TABS (Desain Baru: Melayang & Modern)
+ * ============================================================ */
+.tabs-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 0.8rem 1rem 1rem 1rem;
+  background: var(--surface);
 }
-.tabs-nav::-webkit-scrollbar { display: none; }
+
+.tabs-nav { 
+  display: inline-flex; 
+  background: var(--bg); 
+  padding: 0.35rem; 
+  border-radius: 99px; 
+  border: 1.5px solid var(--border); 
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
 .tab-btn { 
-  flex: 1; padding: 0.6rem 1rem; border-radius: var(--r-md); font-weight: 700; font-size: 0.95rem; 
-  color: var(--ink-light); transition: var(--trans); white-space: nowrap; text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 0.6rem 1.5rem; 
+  border-radius: 99px; 
+  font-weight: 700; 
+  font-size: 0.95rem; 
+  color: var(--ink-light); 
+  transition: var(--trans); 
+  white-space: nowrap; text-align: center;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
-.tab-btn:hover { color: var(--hijau); background: var(--hijau-light); }
-.tab-btn.active { background: var(--hijau); color: #fff; box-shadow: 0 4px 12px rgba(42,157,143,0.3); }
+.tab-btn:hover { color: var(--hijau); }
+.tab-btn.active { 
+  background: var(--surface); 
+  color: var(--hijau); 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-/* Hero Title (Judul Halaman Normal) */
+/* Hero Title */
 .hero-title {
   text-align: center;
   margin-bottom: 2rem;
@@ -142,66 +166,38 @@ a { color: inherit; text-decoration: none; }
 .tab-pane.active { display: block; }
 
 /* ============================================================
- * §3 FULLSCREEN MODE (DESKTOP 3x3, MOBILE 1 KOLOM)
+ * §4 FULLSCREEN MODE
  * ============================================================ */
 .fs-title { display: none; }
-
 body.is-fullscreen { overflow: hidden; background: var(--bg); }
 body.is-fullscreen .sticky-wrapper,
 body.is-fullscreen .hero-title { display: none !important; }
-
-body.is-fullscreen .container { 
-  max-width: 100%; padding: 0; height: 100dvh; margin: 0; 
-  display: flex; flex-direction: column;
-}
-
+body.is-fullscreen .container { max-width: 100%; padding: 0; height: 100dvh; margin: 0; display: flex; flex-direction: column; }
 body.is-fullscreen .fs-title {
   display: flex; align-items: center; justify-content: center; gap: 0.6rem;
   padding: 1rem 0 0.5rem 0;
   font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900;
   color: var(--rose-deep); letter-spacing: -0.02em;
 }
-
-body.is-fullscreen #tab-live { 
-  flex: 1; padding: 0 1rem 1rem 1rem; 
-  display: flex; flex-direction: column; min-height: 0;
-}
-
-/* Desktop Fullscreen: 3x3 Grid */
+body.is-fullscreen #tab-live { flex: 1; padding: 0 1rem 1rem 1rem; display: flex; flex-direction: column; min-height: 0; }
 body.is-fullscreen .live-grid { 
-  display: grid; 
-  grid-template-columns: repeat(3, 1fr); 
-  grid-template-rows: repeat(3, 1fr); 
-  gap: 1rem; 
-  height: 100%; 
-  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); 
+  gap: 1rem; height: 100%; flex: 1; min-height: 0;
 }
-body.is-fullscreen .live-card {
-  height: 100%; margin: 0; display: flex; flex-direction: column; padding: 0.8rem;
-}
-body.is-fullscreen .live-body {
-  flex: 1; min-height: 0; padding: 0.5rem;
-}
+body.is-fullscreen .live-card { height: 100%; margin: 0; display: flex; flex-direction: column; padding: 0.8rem; }
+body.is-fullscreen .live-body { flex: 1; min-height: 0; padding: 0.5rem; }
 
 /* ============================================================
- * §4 TAB 1: LIVE PANGGUNG
+ * §5 TAB 1: LIVE PANGGUNG
  * ============================================================ */
-.live-grid { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-  gap: 1.2rem; 
-}
-
+.live-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
 .live-card { 
   background: var(--surface); border: 1.5px solid var(--border); 
   border-radius: var(--r-lg); padding: 1.25rem; box-shadow: var(--shadow-sm); 
   display: flex; flex-direction: column; gap: 1rem; transition: var(--trans);
   position: relative; overflow: hidden;
 }
-.live-card::after {
-  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-  background: var(--border); transition: var(--trans);
-}
+.live-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); transition: var(--trans); }
 .live-card.is-live { border-color: var(--hijau); box-shadow: 0 4px 20px rgba(42,157,143,0.15); transform: translateY(-2px); }
 .live-card.is-live::after { background: var(--hijau); }
 
@@ -224,12 +220,11 @@ body.is-fullscreen .live-body {
 .live-value { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--hijau); line-height: 1.1; }
 .live-value small { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-top: 0.3rem; }
 .live-timer { font-size: 2.2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
-
 .live-next { font-size: 0.85rem; font-weight: 600; color: var(--ink-light); display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 0.6rem 0.8rem; border-radius: var(--r-sm); border: 1px solid var(--border); }
 .live-next strong { color: var(--rose-deep); font-size: 0.95rem; }
 
 /* ============================================================
- * §5 TAB 2: DAFTAR PESERTA
+ * §6 TAB 2: DAFTAR PESERTA (FIX PROPORSI)
  * ============================================================ */
 .search-bar { margin-bottom: 1.5rem; position: relative; max-width: 600px; margin-left: auto; margin-right: auto; }
 .search-bar input { 
@@ -241,7 +236,12 @@ body.is-fullscreen .live-body {
 .search-bar input:focus { border-color: var(--hijau); box-shadow: 0 0 0 4px var(--hijau-light); }
 .search-bar svg { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-light); }
 
-.peserta-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; }
+.peserta-list { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
+  gap: 1.2rem; 
+  align-items: start; 
+}
 
 .peserta-item { 
   background: var(--surface); border: 1.5px solid var(--border); 
@@ -250,10 +250,7 @@ body.is-fullscreen .live-body {
   transition: var(--trans); box-shadow: var(--shadow-sm);
   position: relative; overflow: hidden;
 }
-.peserta-item::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
-  background: var(--hijau); opacity: 0; transition: var(--trans);
-}
+.peserta-item::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--hijau); opacity: 0; transition: var(--trans); }
 .peserta-item:hover { border-color: var(--hijau); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 .peserta-item:hover::before { opacity: 1; }
 
@@ -267,81 +264,36 @@ body.is-fullscreen .live-body {
 .peserta-meta svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; opacity: 0.7; }
 
 /* Desain Khusus Tim LCP (3 Nama) */
-.team-box {
-  background: #F8FAFC;
-  border: 1.5px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 1rem;
-  margin-top: 0.5rem;
+.team-box { background: #F8FAFC; border: 1.5px solid var(--border); border-radius: var(--r-md); padding: 1rem; margin-top: 0.5rem; }
+.team-label { font-size: 0.7rem; font-weight: 800; color: var(--hijau); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+.team-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; } 
+.team-list li { 
+  display: flex; align-items: center; gap: 0.6rem; font-size: 0.95rem; font-weight: 600; color: var(--ink); 
+  background: var(--surface); padding: 0.45rem 0.8rem; 
+  border-radius: var(--r-sm); border: 1px solid var(--border-dark); 
 }
-.team-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: var(--hijau);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.6rem;
-  display: flex; align-items: center; gap: 0.4rem;
-}
-.team-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.team-list li {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--surface);
-  padding: 0.5rem 0.8rem;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--border-dark);
-}
-.team-list li .member-num {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: var(--ink-light);
-  background: var(--bg);
-  width: 20px; height: 20px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-}
+.team-list li .member-num { font-size: 0.7rem; font-weight: 800; color: var(--ink-light); background: var(--bg); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
 .empty-state { text-align: center; padding: 4rem 1rem; color: var(--ink-light); grid-column: 1 / -1; }
 .empty-state svg { width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.2; }
 .empty-state p { font-size: 1rem; font-weight: 500; }
 
 /* ============================================================
- * §6 RESPONSIVE (MOBILE & TABLET)
+ * §7 RESPONSIVE (MOBILE & TABLET)
  * ============================================================ */
 @media (max-width: 768px) {
   .hide-mobile { display: none; }
   .hero-title h1 { font-size: 1.8rem; }
   .hero-title p { font-size: 0.9rem; }
   
-  /* Perbaikan Fullscreen di Mobile: Ubah jadi 1 Kolom & Izinkan Scroll */
-  body.is-fullscreen { overflow: auto; } /* Kembalikan fungsi scroll di body */
-  body.is-fullscreen .container { 
-    height: auto; min-height: 100dvh; overflow: visible; padding-bottom: 2rem;
-  }
-  body.is-fullscreen #tab-live { 
-    flex: none; height: auto; overflow: visible; padding: 0 1rem 2rem 1rem;
-  }
-  body.is-fullscreen .live-grid { 
-    grid-template-columns: 1fr; 
-    grid-template-rows: auto; 
-    height: auto; 
-  }
-  body.is-fullscreen .live-card { 
-    height: auto; 
-  }
-  body.is-fullscreen .fs-title { 
-    font-size: 1.3rem; padding: 1rem 0; 
-  }
+  .tab-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+  
+  body.is-fullscreen { overflow: auto; }
+  body.is-fullscreen .container { height: auto; min-height: 100dvh; overflow: visible; padding-bottom: 2rem; }
+  body.is-fullscreen #tab-live { flex: none; height: auto; overflow: visible; padding: 0 1rem 2rem 1rem; }
+  body.is-fullscreen .live-grid { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+  body.is-fullscreen .live-card { height: auto; }
+  body.is-fullscreen .fs-title { font-size: 1.3rem; padding: 1rem 0; }
 }
 </style>
 </head>
@@ -362,40 +314,39 @@ body.is-fullscreen .live-body {
     </div>
   </header>
 
-  <div class="tabs-nav">
-    <button class="tab-btn active" data-tab="tab-live">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/><circle cx="12" cy="12" r="2"/></svg>
-      Live Panggung
-    </button>
-    <button class="tab-btn" data-tab="tab-peserta">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Daftar Peserta
-    </button>
+  <!-- TAB NAVIGASI BARU: Melayang & Modern -->
+  <div class="tabs-wrapper">
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-live">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/><circle cx="12" cy="12" r="2"/></svg>
+        Live Panggung
+      </button>
+      <button class="tab-btn" data-tab="tab-peserta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Daftar Peserta
+      </button>
+    </div>
   </div>
 </div>
 
 <div class="container">
   
-  <!-- JUDUL KHUSUS FULLSCREEN -->
   <div class="fs-title">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--hijau)" stroke-width="2.5"><path d="M12 2L3 7v6c0 5 4 9 9 11 5-2 9-6 9-11V7l-9-5z"/></svg>
     Pemantauan MTQ 2026
   </div>
 
-  <!-- JUDUL NORMAL -->
   <div class="hero-title">
     <h1>Halaman Pemantauan MTQ 2026</h1>
     <p>Sistem Informasi Live Panggung & Daftar Peserta<br>MTQ Pelajar Sekolah Dasar Tingkat Kabupaten Bantul</p>
   </div>
 
-  <!-- TAB 1: LIVE PANGGUNG -->
   <div id="tab-live" class="tab-pane active">
     <div class="live-grid" id="liveGrid">
       <div class="empty-state" style="grid-column:1/-1;"><span class="spinner"></span><p style="margin-top:1rem;">Memuat status panggung...</p></div>
     </div>
   </div>
 
-  <!-- TAB 2: DAFTAR PESERTA -->
   <div id="tab-peserta" class="tab-pane">
     <div class="search-bar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -430,13 +381,10 @@ body.is-fullscreen .live-body {
   async function api(action, payload = {}) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
-    
     try {
       const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, ...payload }),
-        signal: controller.signal
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, ...payload }), signal: controller.signal
       });
       clearTimeout(timeoutId);
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -451,14 +399,11 @@ body.is-fullscreen .live-body {
     btn.onclick = () => {
       const target = btn.dataset.tab;
       if (state.activeTab === target) return;
-
       $$('.tab-btn').forEach(b => b.classList.remove('active'));
       $$('.tab-pane').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       $('#' + target).classList.add('active');
-      
       state.activeTab = target;
-
       if (target === 'tab-live') {
         if (!state.isFetchingLive) loadLive();
       } else if (target === 'tab-peserta' && !state.isPesertaLoaded) {
@@ -470,7 +415,6 @@ body.is-fullscreen .live-body {
   async function loadLive() {
     if (state.isFetchingLive || document.hidden || state.activeTab !== 'tab-live') return;
     state.isFetchingLive = true;
-    
     try {
       const res = await api('publik_panggung');
       if (res.status === 'success') {
@@ -497,16 +441,13 @@ body.is-fullscreen .live-body {
   function scheduleNextPoll() {
     clearTimeout(state.pollTimeout);
     state.pollTimeout = setTimeout(() => {
-      if (!document.hidden && state.activeTab === 'tab-live') {
-        loadLive();
-      }
+      if (!document.hidden && state.activeTab === 'tab-live') loadLive();
     }, POLL_INTERVAL);
   }
 
   function renderLive(cabangList, serverTime) {
     const grid = $('#liveGrid');
     const timeOffset = serverTime ? (new Date(serverTime).getTime() - Date.now()) : 0;
-    
     const order = ['MTQ', 'MTtQ', 'MHQ', 'Puitisasi', 'MAz', 'LPP', 'LCP', 'Lukis', 'Menyanyi'];
     cabangList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
@@ -517,8 +458,7 @@ body.is-fullscreen .live-body {
       let bodyHtml = '';
 
       if (c.mode === 'queue') {
-        const now = c.sekarang;
-        const next = c.berikut;
+        const now = c.sekarang, next = c.berikut;
         bodyHtml = `
           <div class="live-body">
             <div class="live-label">Sedang Tampil</div>
@@ -526,24 +466,17 @@ body.is-fullscreen .live-body {
             ${now && now.Nama ? `<small>${esc(now.Nama)}</small>` : ''}
             ${now && now.Kapanewon ? `<small style="font-size:0.75rem; opacity:0.7;">${esc(now.Kapanewon)}</small>` : ''}
           </div>
-          <div class="live-next">
-            <span>Berikutnya:</span>
-            <strong>${next ? esc(next.No_Undian) : '—'}</strong>
-          </div>
+          <div class="live-next"><span>Berikutnya:</span><strong>${next ? esc(next.No_Undian) : '—'}</strong></div>
         `;
       } else if (c.mode === 'timer') {
-        let timerStr = '00 : 00 : 00';
-        let isTimeUp = false;
+        let timerStr = '00 : 00 : 00', isTimeUp = false;
         if (c.timer_start && c.timer_duration_sec) {
           const startMs = new Date(c.timer_start).getTime();
           const durationMs = c.timer_duration_sec * 1000;
           const elapsedMs = (Date.now() + timeOffset) - startMs;
           let sisa = Math.max(0, Math.floor((durationMs - elapsedMs) / 1000));
           isTimeUp = sisa <= 0;
-          
-          const h = Math.floor(sisa / 3600);
-          const m = Math.floor((sisa % 3600) / 60);
-          const s = sisa % 60;
+          const h = Math.floor(sisa / 3600), m = Math.floor((sisa % 3600) / 60), s = sisa % 60;
           timerStr = `${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
         }
         bodyHtml = `
@@ -565,10 +498,7 @@ body.is-fullscreen .live-body {
       return `
         <div class="live-card ${cls}">
           <div class="live-header">
-            <div class="live-title">
-              <span class="live-kode">${esc(c.kode)}</span>
-              ${esc(c.label.split('(')[0].trim())}
-            </div>
+            <div class="live-title"><span class="live-kode">${esc(c.kode)}</span>${esc(c.label.split('(')[0].trim())}</div>
             <span class="live-badge ${badgeCls}">${c.status_lomba}</span>
           </div>
           ${bodyHtml}
@@ -585,9 +515,7 @@ body.is-fullscreen .live-body {
         state.allPeserta = res.peserta || [];
         state.isPesertaLoaded = true;
         renderPeserta(state.allPeserta);
-      } else {
-        throw new Error(res.message || 'Gagal memuat');
-      }
+      } else throw new Error(res.message || 'Gagal memuat');
     } catch (e) {
       list.innerHTML = `<div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
@@ -598,7 +526,6 @@ body.is-fullscreen .live-body {
 
   function renderPeserta(data) {
     const list = $('#pesertaList');
-    
     if (data.length === 0) {
       list.innerHTML = `<div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -609,13 +536,11 @@ body.is-fullscreen .live-body {
 
     list.innerHTML = data.map(p => {
       const isLCP = p.Cabang === 'LCP';
-      
       let titleHtml = `<h4>${esc(p.Nama)}</h4>`;
       let teamHtml = '';
 
       if (isLCP) {
         titleHtml = `<h4>Tim LCP ${esc(p.Kapanewon)}</h4>`;
-        
         teamHtml = `
           <div class="team-box">
             <div class="team-label">
@@ -673,9 +598,7 @@ body.is-fullscreen .live-body {
     }, 300);
   });
 
-  // ── FULLSCREEN API & FALLBACK CSS ──
   const btnFs = $('#btnFullscreen');
-  
   function updateFsButton(isFs) {
     if (isFs) {
       btnFs.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg> <span class="hide-mobile">Keluar</span>`;
@@ -686,30 +609,21 @@ body.is-fullscreen .live-body {
 
   btnFs.addEventListener('click', () => {
     const isCurrentlyFs = document.body.classList.contains('is-fullscreen');
-    
     if (!isCurrentlyFs) {
-      // 1. Terapkan class CSS (Fallback untuk iOS/HP yang memblokir API)
       document.body.classList.add('is-fullscreen');
       updateFsButton(true);
-      
-      // 2. Coba panggil API Native Fullscreen (Desktop)
       if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {
-          // Abaikan error, class CSS sudah berfungsi
-        });
+        document.documentElement.requestFullscreen().catch(() => {});
       }
     } else {
-      // Keluar dari Fullscreen
       document.body.classList.remove('is-fullscreen');
       updateFsButton(false);
-      
       if (document.exitFullscreen && document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
       }
     }
   });
 
-  // Sinkronisasi jika user keluar fullscreen lewat tombol ESC
   document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement && document.body.classList.contains('is-fullscreen')) {
       document.body.classList.remove('is-fullscreen');
