@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#2A9D8F" />
-<title>Pemantauan Publik — MTQ 2026</title>
+<title>Pemantauan Live — MTQ 2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,6 @@
   --hijau-light: #E8F6F4;
   --gold: #E9C46A;
   --gold-light: #FEF5E7;
-  
   --ink: #1E293B;
   --ink-light: #64748B;
   --bg: #F8FAFC;
@@ -31,7 +30,6 @@
   --border: #E2E8F0;
   --border-dark: #CBD5E0;
   --danger: #E53E3E;
-  --danger-light: #FFF5F5;
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
@@ -65,6 +63,7 @@ a { color: inherit; text-decoration: none; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
 
 .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(42,157,143,0.2); border-radius: 50%; border-top-color: var(--hijau); animation: spin 0.8s linear infinite; }
 
@@ -131,32 +130,7 @@ a { color: inherit; text-decoration: none; }
 .live-timer { font-size: 2rem; font-weight: 900; color: var(--rose-deep); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
 
 /* ============================================================
- * §5 TAB 2: CEK HASIL
- * ============================================================ */
-.cek-box { max-width: 600px; margin: 0 auto; background: var(--surface); padding: 2rem; border-radius: var(--r-lg); border: 1.5px solid var(--border); box-shadow: var(--shadow-md); }
-.cek-box h2 { text-align: center; margin-bottom: 0.5rem; font-size: 1.4rem; }
-.cek-box p { text-align: center; color: var(--ink-light); font-size: 0.9rem; margin-bottom: 1.5rem; }
-.input-group { display: flex; gap: 0.5rem; }
-.input-cek { flex: 1; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: var(--r-md); font-size: 1.1rem; font-weight: 800; text-transform: uppercase; text-align: center; transition: var(--trans); outline: none; }
-.input-cek:focus { border-color: var(--hijau); box-shadow: 0 0 0 4px var(--hijau-light); }
-.btn-cek { padding: 0 1.5rem; border-radius: var(--r-md); background: var(--hijau); color: #fff; font-weight: 800; font-size: 0.95rem; transition: var(--trans); }
-.btn-cek:hover { background: #21867a; }
-.btn-cek:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.result-card { display: none; margin-top: 1.5rem; background: linear-gradient(135deg, #FFFFFF, #F0FDF4); border: 2px solid var(--hijau); border-radius: var(--r-lg); padding: 1.5rem; text-align: center; animation: fadeIn 0.3s ease; }
-.result-card.show { display: block; }
-.result-card .no { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; color: var(--hijau); line-height: 1; }
-.result-card h3 { font-size: 1.2rem; margin: 0.5rem 0 0.2rem; color: var(--ink); }
-.result-card p { font-size: 0.85rem; color: var(--ink-light); margin-bottom: 1rem; }
-.result-score { font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 900; color: var(--rose-deep); line-height: 1; }
-.result-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); margin-bottom: 0.5rem; }
-.result-badge { display: inline-block; padding: 0.3rem 1rem; border-radius: 99px; font-size: 0.85rem; font-weight: 800; margin-top: 0.5rem; }
-.result-badge.juara { background: var(--gold); color: var(--rose-deep); box-shadow: 0 2px 8px rgba(233,196,106,0.4); }
-.result-badge.biasa { background: var(--bg); color: var(--ink-light); border: 1px solid var(--border); }
-.result-blind { background: var(--gold-light); border: 2px dashed var(--gold); color: #92400e; padding: 1.5rem; border-radius: var(--r-md); font-weight: 600; font-size: 0.9rem; }
-
-/* ============================================================
- * §6 TAB 3: DAFTAR PESERTA
+ * §5 TAB 2: DAFTAR PESERTA
  * ============================================================ */
 .search-bar { margin-bottom: 1rem; }
 .search-bar input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: var(--r-md); font-size: 1rem; outline: none; transition: var(--trans); }
@@ -164,7 +138,7 @@ a { color: inherit; text-decoration: none; }
 .peserta-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .peserta-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: var(--trans); }
 .peserta-item:hover { border-color: var(--hijau); transform: translateX(2px); }
-.peserta-item .no { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.1rem; color: var(--hijau); min-width: 70px; }
+.peserta-item .no { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.1rem; color: var(--hijau); min-width: 90px; }
 .peserta-item .info { flex: 1; min-width: 0; }
 .peserta-item .info h4 { font-size: 0.95rem; margin: 0 0 0.1rem; color: var(--ink); }
 .peserta-item .info p { font-size: 0.75rem; color: var(--ink-light); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -188,7 +162,6 @@ a { color: inherit; text-decoration: none; }
   
   <div class="tabs-nav">
     <button class="tab-btn active" data-tab="tab-live">🎭 Live Panggung</button>
-    <button class="tab-btn" data-tab="tab-cek">🏆 Cek Hasil</button>
     <button class="tab-btn" data-tab="tab-peserta">👥 Daftar Peserta</button>
   </div>
 
@@ -199,25 +172,10 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 
-  <!-- TAB 2: CEK HASIL -->
-  <div id="tab-cek" class="tab-pane">
-    <div class="cek-box">
-      <h2>Cek Hasil Lomba</h2>
-      <p>Masukkan nomor undian peserta (contoh: <b>MTQ-01</b> atau <b>LCP-03</b>)</p>
-      
-      <div class="input-group">
-        <input type="text" id="inputNoUndian" class="input-cek" placeholder="MTQ-01" maxlength="10" autocomplete="off" spellcheck="false">
-        <button class="btn-cek" id="btnCek">Cek</button>
-      </div>
-
-      <div id="resultCard" class="result-card"></div>
-    </div>
-  </div>
-
-  <!-- TAB 3: DAFTAR PESERTA -->
+  <!-- TAB 2: DAFTAR PESERTA -->
   <div id="tab-peserta" class="tab-pane">
     <div class="search-bar">
-      <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, atau kapanewon..." autocomplete="off">
+      <input type="text" id="searchPeserta" placeholder="Cari No. Pendaftaran, nama, atau sekolah..." autocomplete="off">
     </div>
     <div class="peserta-list" id="pesertaList">
       <div style="text-align:center;padding:3rem;"><span class="spinner"></span></div>
@@ -257,7 +215,6 @@ a { color: inherit; text-decoration: none; }
       btn.classList.add('active');
       $('#' + btn.dataset.tab).classList.add('active');
 
-      // Lazy load data saat tab dibuka
       if (btn.dataset.tab === 'tab-peserta' && allPeserta.length === 0) {
         loadPeserta();
       }
@@ -282,7 +239,6 @@ a { color: inherit; text-decoration: none; }
       </div>`;
     } finally {
       isPolling = false;
-      // Polling berantai setiap 15 detik
       clearTimeout(pollTimeout);
       pollTimeout = setTimeout(() => {
         if (!document.hidden && $('#tab-live').classList.contains('active')) {
@@ -306,7 +262,6 @@ a { color: inherit; text-decoration: none; }
       
       let bodyHtml = '';
 
-      // Mode Antrian (Queue)
       if (c.mode === 'queue') {
         const now = c.sekarang;
         const next = c.berikut;
@@ -321,9 +276,7 @@ a { color: inherit; text-decoration: none; }
             <span style="font-weight:800;color:var(--rose-deep)">${next ? esc(next.No_Undian) : '—'}</span>
           </div>
         `;
-      } 
-      // Mode Timer (Melukis)
-      else if (c.mode === 'timer') {
+      } else if (c.mode === 'timer') {
         let timerStr = '00 : 00 : 00';
         if (c.timer_start && c.sisa_detik !== undefined) {
           const h = Math.floor(c.sisa_detik / 3600);
@@ -338,9 +291,7 @@ a { color: inherit; text-decoration: none; }
             ${c.timer_habis ? '<span style="color:var(--danger);font-weight:800;font-size:0.8rem;margin-top:0.5rem;display:block;">WAKTU HABIS</span>' : ''}
           </div>
         `;
-      } 
-      // Mode Fase (LCP)
-      else if (c.mode === 'phase') {
+      } else if (c.mode === 'phase') {
         bodyHtml = `
           <div class="live-body">
             <div class="live-label">Fase Saat Ini</div>
@@ -364,60 +315,7 @@ a { color: inherit; text-decoration: none; }
     }).join('');
   }
 
-  // ── 2. CEK HASIL ──
-  $('#inputNoUndian').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-  $('#inputNoUndian').addEventListener('keydown', e => { if (e.key === 'Enter') cekHasil(); });
-  $('#btnCek').onclick = cekHasil;
-
-  async function cekHasil() {
-    const no = $('#inputNoUndian').value.trim();
-    if (!no) return alert('Masukkan nomor undian terlebih dahulu.');
-    
-    const btn = $('#btnCek');
-    const card = $('#resultCard');
-    
-    btn.disabled = true; btn.textContent = 'Memuat...';
-    card.classList.remove('show');
-
-    try {
-      const res = await api('publik_cek_hasil', { no_undian: no });
-      if (res.error) throw new Error(res.message);
-
-      const p = res.peserta;
-      let html = `
-        <div class="no">${esc(p.No_Undian)}</div>
-        <h3>${esc(p.Nama)}</h3>
-        <p>${esc(p.Kapanewon)} · ${esc(p.Sekolah)} · ${esc(p.Cabang)}</p>
-      `;
-
-      if (res.blind) {
-        html += `<div class="result-blind">${esc(res.message)}</div>`;
-      } else if (!res.hasil) {
-        html += `<div style="padding:1rem;color:var(--ink-light);font-style:italic;">Nilai belum tersedia.</div>`;
-      } else {
-        const h = res.hasil;
-        const total = h.Total ? Number(h.Total).toFixed(2) : '0.00';
-        const isJuara = h.Label && h.Label !== '';
-        
-        html += `
-          <div class="result-label" style="margin-top:1rem">Total Skor</div>
-          <div class="result-score">${total}</div>
-          ${isJuara 
-            ? `<div class="result-badge juara">🏆 ${esc(h.Label)}</div>` 
-            : `<div class="result-badge biasa">Peringkat ${h.Rank}</div>`}
-        `;
-      }
-
-      card.innerHTML = html;
-      card.classList.add('show');
-    } catch (e) {
-      alert(e.message);
-    } finally {
-      btn.disabled = false; btn.textContent = 'Cek';
-    }
-  }
-
-  // ── 3. DAFTAR PESERTA ──
+  // ── 2. DAFTAR PESERTA ──
   async function loadPeserta() {
     const list = $('#pesertaList');
     try {
@@ -449,7 +347,7 @@ a { color: inherit; text-decoration: none; }
 
     list.innerHTML = data.map(p => `
       <div class="peserta-item">
-        <div class="no">${esc(p.No_Undian || '-')}</div>
+        <div class="no">${esc(p.No_Pendaftaran || '-')}</div>
         <div class="info">
           <h4>${esc(p.Nama)}</h4>
           <p>${esc(p.Kapanewon)} · ${esc(p.Sekolah)}</p>
@@ -465,23 +363,19 @@ a { color: inherit; text-decoration: none; }
       p.Nama.toUpperCase().includes(q) || 
       p.Sekolah.toUpperCase().includes(q) || 
       p.Kapanewon.toUpperCase().includes(q) ||
-      p.No_Undian.toUpperCase().includes(q)
+      (p.No_Pendaftaran && p.No_Pendaftaran.toUpperCase().includes(q))
     );
     renderPeserta(filtered);
   });
 
   // ── BOOT ──
-  // Cek hash URL untuk langsung buka tab tertentu (opsional)
   const hash = window.location.hash.replace('#', '');
   if (hash === 'peserta') {
     $('[data-tab="tab-peserta"]').click();
-  } else if (hash === 'cek') {
-    $('[data-tab="tab-cek"]').click();
   } else {
     loadLive();
   }
 
-  // Re-poll saat tab aktif kembali
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && $('#tab-live').classList.contains('active') && !isPolling) {
       clearTimeout(pollTimeout);
