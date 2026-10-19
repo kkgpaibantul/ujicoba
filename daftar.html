@@ -1192,23 +1192,30 @@ a { color: inherit; text-decoration: none; }
       try { applyConfig(cachedCfg); } catch (e) { /* corrupted cache — ignore */ }
     }
 
-    /* 3. Decide view — instantly */
+    /* 3. Cleanup invalid auth state */
+    if (State.token && !State.ofisial) {
+      State.token = null;
+      lsDel(LS_TOKEN);
+    }
+
+    /* 4. Decide view — instantly */
     const hasToken = !!(State.token && State.ofisial);
 
     if (hasToken) {
       showView('view-dashboard');
       renderDashboardSkeleton();
       setLoadingMsg('Memuat data peserta...');
+      initDashboardEvents();
     } else {
       showView('view-auth');
       initAuth();
       setLoadingMsg('Menyiapkan formulir...');
     }
 
-    /* 4. Fire-and-forget config fetch */
+    /* 5. Fire-and-forget config fetch */
     loadConfigInBackground().catch(() => {});
 
-    /* 5. Load data if logged in */
+    /* 6. Load data if logged in */
     if (hasToken) {
       try {
         await loadData();
@@ -1230,28 +1237,28 @@ a { color: inherit; text-decoration: none; }
 
   /* Parallel loadData */
   async function loadData() {
-    const ofisialKapanewon = (State.ofisial || {}).Kapanewon;
+    // 1. Fetch peserta data first to get ofisial info (Kapanewon)
+    const pesertaRes = await api('list_peserta', {}, NETWORK_RETRY);
+    if (pesertaRes.status !== 'success') {
+      throw new Error(pesertaRes.message || 'Gagal memuat data peserta.');
+    }
 
-    const [pesertaRes, sekolahRes] = await Promise.allSettled([
-      api('list_peserta', {}, NETWORK_RETRY),
-      api('sekolah_list', { kapanewon: ofisialKapanewon }, NETWORK_RETRY)
-    ]);
-
-    if (pesertaRes.status !== 'fulfilled') throw pesertaRes.reason;
-    const res = pesertaRes.value;
-    if (res.status !== 'success') throw new Error(res.message || 'Gagal memuat data peserta.');
-
-    State.ofisial = res.ofisial;
-    State.peserta = Array.isArray(res.peserta) ? res.peserta : [];
-    State.slotTerpakai = res.slot_terpakai || 0;
-    State.kuota = res.kuota || State.kuota;
+    State.ofisial = pesertaRes.ofisial;
+    State.peserta = Array.isArray(pesertaRes.peserta) ? pesertaRes.peserta : [];
+    State.slotTerpakai = pesertaRes.slot_terpakai || 0;
+    State.kuota = pesertaRes.kuota || State.kuota || 11;
     lsSet(LS_OFISIAL, State.ofisial);
 
-    if (sekolahRes.status === 'fulfilled') {
-      const sch = sekolahRes.value;
-      if (sch && sch.status === 'success') State.sekolah = sch.sekolah || [];
-    } else if (sekolahRes.reason && sekolahRes.reason.code === 'UNAUTHORIZED') {
-      throw sekolahRes.reason;
+    // 2. Fetch schools using the verified Kapanewon
+    const ofisialKapanewon = State.ofisial.Kapanewon;
+    try {
+      const schRes = await api('sekolah_list', { kapanewon: ofisialKapanewon }, NETWORK_RETRY);
+      if (schRes && schRes.status === 'success') {
+        State.sekolah = schRes.sekolah || [];
+      }
+    } catch (err) {
+      if (err.code === 'UNAUTHORIZED') throw err;
+      console.warn('Gagal memuat sekolah:', err);
     }
   }
 
@@ -1290,17 +1297,22 @@ a { color: inherit; text-decoration: none; }
           return;
         }
         const prevToken = State.token;
+        const prevOfisial = State.ofisial;
         State.token = tok;
+        State.ofisial = res.ofisial; // Set immediately so loadData uses correct Kapanewon
+        
         try {
           await loadData();
           _dataLoaded = true;
           lsSet(LS_TOKEN, tok);
           lsSet(LS_OFISIAL, State.ofisial);
           showView('view-dashboard');
+          initDashboardEvents();
           renderDashboard();
           toast('Login berhasil', 'success');
         } catch (loadErr) {
           State.token = prevToken;
+          State.ofisial = prevOfisial;
           if (loadErr.code !== 'UNAUTHORIZED') {
             await showAlert(loadErr.message || 'Token valid tetapi gagal memuat data. Coba lagi.', {
               type: 'error', title: 'Gagal Memuat'
@@ -1643,9 +1655,70 @@ a { color: inherit; text-decoration: none; }
   /* ============================================================
    * §11 DASHBOARD
    * ============================================================ */
-  function renderDashboard() {
+  function initDashboardEvents() {
     const grid = $('#branchGrid');
     if (!grid) return;
+
+    // Cegah double binding
+    if (grid.dataset.eventsBound === '1') return;
+    grid.dataset.eventsBound = '1';
+
+    grid.addEventListener('click', e => {
+      const emptyCard = e.target.closest('.branch-card.empty.clickable');
+      if (emptyCard) {
+        openForm(emptyCard.dataset.key);
+        return;
+      }
+
+      const btnExpand = e.target.closest('.btn-expand');
+      if (btnExpand) {
+        const area = document.getElementById('upload-' + btnExpand.dataset.id);
+        if (area) area.classList.toggle('active');
+        return;
+      }
+
+      const btnEdit = e.target.closest('.btn-edit');
+      if (btnEdit) {
+        const p = State.peserta.find(x => x.ID === btnEdit.dataset.id);
+        if (p) openForm(p.Cabang, p.ID);
+        return;
+      }
+
+      const btnDel = e.target.closest('.btn-del');
+      if (btnDel) {
+        deletePeserta(btnDel.dataset.id);
+        return;
+      }
+
+      const box = e.target.closest('.upload-box');
+      if (box && !box.classList.contains('done') && box.dataset.uploading !== '1') {
+        const input = box.querySelector('.file-input');
+        if (input) {
+          input.value = '';
+          input.click();
+        }
+      }
+    });
+
+    grid.addEventListener('change', e => {
+      if (e.target.classList.contains('file-input')) {
+        const input = e.target;
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const box = input.closest('.upload-box');
+        handleDashboardUpload(file, input.dataset.jenis, input.dataset.id, box);
+      }
+    });
+  }
+
+  function renderDashboard() {
+    const grid = $('#branchGrid');
+    const dash = $('#view-dashboard');
+    if (!grid) return;
+
+    // Preserve scroll & expanded uploads
+    const scrollPos = dash ? dash.scrollTop : 0;
+    const expandedIds = Array.from(document.querySelectorAll('.upload-area.active')).map(el => el.id.replace('upload-', ''));
 
     if (!State.cabang.length) {
       grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--ink-light);">
@@ -1757,48 +1830,11 @@ a { color: inherit; text-decoration: none; }
 
     grid.innerHTML = html;
 
-    grid.querySelectorAll('.branch-card.empty.clickable').forEach(card => {
-      card.addEventListener('click', () => openForm(card.dataset.key));
-    });
-
-    grid.querySelectorAll('.btn-expand').forEach(b => {
-      b.addEventListener('click', () => {
-        const area = document.getElementById('upload-' + b.dataset.id);
-        if (area) area.classList.toggle('active');
-      });
-    });
-
-    grid.querySelectorAll('.btn-edit').forEach(b => {
-      b.addEventListener('click', () => {
-        const p = State.peserta.find(x => x.ID === b.dataset.id);
-        if (p) openForm(p.Cabang, p.ID);
-      });
-    });
-
-    grid.querySelectorAll('.btn-del').forEach(b => {
-      b.addEventListener('click', () => deletePeserta(b.dataset.id));
-    });
-
-    bindDashboardUploads();
-  }
-
-  function bindDashboardUploads() {
-    $$('.upload-box').forEach(box => {
-      if (box.classList.contains('done')) return;
-      const input = box.querySelector('.file-input');
-      if (!input) return;
-
-      box.addEventListener('click', () => {
-        if (box.dataset.uploading === '1') return;
-        input.value = '';
-        input.click();
-      });
-
-      input.addEventListener('change', e => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-        handleDashboardUpload(file, input.dataset.jenis, input.dataset.id, box);
-      });
+    // Restore UI State
+    if (dash) dash.scrollTop = scrollPos;
+    expandedIds.forEach(id => {
+      const el = document.getElementById('upload-' + id);
+      if (el) el.classList.add('active');
     });
   }
 
@@ -1843,14 +1879,7 @@ a { color: inherit; text-decoration: none; }
         boxEl.innerHTML = oldHTML;
         boxEl.classList.remove('uploading');
         delete boxEl.dataset.uploading;
-        const newInput = boxEl.querySelector('.file-input');
-        if (newInput) {
-          boxEl.addEventListener('click', () => { newInput.value = ''; newInput.click(); }, { once: true });
-          newInput.addEventListener('change', ev => {
-            const f = ev.target.files && ev.target.files[0];
-            if (f) handleDashboardUpload(f, jenis, id, boxEl);
-          }, { once: true });
-        }
+        // Karena kita pakai event delegation, listener otomatis berfungsi pada input baru
       }
     } finally {
       uploadingKeys.delete(key);
@@ -2210,6 +2239,8 @@ a { color: inherit; text-decoration: none; }
       if (!pId) throw new Error('Server tidak mengembalikan ID peserta.');
 
       const fileKeys = Object.keys(f.files || {});
+      let fileErrors = false;
+
       for (let i = 0; i < fileKeys.length; i++) {
         const jenis = fileKeys[i];
         const file = f.files[jenis];
@@ -2230,15 +2261,22 @@ a { color: inherit; text-decoration: none; }
           }, UPLOAD_OPTS);
 
           if (upRes.error) {
+            fileErrors = true;
             toast(`Gagal upload ${label}: ${upRes.message || 'kesalahan'}`, 'error');
           }
         } catch (fileErr) {
           if (fileErr.code === 'UNAUTHORIZED') throw fileErr;
+          fileErrors = true;
           toast(`${label}: ${fileErr.message || 'gagal'}`, 'error');
         }
       }
 
-      toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta berhasil ditambahkan', 'success');
+      if (fileErrors) {
+        toast('Data tersimpan, tetapi beberapa berkas gagal diunggah. Silakan coba unggah manual di dashboard.', 'warn');
+      } else {
+        toast(f.mode === 'edit' ? 'Data diperbarui' : 'Peserta berhasil ditambahkan', 'success');
+      }
+
       await loadData();
       _dataLoaded = true;
 
@@ -2393,7 +2431,7 @@ a { color: inherit; text-decoration: none; }
   });
 
   window.addEventListener('beforeunload', (e) => {
-    if (saveInFlight || uploadingKeys.size > 0) {
+    if (saveInFlight || uploadingKeys.size > 0 || (State.form && hasFormData())) {
       e.preventDefault();
       e.returnValue = '';
       return '';
