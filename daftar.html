@@ -604,6 +604,14 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
+    <!-- NEW FINALIZE AREA -->
+    <div id="finalizeArea" style="display: none; margin-bottom: 1.5rem; background: var(--surface); padding: 1.2rem; border-radius: var(--r-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); text-align: center;">
+      <h3 style="font-size: 1rem; color: var(--rose-deep); margin-bottom: 0.4rem;">Selesai Mengisi Data?</h3>
+      <p style="font-size: 0.85rem; margin-bottom: 1rem; color: var(--ink-light); line-height: 1.5;">Pastikan semua data peserta dan berkas sudah benar.<br>Setelah difinalisasi, data <strong style="color: var(--danger);">tidak dapat diubah</strong>.</p>
+      <button class="btn btn-primary btn-block" id="btnFinalisasi" type="button">Kunci & Finalisasi Pendaftaran</button>
+    </div>
+    <!-- END FINALIZE AREA -->
+
     <div class="branch-grid" id="branchGrid">
       <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--ink-light);">
         <span class="spinner" style="color:var(--rose-primary);border-color:var(--rose-light);border-top-color:var(--rose-primary);"></span>
@@ -1794,6 +1802,22 @@ a { color: inherit; text-decoration: none; }
     prog.style.width = pct + '%';
     prog.style.background = State.slotTerpakai >= State.kuota ? 'var(--danger)' : 'var(--hijau)';
 
+    // Tampilkan/Sembunyikan Area Finalisasi
+    const finalizeArea = $('#finalizeArea');
+    if (finalizeArea) {
+      const unlocked = State.peserta.filter(p => p.Status === 'menunggu');
+      if (unlocked.length > 0) {
+        finalizeArea.style.display = 'block';
+        const btnFinal = $('#btnFinalisasi');
+        if (btnFinal && !btnFinal.dataset.bound) {
+           btnFinal.dataset.bound = '1';
+           btnFinal.addEventListener('click', submitFinal);
+        }
+      } else {
+        finalizeArea.style.display = 'none';
+      }
+    }
+
     const byCabang = {};
     State.peserta.forEach(p => { byCabang[p.Cabang] = p; });
 
@@ -1893,6 +1917,30 @@ a { color: inherit; text-decoration: none; }
       const el = document.getElementById('upload-' + id);
       if (el) el.classList.add('active');
     });
+  }
+
+  async function submitFinal() {
+    const ok = await showConfirm(
+      'Pastikan semua data peserta dan berkas sudah lengkap. Setelah difinalisasi, Anda TIDAK DAPAT mengubah atau menghapus data peserta lagi. Lanjutkan?',
+      { type: 'warn', title: 'Finalisasi Pendaftaran', okText: 'Ya, Finalisasi', okClass: 'btn-destructive' }
+    );
+    if (!ok) return;
+
+    const btn = $('#btnFinalisasi');
+    setBtnLoading(btn, 'Memproses...');
+
+    try {
+      const res = await api('submit_final_ofisial', {}, WRITE_OPTS);
+      if (res.error) throw new Error(res.message || 'Gagal finalisasi.');
+      toast(res.message || 'Pendaftaran berhasil difinalisasi.', 'success');
+      await loadData();
+      renderDashboard();
+    } catch (e) {
+      if (e.code === 'UNAUTHORIZED') return;
+      await showAlert(e.message || 'Gagal finalisasi. Pastikan semua berkas sudah diunggah.', { type: 'error', title: 'Gagal Finalisasi' });
+    } finally {
+      resetBtn(btn);
+    }
   }
 
   async function handleDashboardUpload(file, jenis, id, boxEl) {
