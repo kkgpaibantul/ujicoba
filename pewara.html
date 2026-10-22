@@ -60,11 +60,12 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .input:focus{border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
 .label{display:block;font-size:0.7rem;font-weight:700;color:var(--ink-light);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem}
 
-.toast-container{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none}
-.toast{background:var(--ink);color:#fff;padding:0.65rem 1.2rem;border-radius:99px;font-size:0.85rem;font-weight:600;box-shadow:var(--shadow-lg);animation:fadeIn 0.3s ease;max-width:90vw;text-align:center}
+.toast-container{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none}
+.toast{background:var(--ink);color:#fff;padding:0.65rem 1.2rem;border-radius:99px;font-size:0.85rem;font-weight:600;box-shadow:var(--shadow-lg);animation:fadeIn 0.3s ease;max-width:90vw;text-align:center;display:flex;align-items:center;gap:0.5rem}
 .toast.success{background:var(--hijau)}
 .toast.error{background:var(--danger)}
 .toast.info{background:var(--rose-primary)}
+.toast.warning{background:var(--gold);color:var(--rose-deep)}
 
 .autosave-indicator{position:fixed;bottom:84px;right:1.2rem;background:rgba(74,46,63,0.94);color:#fff;padding:0.45rem 0.95rem;border-radius:99px;font-size:0.72rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;opacity:0;transform:translateY(10px);transition:all 0.22s cubic-bezier(0.4,0,0.2,1);z-index:100;pointer-events:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
 .autosave-indicator.show{opacity:1;transform:translateY(0)}
@@ -324,6 +325,12 @@ input[type=number]{-moz-appearance:textfield}
 .lcp-table td .jawaban-input:focus{outline:none;border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
 .lcp-table td .jawaban-input:disabled{opacity:0.6;cursor:not-allowed}
 
+.jawaban-preview { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 6px; padding: 0 4px; }
+.jawab-chip { width: 24px; height: 24px; border-radius: 4px; font-size: 0.65rem; font-family: monospace; font-weight: 700; display: flex; align-items: center; justify-content: center; background: var(--surface-2); color: var(--ink-light); border: 1px solid var(--border); transition: all 0.2s; }
+.jawab-chip.filled { background: #E0E7FF; color: #3730A3; border-color: #A5B4FC; }
+.jawab-chip.correct { background: var(--hijau-light); color: #065f46; border-color: var(--hijau); }
+.jawab-chip.wrong { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+
 .lcp-table td .wajib-string{width:120px;padding:0.4rem 0.6rem;text-align:center;font-family:'Courier New',monospace;font-weight:800;font-size:0.95rem;letter-spacing:0.15em;text-transform:uppercase;border:1.5px solid var(--border);border-radius:6px;background:#fff}
 .lcp-table td .wajib-string:focus{outline:none;border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
 .lcp-table td .wajib-string.invalid{border-color:var(--danger);background:var(--danger-light)}
@@ -332,6 +339,15 @@ input[type=number]{-moz-appearance:textfield}
 .wajib-chip.b{background:var(--hijau)}
 .wajib-chip.s{background:var(--danger)}
 .wajib-chip.empty{background:#E2E8F0}
+
+/* Counter Stepper */
+.counter-group { display: inline-flex; align-items: center; border: 1.5px solid var(--border); border-radius: 8px; background: #fff; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.counter-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--surface-2); font-weight: 900; font-size: 1.2rem; color: var(--ink-light); transition: all 0.15s; user-select: none; border: none; cursor: pointer; }
+.counter-btn:hover:not(:disabled) { background: var(--rose-light); color: var(--rose-deep); }
+.counter-btn:active:not(:disabled) { transform: scale(0.95); }
+.counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.counter-input { width: 50px; height: 36px; text-align: center; border: none; outline: none; font-weight: 800; font-size: 1.05rem; color: var(--rose-deep); background: transparent; -moz-appearance: textfield; }
+.counter-input::-webkit-inner-spin-button, .counter-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 .pool-info{background:var(--gold-light);border:1px solid var(--gold);border-radius:var(--r-md);padding:0.6rem 0.9rem;font-size:0.78rem;color:#92400e;margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.8rem}
 .pool-info.error{background:var(--danger-light);border-color:var(--danger);color:#7f1d1d}
@@ -569,32 +585,54 @@ input[type=number]{-moz-appearance:textfield}
     const wrap = $('#toastContainer');
     const el = document.createElement('div');
     el.className = 'toast ' + type;
-    el.textContent = msg;
+    
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+
+    el.innerHTML = `<span style="font-size:1.1rem">${icon}</span> <span>${esc(msg)}</span>`;
+    
+    if (type === 'error') el.style.animation = 'shake 0.4s, fadeIn 0.3s';
+
     wrap.appendChild(el);
-    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3200);
+    
+    setTimeout(() => { 
+      el.style.opacity = '0'; 
+      el.style.transform = 'translateY(-10px)';
+      setTimeout(() => el.remove(), 300); 
+    }, 3500);
   }
 
   function showConfirm(msg, opts = {}) {
     return new Promise(resolve => {
       const wrap = document.createElement('div');
       wrap.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1.2rem;opacity:0;transition:opacity 0.2s;backdrop-filter:blur(4px)';
+      
+      const isDanger = opts.okText?.toLowerCase().includes('hapus') || opts.okText?.toLowerCase().includes('keluar') || opts.okText?.toLowerCase().includes('reset') || opts.okText?.toLowerCase().includes('keluar');
+      const btnClass = isDanger ? 'btn-danger' : 'btn-primary';
+      const icon = isDanger ? '⚠️' : '❓';
+
       wrap.innerHTML = `
-        <div style="background:#fff;border-radius:16px;padding:1.6rem;max-width:420px;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.3)">
-          <h3 style="font-size:1.1rem;font-weight:800;color:#4A2E3F;margin-bottom:0.5rem">${esc(opts.title || 'Konfirmasi')}</h3>
-          <p style="font-size:0.88rem;color:#718096;line-height:1.5;margin-bottom:1.4rem;white-space:pre-line">${esc(msg)}</p>
-          <div style="display:flex;gap:0.5rem;justify-content:flex-end">
-            <button class="btn btn-ghost" data-act="cancel">${esc(opts.cancelText || 'Batal')}</button>
-            <button class="btn btn-primary" data-act="ok">${esc(opts.okText || 'Ya')}</button>
+        <div style="background:#fff;border-radius:16px;padding:1.6rem;max-width:420px;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.3); animation:fadeIn 0.2s">
+          <div style="font-size:2rem;margin-bottom:0.5rem;text-align:center">${icon}</div>
+          <h3 style="font-size:1.1rem;font-weight:800;color:#4A2E3F;margin-bottom:0.5rem;text-align:center">${esc(opts.title || 'Konfirmasi')}</h3>
+          <p style="font-size:0.88rem;color:#718096;line-height:1.5;margin-bottom:1.4rem;white-space:pre-line;text-align:center">${esc(msg)}</p>
+          <div style="display:flex;gap:0.5rem;justify-content:center">
+            <button class="btn btn-ghost" data-act="cancel" style="flex:1">${esc(opts.cancelText || 'Batal')}</button>
+            <button class="btn ${btnClass}" data-act="ok" style="flex:1">${esc(opts.okText || 'Ya')}</button>
           </div>
         </div>`;
       document.body.appendChild(wrap);
       requestAnimationFrame(() => wrap.style.opacity = '1');
+      
       const cleanup = v => {
         wrap.style.opacity = '0';
         setTimeout(() => wrap.remove(), 220);
         document.removeEventListener('keydown', onKey);
         resolve(v);
       };
+      
       const onKey = e => { if (e.key === 'Escape') cleanup(false); else if (e.key === 'Enter') cleanup(true); };
       document.addEventListener('keydown', onKey);
       wrap.querySelector('[data-act="ok"]').onclick = () => cleanup(true);
@@ -1282,7 +1320,6 @@ input[type=number]{-moz-appearance:textfield}
     scheduleAutoSave(tr.dataset.no);
     scheduleGlobalUpdate();
 
-    // Auto-advance via debounce 500ms
     if (inp._advTimer) clearTimeout(inp._advTimer);
     inp._advTimer = setTimeout(() => {
       inp._advTimer = null;
@@ -1906,13 +1943,16 @@ input[type=number]{-moz-appearance:textfield}
     const isQueue = d.cabang !== 'Lukis' && d.cabang !== 'LCP';
     const isTimer = d.cabang === 'Lukis';
     const isPhase = d.cabang === 'LCP';
+    
+    const currentTahap = getTahap(); 
+    const defaultPhaseLabel = currentTahap === 'final' ? 'Final' : 'Babak Penyisihan';
 
     $('#panggungContent').innerHTML = `
       <div class="dash-header" style="margin-bottom:1rem; padding:1.2rem">
         <div class="kicker">${esc(d.kode)}</div>
         <h2 style="font-size:1.2rem">${esc(d.label)}</h2>
         <p style="font-size:0.8rem;margin-top:0.4rem;opacity:0.9">
-          Kontrol status jalannya lomba. Perubahan akan langsung terlihat di layar pemantauan publik.
+          Kontrol status jalannya lomba. ${isPhase ? `<b>Otomatis mendeteksi: ${currentTahap === 'final' ? 'Babak Final' : 'Babak Penyisihan'}</b>` : ''}
         </p>
       </div>
 
@@ -1921,10 +1961,10 @@ input[type=number]{-moz-appearance:textfield}
       </div>
     `;
 
-    loadPanggungStatus(isQueue, isTimer, isPhase);
+    loadPanggungStatus(isQueue, isTimer, isPhase, currentTahap, defaultPhaseLabel);
   }
 
-  async function loadPanggungStatus(isQueue, isTimer, isPhase) {
+  async function loadPanggungStatus(isQueue, isTimer, isPhase, currentTahap, defaultPhaseLabel) {
     try {
       const res = await api('panggung_get', {}, { timeout: 15000 });
       if (res.error) throw new Error(res.message);
@@ -1973,15 +2013,34 @@ input[type=number]{-moz-appearance:textfield}
           </div>
         `;
       } else {
-        html += `
-          <div style="background:var(--surface-2);padding:1.5rem;border-radius:8px;margin-bottom:1.5rem;">
-            <div style="font-size:0.75rem;font-weight:700;color:var(--ink-light);text-transform:uppercase">Fase Saat Ini</div>
-            <div style="font-size:1.5rem;font-weight:800;color:var(--rose-deep);margin-top:0.4rem">${esc(p.phase_label || 'Belum diset')}</div>
+        // LCP Mode
+        const currentLabel = p.phase_label || defaultPhaseLabel;
+        
+        const quickFinalBtns = currentTahap === 'final' ? `
+          <div style="display:flex;gap:0.4rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Wajib Timing">📝 Wajib Timing</button>
+            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Lempar Rebut">🔄 Lempar Rebut</button>
+            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Rebutan">⚡ Rebutan</button>
           </div>
+        ` : '';
+
+        html += `
+          <div style="background:var(--surface-2);padding:1.5rem;border-radius:8px;margin-bottom:1rem;">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--ink-light);text-transform:uppercase">Fase Saat Ini di Layar</div>
+            <div style="font-size:1.5rem;font-weight:800;color:var(--rose-deep);margin-top:0.4rem">${esc(currentLabel)}</div>
+          </div>
+
+          ${quickFinalBtns}
+          
+          <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;align-items:center;">
+            <input type="text" id="inputPhaseLabel" class="input" value="${esc(currentLabel)}" style="max-width:250px" placeholder="Ketik label kustom...">
+            <button class="btn btn-ghost btn-sm" id="btnSetPhase" data-act="phase_set">💾 Set Label</button>
+          </div>
+
           <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-primary" data-act="mulai">▶ Mulai</button>
-            <button class="btn btn-accent" data-act="istirahat">⏸ Istirahat</button>
-            <button class="btn btn-warning" data-act="selesai">⏹ Selesai</button>
+            <button class="btn btn-primary" data-act="mulai">▶ Mulai / Lanjut</button>
+            <button class="btn btn-warning" data-act="istirahat">⏸ Istirahat</button>
+            <button class="btn btn-accent" data-act="selesai">⏹ Selesai</button>
           </div>
         `;
       }
@@ -1989,7 +2048,20 @@ input[type=number]{-moz-appearance:textfield}
       $('#panggungControls').innerHTML = html;
 
       $$('#panggungControls button[data-act]').forEach(btn => {
-        btn.onclick = () => doPanggungAction(btn.dataset.act, btn);
+        btn.onclick = () => {
+          const act = btn.dataset.act;
+          
+          if (act === 'phase_quick') {
+            const label = btn.dataset.label;
+            doPanggungAction('phase_set', btn, { phase_label: label });
+          } else if (act === 'phase_set') {
+            const val = $('#inputPhaseLabel').value.trim();
+            if (!val) return toast('Label fase tidak boleh kosong', 'error');
+            doPanggungAction(act, btn, { phase_label: val });
+          } else {
+            doPanggungAction(act, btn);
+          }
+        };
       });
 
     } catch (e) {
@@ -1997,18 +2069,20 @@ input[type=number]{-moz-appearance:textfield}
     }
   }
 
-  async function doPanggungAction(action, btn) {
-    if (!(await showConfirm(`Lakukan aksi: ${action.toUpperCase()}?`, { okText: 'Ya' }))) return;
+  async function doPanggungAction(action, btn, extraPayload = {}) {
+    const label = action === 'phase_set' ? 'mengubah fase' : `melakukan aksi: ${action.toUpperCase()}`;
+    if (!(await showConfirm(`Yakin ${label}?`, { okText: 'Ya' }))) return;
     
     const prev = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner" style="width:12px;height:12px"></span>';
 
     try {
-      const res = await api('panggung_update', { action_panggung: action }, { timeout: 20000 });
+      const payload = { action_panggung: action, ...extraPayload };
+      const res = await api('panggung_update', payload, { timeout: 20000 });
       if (res.error) throw new Error(res.message);
-      toast(res.message || 'Aksi berhasil', 'success');
       
+      toast(res.message || 'Aksi berhasil', 'success');
       renderPanggung();
     } catch (e) {
       toast('Gagal: ' + e.message, 'error');
@@ -2589,17 +2663,27 @@ input[type=number]{-moz-appearance:textfield}
       const benar = peny.benar ?? '';
       const skor = peny.skor ?? '';
       const jawaban = peny.jawaban || '';
+      
+      let initialChips = '';
+      if (jawaban.length > 0) {
+        initialChips = jawaban.split('').map((ch, i) => 
+          `<div class="jawab-chip filled">${i+1}:${ch}</div>`
+        ).join('');
+      }
+
       const hintTxt = jawaban
         ? `Tersimpan: ${benar}/25 benar · skor ${skor}`
         : 'Ketik 25 karakter (A/B/C/D atau - kosong)';
+        
       return `<tr data-no="${esc(r.No_Undian)}">
         <td class="l"><strong>${esc(r.No_Undian)}</strong>${!blind && r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
         <td>${esc(r.Kapanewon || '—')}</td>
-        <td>
+        <td style="padding: 10px 8px;">
           <input type="text" class="jawaban-input" data-key="jawaban" maxlength="25"
             value="${esc(jawaban)}" placeholder="ABCDABCDABCDABCDABCDABCDA"
             spellcheck="false" autocomplete="off" ${!penilaianBuka ? 'disabled' : ''}>
-          <div style="font-size:0.68rem;color:var(--ink-light);margin-top:2px" data-hint>${esc(hintTxt)}</div>
+          <div class="jawaban-preview" data-preview>${initialChips}</div>
+          <div style="font-size:0.68rem;color:var(--ink-light);margin-top:4px" data-hint>${esc(hintTxt)}</div>
         </td>
         <td style="font-weight:800;color:var(--rose-primary)" data-benar>${benar !== '' ? benar : '—'}</td>
         <td style="font-weight:800;color:var(--hijau)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
@@ -2618,7 +2702,7 @@ input[type=number]{-moz-appearance:textfield}
           <thead><tr>
             <th style="text-align:left">Regu</th>
             <th>Kapanewon</th>
-            <th>Jawaban (25 karakter)</th>
+            <th style="min-width: 200px;">Jawaban (25 karakter)</th>
             <th>Benar</th>
             <th>Skor</th>
           </tr></thead>
@@ -2633,11 +2717,23 @@ input[type=number]{-moz-appearance:textfield}
       inp.addEventListener('input', () => {
         let v = String(inp.value).toUpperCase().replace(/[^A-D-]/g, '').slice(0, 25);
         if (inp.value !== v) inp.value = v;
+        
+        const previewEl = inp.closest('tr').querySelector('[data-preview]');
+        if (previewEl) {
+          if (v.length === 0) {
+            previewEl.innerHTML = '';
+          } else {
+            previewEl.innerHTML = v.split('').map((ch, i) => 
+              `<div class="jawab-chip filled">${i+1}:${ch}</div>`
+            ).join('');
+          }
+        }
+
         scheduleGradePreview(inp);
       });
     });
 
-    function scheduleGradePreview(inp, delay = 500) {
+    function scheduleGradePreview(inp, delay = 600) {
       if (inp._gTimer) clearTimeout(inp._gTimer);
       inp._gTimer = setTimeout(async () => {
         inp._gTimer = null;
@@ -2646,6 +2742,7 @@ input[type=number]{-moz-appearance:textfield}
         const benarCell = tr.querySelector('[data-benar]');
         const skorCell = tr.querySelector('[data-skor]');
         const hintEl = tr.querySelector('[data-hint]');
+        const previewEl = tr.querySelector('[data-preview]');
 
         if (jawaban.length === 0) {
           benarCell.textContent = '—';
@@ -2662,9 +2759,19 @@ input[type=number]{-moz-appearance:textfield}
         try {
           const res = await api('grade_penyisihan', { jawaban }, { timeout: 15000 });
           if (res.error) throw new Error(res.message);
+          
           benarCell.textContent = String(res.benar);
           skorCell.textContent = String(res.skor);
           hintEl.textContent = `✓ ${res.benar}/25 benar · skor ${res.skor}`;
+          
+          if (previewEl && res.salah_indices) {
+            const salahSet = new Set(res.salah_indices);
+            previewEl.innerHTML = jawaban.split('').map((ch, i) => {
+              const isWrong = salahSet.has(i + 1);
+              return `<div class="jawab-chip ${isWrong ? 'wrong' : 'correct'}">${i+1}:${ch}</div>`;
+            }).join('');
+          }
+
         } catch (e) {
           benarCell.textContent = '⚠';
           skorCell.textContent = '—';
@@ -2730,7 +2837,6 @@ input[type=number]{-moz-appearance:textfield}
       }))
       .sort((a, b) => (b.skor - a.skor) || (b.tambahan - a.tambahan));
 
-    // Cek seri HANYA jika Skor DAN Tambahan sama persis
     const tieBoundary = ranked.length >= 6 && 
                         ranked[4].skor === ranked[5].skor && 
                         ranked[4].tambahan === ranked[5].tambahan;
@@ -2742,7 +2848,6 @@ input[type=number]{-moz-appearance:textfield}
       const isFinalis = finalis.has(r.no);
       const boundaryWarn = i === 4 || i === 5;
       
-      // Highlight kuning hanya jika BENAR-BENAR SERI
       const bgStyle = (boundaryWarn && tieBoundary) ? 'background:#FEF3C7' : (isFinalis ? 'background:#F0FDF4' : '');
       
       return `<tr style="${bgStyle}">
@@ -2817,6 +2922,17 @@ input[type=number]{-moz-appearance:textfield}
     { key: 'final_rebutan', label: 'Rebutan',      maxBenar: 10, mode: 'counter2' }
   ];
 
+  function buildCounterHtml(key, val, min, max) {
+    const strVal = (val === undefined || val === null || val === '') ? '' : String(val);
+    return `
+      <div class="counter-group">
+        <button type="button" class="counter-btn" data-act="minus" data-target="${key}">−</button>
+        <input type="number" class="counter-input" data-key="${key}" value="${esc(strVal)}" min="${min}" max="${max}">
+        <button type="button" class="counter-btn" data-act="plus" data-target="${key}">+</button>
+      </div>
+    `;
+  }
+
   function renderLcpFinal(tabKey = 'final_wajib') {
     showView('lcp-final');
     const d = State.dashboard;
@@ -2842,7 +2958,6 @@ input[type=number]{-moz-appearance:textfield}
     let tableHtml = '';
 
     if (tab.mode === 'counter') {
-      // Wajib Timing
       const maxBenar = tab.maxBenar;
       tableHtml = rows.map(r => {
         const fase = (r.fases || {})[tab.key] || {};
@@ -2851,8 +2966,8 @@ input[type=number]{-moz-appearance:textfield}
         return `<tr data-no="${esc(r.No_Undian)}">
           <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
           <td>${esc(r.Kapanewon || '—')}</td>
-          <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxBenar}" step="1" placeholder="0-${maxBenar}" ${!penilaianBuka ? 'disabled' : ''}></td>
-          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+          <td>${buildCounterHtml('benar', benar, 0, maxBenar)}</td>
+          <td style="font-weight:800;color:var(--rose-primary);font-size:1.1rem" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
         </tr>`;
       }).join('');
 
@@ -2873,7 +2988,6 @@ input[type=number]{-moz-appearance:textfield}
           </table>
         </div>`;
     } else if (tab.mode === 'wajib-rebut') {
-      // Lempar Rebut
       const maxSoal = tab.maxBenar * nFinalis;
       tableHtml = rows.map(r => {
         const fase = (r.fases || {})[tab.key] || {};
@@ -2893,9 +3007,9 @@ input[type=number]{-moz-appearance:textfield}
             <div class="wajib-preview" data-preview>${chips}</div>
             <div style="font-size:0.68rem;color:var(--ink-light);margin-top:2px">Wajib B: <strong data-wajib-count>${wajibB === '' ? '—' : wajibB}</strong>/7</div>
           </td>
-          <td><input type="number" class="lcp-input" data-key="rebut_b" value="${esc(rebutB)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
-          <td><input type="number" class="lcp-input" data-key="rebut_s" value="${esc(rebutS)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
-          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+          <td>${buildCounterHtml('rebut_b', rebutB, 0, maxSoal)}</td>
+          <td>${buildCounterHtml('rebut_s', rebutS, 0, maxSoal)}</td>
+          <td style="font-weight:800;color:var(--rose-primary);font-size:1.1rem" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
         </tr>`;
       }).join('');
 
@@ -2926,7 +3040,6 @@ input[type=number]{-moz-appearance:textfield}
           <span>Rebut attempts: <strong data-attempts>0</strong>/<span data-pool-max>0</span></span>
         </div>`;
     } else {
-      // Rebutan
       const maxSoal = tab.maxBenar;
       tableHtml = rows.map(r => {
         const fase = (r.fases || {})[tab.key] || {};
@@ -2936,9 +3049,9 @@ input[type=number]{-moz-appearance:textfield}
         return `<tr data-no="${esc(r.No_Undian)}">
           <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
           <td>${esc(r.Kapanewon || '—')}</td>
-          <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
-          <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
-          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+          <td>${buildCounterHtml('benar', benar, 0, maxSoal)}</td>
+          <td>${buildCounterHtml('salah', salah, 0, maxSoal)}</td>
+          <td style="font-weight:800;color:var(--rose-primary);font-size:1.1rem" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
         </tr>`;
       }).join('');
 
@@ -2975,6 +3088,25 @@ input[type=number]{-moz-appearance:textfield}
 
     $$('.lcp-tab').forEach(b => b.onclick = () => renderLcpFinal(b.dataset.tab));
 
+    $('#lcpFinalContent').addEventListener('click', e => {
+      const btn = e.target.closest('.counter-btn');
+      if (!btn) return;
+      
+      const group = btn.closest('.counter-group');
+      const inp = group.querySelector('.counter-input');
+      const min = parseInt(inp.getAttribute('min') || 0, 10);
+      const max = parseInt(inp.getAttribute('max') || 99, 10);
+      let val = parseInt(inp.value || 0, 10);
+      
+      if (isNaN(val)) val = 0;
+
+      if (btn.dataset.act === 'plus') val = Math.min(max, val + 1);
+      else if (btn.dataset.act === 'minus') val = Math.max(min, val - 1);
+      
+      inp.value = val;
+      inp.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+
     attachLiveUpdate(tab);
 
     $('#btnSaveLcpFinal').onclick = async e => {
@@ -2986,8 +3118,7 @@ input[type=number]{-moz-appearance:textfield}
         const no = tr.dataset.no;
         if (tab.mode === 'counter') {
           const benarRaw = tr.querySelector('[data-key="benar"]').value.trim();
-          const benar = benarRaw === '' ? NaN : Number(benarRaw);
-          if (!Number.isInteger(benar)) { errs.push(`${no}: benar harus bilangan bulat`); return; }
+          const benar = benarRaw === '' ? 0 : Number(benarRaw);
           if (benar < 0 || benar > tab.maxBenar) { errs.push(`${no}: benar 0-${tab.maxBenar}`); return; }
           payload.push({ No_Undian: no, benar, salah: 0 });
         } else if (tab.mode === 'wajib-rebut') {
@@ -3001,8 +3132,7 @@ input[type=number]{-moz-appearance:textfield}
           const wajibB = (wajibStrRaw.match(/B/g) || []).length;
           const rebutB = rebutBRaw === '' ? 0 : Number(rebutBRaw);
           const rebutS = rebutSRaw === '' ? 0 : Number(rebutSRaw);
-          if (!Number.isInteger(rebutB) || rebutB < 0) { errs.push(`${no}: rebut B harus ≥ 0`); return; }
-          if (!Number.isInteger(rebutS) || rebutS < 0) { errs.push(`${no}: rebut S harus ≥ 0`); return; }
+          
           payload.push({
             No_Undian: no,
             benar: wajibB + rebutB,
@@ -3014,10 +3144,9 @@ input[type=number]{-moz-appearance:textfield}
         } else {
           const benarRaw = tr.querySelector('[data-key="benar"]').value.trim();
           const salahRaw = tr.querySelector('[data-key="salah"]').value.trim();
-          const benar = benarRaw === '' ? NaN : Number(benarRaw);
+          const benar = benarRaw === '' ? 0 : Number(benarRaw);
           const salah = salahRaw === '' ? 0 : Number(salahRaw);
-          if (!Number.isInteger(benar)) { errs.push(`${no}: benar harus bilangan bulat`); return; }
-          if (!Number.isInteger(salah)) { errs.push(`${no}: salah harus bilangan bulat`); return; }
+          
           if (benar < 0 || benar > tab.maxBenar) { errs.push(`${no}: benar 0-${tab.maxBenar}`); return; }
           if (salah < 0 || salah > tab.maxBenar) { errs.push(`${no}: salah 0-${tab.maxBenar}`); return; }
           payload.push({ No_Undian: no, benar, salah });
@@ -3044,16 +3173,13 @@ input[type=number]{-moz-appearance:textfield}
 
       if (!(await showConfirm(`Simpan ${payload.length} regu untuk ${tab.label}?`, { okText: 'Simpan' }))) return;
 
-      const cleanPayload = payload.map(p => {
-        const out = { No_Undian: p.No_Undian, benar: p.benar, salah: p.salah };
-        return out;
-      });
+      const cleanPayload = payload.map(p => ({ No_Undian: p.No_Undian, benar: p.benar, salah: p.salah }));
 
       await guardAction('save_lcp_' + tab.key, async () => {
         const prevHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-        $$('#lcpFinalContent .lcp-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = true);
+        $$('#lcpFinalContent .counter-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = true);
         try {
           const res = await api('simpan_lcp', { fase: tab.key, rows: cleanPayload }, { timeout: 45000 });
           if (res.error) throw new Error(res.message);
@@ -3064,14 +3190,9 @@ input[type=number]{-moz-appearance:textfield}
             const target = State.dashboard.rows.find(x => x.No_Undian === p.No_Undian);
             if (target) {
               if (!target.fases) target.fases = {};
-              const enriched = {
-                benar: p.benar, salah: p.salah,
-                skor: p.benar * faseCfg[0] + p.salah * faseCfg[1]
-              };
+              const enriched = { benar: p.benar, salah: p.salah, skor: p.benar * faseCfg[0] + p.salah * faseCfg[1] };
               if (tab.mode === 'wajib-rebut') {
-                enriched.wajib_str = p._wajib_str;
-                enriched.rebut_b = p._rebut_b;
-                enriched.rebut_s = p._rebut_s;
+                enriched.wajib_str = p._wajib_str; enriched.rebut_b = p._rebut_b; enriched.rebut_s = p._rebut_s;
               }
               target.fases[tab.key] = enriched;
             }
@@ -3082,7 +3203,7 @@ input[type=number]{-moz-appearance:textfield}
         } catch (e) {
           toast('Gagal: ' + e.message, 'error');
           if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
-          $$('#lcpFinalContent .lcp-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = false);
+          $$('#lcpFinalContent .counter-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = false);
         }
       });
     };
@@ -3204,12 +3325,17 @@ input[type=number]{-moz-appearance:textfield}
     if (await showConfirm('Keluar dari portal pewara?', { okText: 'Keluar' })) doLogout();
   };
 
-  window.addEventListener('hashchange', e => {
+  window.addEventListener('hashchange', async e => {
     const newHash = (location.hash || '').slice(1);
     const current = State.currentView;
 
     if (current === 'input' && newHash !== 'input' && _dirtyRows.size > 0) {
-      const ok = window.confirm(`Ada ${_dirtyRows.size} baris belum disimpan. Yakin keluar?`);
+      const ok = await showConfirm(`Ada ${_dirtyRows.size} baris yang belum disimpan.\nYakin ingin keluar dan membuang perubahan?`, { 
+        title: 'Peringatan', 
+        okText: 'Ya, Keluar', 
+        cancelText: 'Tetap di Sini' 
+      });
+      
       if (!ok) {
         history.replaceState(null, '', '#input');
         return;
@@ -3234,6 +3360,23 @@ input[type=number]{-moz-appearance:textfield}
       e.preventDefault();
       e.returnValue = '';
       return '';
+    }
+  });
+
+  window.addEventListener('online', () => {
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.remove();
+    toast('Koneksi internet tersambung kembali.', 'success');
+  });
+
+  window.addEventListener('offline', () => {
+    toast('⚠️ KONEKSI TERPUTUS! Periksa WiFi/Data Anda.', 'error');
+    if (!document.getElementById('offlineBanner')) {
+      const banner = document.createElement('div');
+      banner.id = 'offlineBanner';
+      banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:var(--danger);color:#fff;text-align:center;padding:0.5rem;font-weight:800;z-index:99999;font-size:0.85rem;box-shadow:0 2px 10px rgba(0,0,0,0.2);';
+      banner.textContent = '⚠️ Mode Offline: Koneksi internet terputus. Data tidak akan tersimpan.';
+      document.body.appendChild(banner);
     }
   });
 
