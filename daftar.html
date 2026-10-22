@@ -821,6 +821,7 @@ a { color: inherit; text-decoration: none; }
   function renderDropdown(container, options, currentVal, onSelect, config = {}) {
     if (!container) return;
     const { searchable = false, placeholder = 'Pilih...', allowManual = false, manualText = 'Isi Manual' } = config;
+
     let filteredOptions = [...options];
 
     function buildHTML() {
