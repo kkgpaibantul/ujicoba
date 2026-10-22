@@ -187,7 +187,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .row-save-btn.dirty:hover{background:var(--rose-primary)}
 .row-save-btn.saving{background:var(--rose-light);color:var(--rose-primary);border-color:var(--rose-primary);animation:none}
 
-.input-cell{width:52px;height:36px;text-align:center;border:1.5px solid var(--border);border-radius:6px;background:#F9FAFB;font-weight:700;font-size:15px;font-family:'Plus Jakarta Sans',monospace;outline:none;transition:var(--trans);-webkit-appearance:none;font-variant-numeric:tabular-nums}
+.input-cell{width:68px;height:36px;text-align:center;border:1.5px solid var(--border);border-radius:6px;background:#F9FAFB;font-weight:700;font-size:14px;font-family:'Plus Jakarta Sans',monospace;outline:none;transition:var(--trans);-webkit-appearance:none;font-variant-numeric:tabular-nums}
 .input-cell:focus{border-color:var(--rose-primary);background:var(--surface);box-shadow:0 0 0 3px rgba(158,95,123,0.15);transform:scale(1.06);z-index:3;position:relative}
 .input-cell.filled{background:#EFF6FF;border-color:#93C5FD;color:#1e40af}
 .input-cell.invalid{border-color:var(--danger);background:var(--danger-light);color:var(--danger);animation:shake 0.3s}
@@ -262,7 +262,7 @@ input[type=number]{-moz-appearance:textfield}
 .seri-row .info strong{display:block;font-size:0.9rem}
 .seri-row .info small{font-size:0.75rem;color:var(--ink-light)}
 .seri-row .score{font-weight:800;font-size:1rem;color:var(--rose-primary)}
-.seri-row .rank-input{width:80px;padding:0.45rem;text-align:center;font-weight:800;font-size:1rem;border:1.5px solid var(--border);border-radius:6px}
+.seri-row .rank-input{width:110px;padding:0.45rem;text-align:center;font-weight:800;font-size:1rem;border:1.5px solid var(--border);border-radius:6px}
 
 .preview-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.65rem 1.2rem;display:flex;align-items:center;gap:0.5rem;justify-content:space-between;flex-shrink:0}
 .preview-toolbar .title{font-weight:800;font-size:0.9rem;color:var(--rose-deep);display:flex;align-items:center;gap:0.5rem}
@@ -319,7 +319,18 @@ input[type=number]{-moz-appearance:textfield}
 .lcp-table td .lcp-input{width:70px;padding:0.4rem;text-align:center;font-weight:800;font-size:0.95rem;border:1.5px solid var(--border);border-radius:6px}
 .lcp-table td .lcp-input:focus{outline:none;border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
 .lcp-table td .lcp-input:disabled{opacity:0.6;cursor:not-allowed}
-.lcp-table .jawaban-input{width:100%;max-width:400px;padding:0.5rem 0.75rem;text-align:center;font-family:monospace;font-weight:700;letter-spacing:0.2em;font-size:0.85rem;text-transform:uppercase;border:1.5px solid var(--border);border-radius:6px}
+.lcp-table td .wajib-string{width:120px;padding:0.4rem 0.6rem;text-align:center;font-family:'Courier New',monospace;font-weight:800;font-size:0.95rem;letter-spacing:0.15em;text-transform:uppercase;border:1.5px solid var(--border);border-radius:6px;background:#fff}
+.lcp-table td .wajib-string:focus{outline:none;border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
+.lcp-table td .wajib-string.invalid{border-color:var(--danger);background:var(--danger-light)}
+.wajib-preview{display:flex;gap:2px;justify-content:center;margin-top:3px}
+.wajib-chip{width:14px;height:14px;border-radius:3px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff;background:#CBD5E0}
+.wajib-chip.b{background:var(--hijau)}
+.wajib-chip.s{background:var(--danger)}
+.wajib-chip.empty{background:#E2E8F0}
+
+.pool-info{background:var(--gold-light);border:1px solid var(--gold);border-radius:var(--r-md);padding:0.6rem 0.9rem;font-size:0.78rem;color:#92400e;margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.8rem}
+.pool-info.error{background:var(--danger-light);border-color:var(--danger);color:#7f1d1d}
+.pool-info strong{font-weight:800}
 
 .tier-badge{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.7rem;font-weight:800}
 .tier-badge.t1{background:var(--gold);color:var(--rose-deep)}
@@ -333,11 +344,12 @@ input[type=number]{-moz-appearance:textfield}
   .module-grid{grid-template-columns:1fr 1fr}
   .card-grid{grid-template-columns:1fr}
   .table-wrap{max-height:calc(100vh - 320px)}
-  .input-cell{width:44px;height:34px;font-size:14px;min-height:38px}
+  .input-cell{width:58px;height:34px;font-size:13px;min-height:38px}
   .row-save-btn{width:32px;height:32px;font-size:14px}
   .save-bar button{min-width:auto;flex:1}
   .print-page{width:auto;min-height:auto;padding:12mm 8mm}
   .back-home-link{top:1rem;left:1rem}
+  .lcp-table td .wajib-string{width:100px;font-size:0.85rem}
 }
 @media (max-width: 480px){
   .autosave-indicator{bottom:76px;right:0.8rem;font-size:0.68rem}
@@ -421,7 +433,7 @@ input[type=number]{-moz-appearance:textfield}
   <div id="view-seri" class="view">
     <div class="appbar">
       <button class="back" onclick="window.location.hash='#dashboard'">←</button>
-      <h1>Keputusan Dewan Juri</h1>
+      <h1 id="seriTitle">Keputusan Seri</h1>
       <span class="spacer"></span>
     </div>
     <div class="content" id="seriContent"></div>
@@ -500,7 +512,6 @@ input[type=number]{-moz-appearance:textfield}
     currentView: 'login'
   };
 
-  /* Module-level state — declared ONCE */
   const _inflight = new Map();
   const _actionInflight = new Set();
   const _dirtyRows = new Set();
@@ -524,6 +535,22 @@ input[type=number]{-moz-appearance:textfield}
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
   const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /** Parse input decimal (terima koma & titik). Return NaN jika invalid. */
+  function parseInputNumber(raw) {
+    const s = String(raw == null ? '' : raw).trim().replace(',', '.');
+    if (s === '') return NaN;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  /** Parse integer (strict). Return NaN jika bukan integer. */
+  function parseIntegerInput(raw) {
+    const s = String(raw == null ? '' : raw).trim();
+    if (s === '') return NaN;
+    const n = Number(s);
+    return Number.isInteger(n) ? n : NaN;
+  }
 
   function toast(msg, type = 'info') {
     const wrap = $('#toastContainer');
@@ -750,9 +777,45 @@ input[type=number]{-moz-appearance:textfield}
   const isLcp = () => getCab() === 'LCP';
   const isBlind = () => !!((State.dashboard || {}).blind);
   const isPenilaianBuka = () => !!((State.dashboard || {}).penilaian_buka);
+  const getFinalisCount = () => ((State.dashboard || {}).finalis || []).length || 1;
 
   function stateBadgeHtml(state) {
     return `<span class="state-badge ${state}">${esc(state)}</span>`;
+  }
+
+  /**
+   * Deteksi seri — unified helper untuk semua mode.
+   *  - 'std'                    : non-LCP tie → edit nilai juri via modal
+   *  - 'lcp-penyisihan-tambahan': LCP penyisihan tie batas 5 besar → input skor tambahan
+   *  - 'lcp-final-tambahan'     : LCP final tie → input skor tambahan final
+   */
+  function getSeriInfo(d) {
+    if (!d) return { list: [], mode: 'none', label: 'Keputusan Seri' };
+
+    if (isLcp()) {
+      if (d.tahap === 'final') {
+        const grup = d.grup_tambahan_final || [];
+        return {
+          list: grup,
+          mode: 'lcp-final-tambahan',
+          label: 'Soal Tambahan Final',
+          desc: 'Skor tambahan penentu juara (pure objektif)'
+        };
+      }
+      const grup = d.seri_perbatasan ? (d.grup_tambahan || []) : [];
+      return {
+        list: grup,
+        mode: 'lcp-penyisihan-tambahan',
+        label: 'Soal Tambahan',
+        desc: 'Skor tambahan penentu batas 5 besar'
+      };
+    }
+    return {
+      list: d.seri_belum_putus || [],
+      mode: 'std',
+      label: 'Koreksi Nilai (Seri)',
+      desc: 'Edit nilai juri untuk pecahkan seri'
+    };
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -770,7 +833,7 @@ input[type=number]{-moz-appearance:textfield}
     const totalPeserta = (d.rows || []).length;
     const lengkap = (d.rows || []).filter(r => isRowComplete(r)).length;
     const masalah = d.masalah || [];
-    const seri = d.seri_belum_putus || [];
+    const seriInfo = getSeriInfo(d);
     const penilaianBuka = isPenilaianBuka();
 
     const modules = buildModules(state);
@@ -795,8 +858,13 @@ input[type=number]{-moz-appearance:textfield}
     if (masalah.length) {
       warnings += `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>${masalah.length} masalah:</strong> ${masalah.slice(0,3).map(esc).join(' · ')}${masalah.length>3?'...':''}</div></div>`;
     }
-    if (seri.length) {
-      warnings += `<div class="warn-banner info"><span class="icon">⚖️</span><div>Ada seri belum diputuskan: <strong>${seri.map(esc).join(', ')}</strong></div></div>`;
+    if (seriInfo.list.length) {
+      const labelTxt = seriInfo.mode === 'std'
+        ? 'Seri belum diputuskan — koreksi nilai via menu:'
+        : seriInfo.mode === 'lcp-final-tambahan'
+          ? 'Seri di final — input soal tambahan:'
+          : 'Seri batas 5 besar — input soal tambahan:';
+      warnings += `<div class="warn-banner info"><span class="icon">⚖️</span><div>${labelTxt} <strong>${seriInfo.list.map(esc).join(', ')}</strong></div></div>`;
     }
 
     $('#dashContent').innerHTML = `
@@ -817,10 +885,11 @@ input[type=number]{-moz-appearance:textfield}
     const isDraft = state === 'draft';
     const isSidang = state === 'sidang';
     const penilaianBuka = isPenilaianBuka();
+    const seriInfo = getSeriInfo(State.dashboard);
 
     const canInput = (isDraft || isSidang) && penilaianBuka && !isLcp();
     const canKehadiran = (isDraft || isSidang) && penilaianBuka;
-    const canSeri = (isDraft || isSidang) && (State.dashboard.seri_belum_putus || []).length > 0;
+    const canSeri = (isDraft || isSidang) && seriInfo.list.length > 0;
     const canPrint = state !== 'draft';
 
     const canLcpPenyisihan = isLcp() && isDraft && getTahap() === 'penyisihan' && penilaianBuka;
@@ -831,7 +900,7 @@ input[type=number]{-moz-appearance:textfield}
     if (!isLcp()) {
       mod.push({
         route: 'input', icon: '📝', title: 'Input Nilai',
-        desc: `${getKriteria().length} kriteria × ${getJuriList().length} juri`,
+        desc: `${getKriteria().length} kriteria × ${getJuriList().length} juri · desimal didukung`,
         disabled: !canInput
       });
     }
@@ -841,8 +910,8 @@ input[type=number]{-moz-appearance:textfield}
       disabled: !canKehadiran
     });
     mod.push({
-      route: 'seri', icon: '⚖️', title: 'Keputusan Seri',
-      desc: 'Putuskan peringkat saat seri',
+      route: 'seri', icon: '⚖️', title: seriInfo.label,
+      desc: seriInfo.desc,
       disabled: !canSeri
     });
     mod.push({
@@ -890,6 +959,30 @@ input[type=number]{-moz-appearance:textfield}
         </div>
       </div>`;
     }
+
+    // LCP penyisihan: tidak ada tombol lock (harus lewat Tetapkan Finalis dulu)
+    if (isLcp() && getTahap() === 'penyisihan') {
+      return `<div class="transition-bar">
+        <div class="info">
+          <strong>🏆 Lanjut ke Finalis</strong>
+          <span>Setelah input penyisihan lengkap & seri terpecahkan, buka menu <b>Tetapkan Finalis</b>.</span>
+        </div>
+      </div>`;
+    }
+
+    // LCP final dengan seri belum putus: blokir finalisasi
+    if (isLcp() && getTahap() === 'final' && state === 'sidang') {
+      const seriInfo = getSeriInfo(State.dashboard);
+      if (seriInfo.list.length) {
+        return `<div class="transition-bar">
+          <div class="info">
+            <strong>⚖️ Seri Belum Putus</strong>
+            <span>Selesaikan soal tambahan (${seriInfo.list.map(esc).join(', ')}) sebelum finalisasi.</span>
+          </div>
+        </div>`;
+      }
+    }
+
     const map = {
       draft:  { icon: '🔒', title: 'Kunci Nilai', desc: 'Kunci semua nilai dan lanjut ke tahap sidang', btn: 'Kunci Nilai', variant: 'btn-primary', action: 'lock' },
       locked: { icon: '📋', title: 'Buka Sidang', desc: 'Buka sesi sidang untuk koreksi dan keputusan', btn: 'Buka Sidang', variant: 'btn-warning', action: 'sidang_open' },
@@ -948,7 +1041,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §8 INPUT TABLE
+   * §8 INPUT TABLE (Non-LCP, decimal support)
    * ══════════════════════════════════════════════════════════════ */
   function renderInput() {
     showView('input');
@@ -1024,7 +1117,10 @@ input[type=number]{-moz-appearance:textfield}
 
     const groupCols = juri.map((j, idx) => `<th class="th-juri th-juri-${idx+1}" colspan="${crit.length}">Juri ${j.Urutan} — ${esc(j.Nama)}</th>`).join('');
     const critCols = juri.map((j, idx) =>
-      crit.map(c => `<th class="th-juri-${idx+1}">${esc(c.key)}<br><small style="font-weight:500;font-size:9px;opacity:0.75">/${c.max}</small></th>`).join('')
+      crit.map(c => {
+        const min = (c.min === undefined || c.min === 0) ? '' : `${c.min}–`;
+        return `<th class="th-juri-${idx+1}" title="${esc(c.label)} (${min}${c.max})">${esc(c.key)}<br><small style="font-weight:500;font-size:9px;opacity:0.75">/${c.max}</small></th>`;
+      }).join('')
     ).join('');
 
     const header = `
@@ -1051,9 +1147,10 @@ input[type=number]{-moz-appearance:textfield}
         return crit.map(c => {
           const val = jv[c.key];
           const strVal = (val === undefined || val === null) ? '' : String(val);
-          const maxLen = String(c.max).length;
+          // +3 untuk ".XX" desimal (max=30 → "30.99" = 5 chars)
+          const maxLen = String(c.max).length + 3;
           const filled = strVal !== '';
-          return `<td><input class="input-cell${filled ? ' filled' : ''}" type="text" inputmode="numeric" maxlength="${maxLen}"
+          return `<td><input class="input-cell${filled ? ' filled' : ''}" type="text" inputmode="decimal" maxlength="${maxLen}"
             data-juri="${j.Urutan}" data-key="${c.key}" data-max="${c.max}" data-min="${c.min || 0}"
             value="${esc(strVal)}" autocomplete="off"></td>`;
         }).join('');
@@ -1138,26 +1235,38 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   function handleCellInput(inp) {
-    let v = String(inp.value).replace(/[^0-9.]/g, '');
+    // Normalisasi: terima koma & titik
+    let v = String(inp.value).replace(/[^0-9.,]/g, '');
+    v = v.replace(/,/g, '.');
+
+    // Batasi 1 titik
     const parts = v.split('.');
     if (parts.length > 2) v = parts[0] + '.' + parts.slice(1).join('');
+
+    // Batasi 2 desimal
+    const parts2 = v.split('.');
+    if (parts2[1] && parts2[1].length > 2) {
+      v = parts2[0] + '.' + parts2[1].slice(0, 2);
+    }
 
     const max = parseFloat(inp.dataset.max);
     const min = parseFloat(inp.dataset.min || 0);
 
-    if (v !== '' && v !== '.') {
+    // Clamp (skip jika diakhiri titik, user masih ketik)
+    if (v !== '' && v !== '.' && !v.endsWith('.')) {
       const n = parseFloat(v);
       if (!isNaN(n)) {
         if (n > max) v = String(max);
-        if (n < min) v = String(min);
+        else if (n < min) v = String(min);
       }
     }
+
     if (inp.value !== v) inp.value = v;
 
     inp.classList.toggle('filled', v !== '');
     inp.classList.remove('invalid');
 
-    if (v !== '' && v !== '.') {
+    if (v !== '' && v !== '.' && !v.endsWith('.')) {
       const n = parseFloat(v);
       if (isNaN(n) || n < min || n > max) inp.classList.add('invalid');
     }
@@ -1339,7 +1448,7 @@ input[type=number]{-moz-appearance:textfield}
         if (!inp) return;
         const raw = inp.value.trim();
         if (raw === '') return;
-        const n = parseFloat(raw);
+        const n = parseInputNumber(raw);
         const min = c.min || 0;
         if (isNaN(n) || n < min || n > c.max) {
           if (!partialErr) partialErr = `${c.label} J${j.Urutan}: ${raw} invalid (${min}-${c.max})`;
@@ -1450,7 +1559,7 @@ input[type=number]{-moz-appearance:textfield}
           if (!inp) return;
           const raw = inp.value.trim();
           if (raw === '') return;
-          const n = parseFloat(raw);
+          const n = parseInputNumber(raw);
           const min = c.min || 0;
           if (isNaN(n) || n < min || n > c.max) {
             errs.push(`${no} J${j.Urutan} ${c.label}: ${raw} invalid`);
@@ -1699,6 +1808,7 @@ input[type=number]{-moz-appearance:textfield}
       const st = r.Status_Kehadiran || 'belum';
       const cls = st === 'hadir' ? 'hadir' : (st === 'tidak_hadir' ? 'tidak_hadir' : (st === 'diskualifikasi' ? 'diskualifikasi' : ''));
       const penalty = num(r.Penalti);
+      const isLate = st === 'hadir' && penalty > 0;
       const labelMap = { belum: 'Belum', hadir: 'Hadir', tidak_hadir: 'Tidak Hadir', diskualifikasi: 'Diskualifikasi' };
       return `<div class="peserta-card ${cls}" data-no="${esc(r.No_Undian)}">
         <div class="head">
@@ -1706,7 +1816,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="info">
             ${blind ? '<strong>🔒 Blind</strong>' : `<strong>${esc(r.Nama_Siswa || '')}</strong><small>${esc(r.Kapanewon || '')}</small>`}
           </div>
-          <span class="status-chip ${st}">${labelMap[st] || st}</span>
+          <span class="status-chip ${isLate ? 'terlambat' : st}">${labelMap[st] || st}${isLate ? ' ⏱' : ''}</span>
         </div>
         ${penalty > 0 ? `<div style="font-size:0.78rem;color:var(--danger);font-weight:700">⚠ Penalti: -${penalty} poin</div>` : ''}
         <div class="actions">
@@ -1757,79 +1867,345 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §14 SERI
+   * §14 SERI — 2 modes (std → edit juri, lcp → soal tambahan)
    * ══════════════════════════════════════════════════════════════ */
   function renderSeri() {
     showView('seri');
     const d = State.dashboard;
     if (!d) return;
-    const seri = d.seri_belum_putus || [];
-    const rows = d.rows || [];
+    const seriInfo = getSeriInfo(d);
 
-    if (!seri.length) {
-      $('#seriContent').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-light)">✓ Tidak ada seri yang perlu diputuskan</div>';
+    $('#seriTitle').textContent = seriInfo.label;
+
+    if (!seriInfo.list.length) {
+      $('#seriContent').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--ink-light)">✓ Tidak ada seri yang perlu diselesaikan</div>';
       return;
     }
+
+    if (seriInfo.mode === 'std') return renderSeriEditNilai(d, seriInfo);
+    return renderSeriTambahanLcp(d, seriInfo);
+  }
+
+  /** Non-LCP seri: edit nilai juri (bukan manual rank) */
+  function renderSeriEditNilai(d, seriInfo) {
+    const seri = seriInfo.list;
+    const rows = d.rows || [];
+    const juri = getJuriList();
+    const crit = getKriteria();
+    const state = getState();
+    const penilaianBuka = isPenilaianBuka();
+    const blind = isBlind();
+
+    const editable = ['draft', 'sidang'].includes(state) && penilaianBuka;
+
+    let stateNote = '';
+    if (!penilaianBuka) {
+      stateNote = 'Penilaian belum dibuka — koreksi dinonaktifkan.';
+    } else if (state === 'locked') {
+      stateNote = 'Status LOCKED. Buka <b>Sidang</b> terlebih dahulu untuk koreksi nilai.';
+    } else if (state === 'final') {
+      stateNote = 'Status FINAL — nilai permanen, tidak dapat diubah.';
+    } else if (state === 'sidang') {
+      stateNote = 'Status SIDANG — dewan juri dapat mengoreksi nilai juri.';
+    }
+
+    const juriHeaders = juri.map(j => `<th title="${esc(j.Nama || '')}">J${j.Urutan}</th>`).join('');
 
     const seriRows = seri.map(no => {
       const r = rows.find(x => x.No_Undian === no);
       if (!r) return '';
-      const score = isLcp() ? num(r.total_final) : num(r.Total);
-      return `<div class="seri-row" data-no="${esc(no)}">
-        <span class="nomor">${esc(no)}</span>
-        <div class="info">
-          <strong>${esc(r.Nama_Siswa || '—')}</strong>
-          <small>${esc(r.Kapanewon || '')}</small>
-        </div>
-        <span class="score">${score.toFixed(2)}</span>
-        <input type="number" class="rank-input" placeholder="Peringkat" min="1" max="99" data-no="${esc(no)}" />
-      </div>`;
+      const nilai = r.nilai || {};
+
+      const juriCells = juri.map(j => {
+        const jv = nilai[j.Urutan] || {};
+        const filled = crit.every(c =>
+          jv[c.key] !== '' && jv[c.key] !== undefined && jv[c.key] !== null
+        );
+        if (!filled) return `<td style="text-align:center;color:var(--ink-light)">—</td>`;
+        const total = crit.reduce((s, c) => s + (parseFloat(jv[c.key]) || 0), 0);
+        return `<td style="text-align:center;font-weight:700">${total.toFixed(2)}</td>`;
+      }).join('');
+
+      const rata = num(r.Total);
+
+      return `<tr data-no="${esc(no)}">
+        <td class="l">
+          <strong>${esc(no)}</strong>
+          ${!blind ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa || '')}</div>` : ''}
+        </td>
+        ${!blind ? `<td style="text-align:left;font-size:0.82rem">${esc(r.Kapanewon || '—')}</td>` : ''}
+        ${juriCells}
+        <td style="font-weight:800;color:var(--rose-primary);font-size:1rem">${rata.toFixed(2)}</td>
+        <td style="text-align:center">
+          ${editable
+            ? `<button class="btn btn-ghost btn-sm" data-edit="${esc(no)}" style="padding:0.3rem 0.6rem;font-size:0.72rem">✏️ Edit</button>`
+            : '<span style="color:var(--ink-light);font-size:0.75rem">—</span>'}
+        </td>
+      </tr>`;
     }).join('');
 
-    const manualKep = d.keputusan_manual || {};
     $('#seriContent').innerHTML = `
       <div class="warn-banner info">
         <span class="icon">⚖️</span>
-        <div><strong>Seri terdeteksi</strong> — ${seri.length} peserta memiliki nilai sama. Putuskan peringkat sesuai musyawarah dewan juri.</div>
+        <div>
+          <strong>Seri terdeteksi</strong> — ${seri.length} peserta memiliki nilai rata-rata identik.
+          ${stateNote}
+        </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:0.6rem">${seriRows}</div>
-      <button class="btn btn-primary btn-block" id="btnSaveSeri" style="margin-top:0.5rem">💾 Simpan Keputusan</button>`;
+      <div class="table-wrap">
+        <table class="lcp-table">
+          <thead><tr>
+            <th style="text-align:left">Peserta</th>
+            ${!blind ? '<th style="text-align:left">Kapanewon</th>' : ''}
+            ${juriHeaders}
+            <th>Rata²</th>
+            <th>Aksi</th>
+          </tr></thead>
+          <tbody>${seriRows}</tbody>
+        </table>
+      </div>
+      ${editable ? `<div style="font-size:0.78rem;color:var(--ink-light);margin-top:0.6rem">
+        ⓘ Edit nilai juri yang dianggap kurang tepat. Rata-rata dihitung ulang otomatis setelah simpan.
+      </div>` : ''}`;
 
-    $$('.rank-input').forEach(inp => {
-      const no = inp.dataset.no;
-      if (manualKep[no] !== undefined) inp.value = manualKep[no];
+    if (!editable) return;
+
+    $$('[data-edit]').forEach(btn => {
+      btn.onclick = () => openEditNilaiModal(btn.dataset.edit, d);
+    });
+  }
+
+  /** Modal edit nilai juri untuk memecahkan seri non-LCP */
+  function openEditNilaiModal(noUndian, d) {
+    const rows = d.rows || [];
+    const r = rows.find(x => x.No_Undian === noUndian);
+    if (!r) return toast('Peserta tidak ditemukan', 'error');
+
+    const juri = getJuriList();
+    const crit = getKriteria();
+    const nilai = r.nilai || {};
+
+    const juriForms = juri.map(j => {
+      const jv = nilai[j.Urutan] || {};
+      const inputs = crit.map(c => {
+        const val = (jv[c.key] === undefined || jv[c.key] === null) ? '' : String(jv[c.key]);
+        const min = c.min === undefined ? 0 : c.min;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;margin-bottom:0.3rem">
+          <label style="font-size:0.78rem;flex:1;color:var(--ink)">
+            ${esc(c.label)}
+            <span style="color:var(--ink-light);font-size:0.68rem">(${min}–${c.max})</span>
+          </label>
+          <input type="text" inputmode="decimal" class="input" style="width:100px;padding:0.35rem 0.5rem;font-size:0.85rem"
+            data-juri="${j.Urutan}" data-key="${c.key}"
+            data-max="${c.max}" data-min="${min}"
+            value="${esc(val)}" />
+        </div>`;
+      }).join('');
+      const hasAny = crit.some(c => jv[c.key] !== undefined && jv[c.key] !== null && jv[c.key] !== '');
+      return `<div style="background:${hasAny ? 'var(--surface-2)' : '#FEF3C7'};border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.55rem">
+        <div style="font-weight:800;font-size:0.82rem;margin-bottom:0.4rem;color:var(--rose-deep)">
+          Juri ${j.Urutan} · ${esc(j.Nama || '(tanpa nama)')}
+          ${!hasAny ? '<span style="font-size:0.68rem;color:#92400e;font-weight:600"> · belum dinilai</span>' : ''}
+        </div>
+        ${inputs}
+      </div>`;
+    }).join('');
+
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity 0.2s;backdrop-filter:blur(4px)';
+    wrap.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:1.3rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.3)">
+        <h3 style="font-size:1.05rem;font-weight:800;color:#4A2E3F;margin-bottom:0.15rem">Edit Nilai — ${esc(noUndian)}</h3>
+        <p style="font-size:0.8rem;color:#718096;margin-bottom:0.9rem">
+          ${isBlind() ? '🔒 Blind mode' : esc(r.Nama_Siswa || '') + ' · ' + esc(r.Kapanewon || '')}
+        </p>
+        ${juriForms}
+        <div style="font-size:0.72rem;color:var(--ink-light);margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--border)">
+          ⓘ Hanya juri yang lengkap yang akan dikirim. Perubahan tercatat di log.
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem">
+          <button class="btn btn-ghost" data-act="cancel">Batal</button>
+          <button class="btn btn-primary" data-act="save">💾 Simpan</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(wrap);
+    requestAnimationFrame(() => wrap.style.opacity = '1');
+
+    const cleanup = () => {
+      wrap.style.opacity = '0';
+      setTimeout(() => wrap.remove(), 220);
+    };
+
+    // Normalisasi input desimal
+    wrap.querySelectorAll('input[data-juri]').forEach(inp => {
+      inp.addEventListener('input', () => {
+        let v = String(inp.value).replace(/[^0-9.,]/g, '').replace(/,/g, '.');
+        const parts = v.split('.');
+        if (parts.length > 2) v = parts[0] + '.' + parts.slice(1).join('');
+        if (parts[1] && parts[1].length > 2) v = parts[0] + '.' + parts[1].slice(0, 2);
+        if (inp.value !== v) inp.value = v;
+      });
     });
 
-    $('#btnSaveSeri').onclick = async e => {
-      const btn = e.currentTarget;
-      const payload = [];
-      let valid = true;
-      $$('.rank-input').forEach(inp => {
-        const v = inp.value.trim();
-        if (v === '') { valid = false; inp.style.borderColor = 'var(--danger)'; }
-        else {
-          const n = parseInt(v, 10);
-          if (isNaN(n) || n < 1 || n > 99) { valid = false; inp.style.borderColor = 'var(--danger)'; }
-          else payload.push({ No_Undian: inp.dataset.no, Peringkat: n });
+    wrap.querySelector('[data-act="cancel"]').onclick = cleanup;
+    wrap.addEventListener('click', e => { if (e.target === wrap) cleanup(); });
+
+    wrap.querySelector('[data-act="save"]').onclick = async e => {
+      const saveBtn = e.currentTarget;
+      const juriData = {};
+      let errMsg = '';
+
+      juri.forEach(j => {
+        const vals = {};
+        let filled = 0;
+        crit.forEach(c => {
+          const inp = wrap.querySelector(`[data-juri="${j.Urutan}"][data-key="${c.key}"]`);
+          if (!inp) return;
+          inp.style.borderColor = '';
+          const raw = inp.value.trim();
+          if (raw === '') return;
+          const n = parseInputNumber(raw);
+          const min = c.min === undefined ? 0 : c.min;
+          if (isNaN(n) || n < min || n > c.max) {
+            if (!errMsg) errMsg = `Juri ${j.Urutan} · ${c.label}: harus ${min}–${c.max}`;
+            inp.style.borderColor = 'var(--danger)';
+            return;
+          }
+          vals[c.key] = n;
+          filled++;
+        });
+        if (filled === crit.length) juriData[j.Urutan] = vals;
+        else if (filled > 0 && !errMsg) {
+          errMsg = `Juri ${j.Urutan}: ${filled}/${crit.length} kriteria terisi`;
         }
       });
-      if (!valid) return toast('Semua peringkat harus diisi angka 1-99', 'error');
-      if (!payload.length) return toast('Tidak ada keputusan', 'error');
 
-      if (!(await showConfirm(`Simpan ${payload.length} keputusan?`, { okText: 'Simpan' }))) return;
+      if (errMsg) return toast(errMsg, 'error');
+      const juriCount = Object.keys(juriData).length;
+      if (!juriCount) return toast('Tidak ada nilai lengkap untuk disimpan', 'error');
 
-      await guardAction('save_seri', async () => {
+      const payload = Object.entries(juriData).map(([j, vals]) => ({
+        No_Undian: noUndian,
+        juri: parseInt(j, 10),
+        ...vals
+      }));
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+      try {
+        const res = await api('simpan_nilai', { rows: payload }, { timeout: 30000 });
+        if (res.error) throw new Error(res.message);
+
+        const target = (State.dashboard.rows || []).find(x => x.No_Undian === noUndian);
+        if (target) {
+          if (!target.nilai) target.nilai = {};
+          payload.forEach(p => {
+            const total = crit.reduce((s, c) => s + (p[c.key] || 0), 0);
+            target.nilai[p.juri] = { K1: p.K1, K2: p.K2, K3: p.K3, K4: p.K4, Total: total };
+          });
+        }
+
+        toast(res.message || 'Nilai tersimpan', 'success');
+        cleanup();
+        await loadDashboard(true);
+
+        const newInfo = getSeriInfo(State.dashboard);
+        if (!newInfo.list.length) {
+          toast('✓ Seri terpecahkan — siap finalisasi', 'success');
+        } else {
+          toast('Masih ada seri — koreksi lagi jika perlu', 'info');
+        }
+        renderSeri();
+      } catch (err) {
+        toast('Gagal: ' + (err.message || 'Network error'), 'error');
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '💾 Simpan';
+      }
+    };
+  }
+
+  /** LCP tie (penyisihan / final): soal tambahan kumulatif */
+  function renderSeriTambahanLcp(d, seriInfo) {
+    const rows = d.rows || [];
+    const grup = seriInfo.list;
+    const isFinal = seriInfo.mode === 'lcp-final-tambahan';
+    const title = isFinal ? 'Soal Tambahan · Final LCP' : 'Soal Tambahan · Batas 5 Besar';
+    const fase = isFinal ? 'final_tambahan' : 'tambahan';
+    const fieldKey = isFinal ? 'skor_tambahan_final' : 'skor_tambahan';
+
+    const body = grup.map(no => {
+      const r = rows.find(x => x.No_Undian === no);
+      if (!r) return '';
+      const curTambahan = num(r[fieldKey]);
+      const peny = num(r.skor_penyisihan);
+      const fin = num(r.total_final);
+      const base = isFinal ? fin : peny;
+      return `<div class="seri-row" data-no="${esc(no)}" style="grid-template-columns:auto 1fr auto auto auto;">
+        <span class="nomor">${esc(no)}</span>
+        <div class="info">
+          <strong>${esc(r.Nama_Siswa || '—')}</strong>
+          <small>${esc(r.Kapanewon || '—')} · Penyisihan ${peny.toFixed(0)} · Final ${fin.toFixed(0)}</small>
+        </div>
+        <span class="score" style="color:var(--ink-light);font-size:0.85rem">Tambahan saat ini: <strong>${curTambahan.toFixed(0)}</strong></span>
+        <input type="number" class="rank-input" placeholder="Skor" min="0" max="5000" step="1"
+          data-no="${esc(no)}" value="${curTambahan > 0 ? curTambahan : ''}" />
+        <span class="score">${(base + curTambahan).toFixed(0)}</span>
+      </div>`;
+    }).join('');
+
+    $('#seriContent').innerHTML = `
+      <div class="warn-banner info">
+        <span class="icon">⚖️</span>
+        <div>
+          <strong>${title}</strong> — ${grup.length} tim memiliki skor & tiebreak identik.
+          Input <b>skor total tambahan</b> (kumulatif dari semua round soal tambahan).
+          Simpan → sistem re-check. Jika masih seri, panel ini muncul lagi untuk round berikutnya.
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem">${body}</div>
+      <div style="font-size:0.78rem;color:var(--ink-light);margin-top:0.5rem">
+        ⓘ Input skor kumulatif (bukan delta). Contoh: round 1 tambah 100, round 2 tambah 100 → input 200.
+      </div>
+      <button class="btn btn-primary btn-block" id="btnSaveTambahan" style="margin-top:0.5rem">💾 Simpan Skor Tambahan</button>`;
+
+    $('#btnSaveTambahan').onclick = async e => {
+      const btn = e.currentTarget;
+      const payload = [];
+      let err = null;
+      $$('.seri-row .rank-input').forEach(inp => {
+        const raw = inp.value.trim();
+        if (raw === '') { if (!err) err = `${inp.dataset.no}: skor tambahan belum diisi`; return; }
+        const n = parseIntegerInput(raw);
+        if (isNaN(n) || n < 0 || n > 5000) {
+          if (!err) err = `${inp.dataset.no}: skor tambahan harus bilangan bulat 0-5000`;
+          return;
+        }
+        payload.push({ No_Undian: inp.dataset.no, skor: n });
+      });
+      if (err) return toast(err, 'error');
+      if (!payload.length) return toast('Belum ada skor', 'error');
+      if (!(await showConfirm(`Simpan skor tambahan untuk ${payload.length} tim?`, { okText: 'Simpan' }))) return;
+
+      await guardAction('save_tambahan_lcp_' + fase, async () => {
         const prevHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
         try {
-          const res = await api('simpan_keputusan_seri', { rows: payload, tahap: getTahap() }, { timeout: 30000 });
+          const res = await api('simpan_lcp', { fase, rows: payload }, { timeout: 30000 });
           if (res.error) throw new Error(res.message);
-          toast(res.message || 'Tersimpan', 'success');
+          toast(res.message || 'Skor tambahan tersimpan', 'success');
           await loadDashboard(true);
-          renderSeri();
-        } catch (err) {
-          toast('Gagal: ' + err.message, 'error');
+          const newInfo = getSeriInfo(State.dashboard);
+          if (!newInfo.list.length) {
+            toast('✓ Seri terpecahkan! Lanjut ke tahap berikutnya.', 'success');
+            location.hash = '#dashboard';
+          } else {
+            renderSeri();
+          }
+        } catch (err2) {
+          toast('Gagal: ' + err2.message, 'error');
           if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
         }
       });
@@ -1877,7 +2253,7 @@ input[type=number]{-moz-appearance:textfield}
         <h3 style="font-size:11pt;margin:14px 0 8px;color:#4A2E3F">PENYISIHAN</h3>
         ${buildBaTable(d.penyisihan || [], ['No_Undian','Nama_Siswa','Kapanewon','Penyisihan','Tambahan','Total','Rank'])}
         <h3 style="font-size:11pt;margin:14px 0 8px;color:#4A2E3F">FINAL</h3>
-        ${buildBaTable(d.final || [], ['No_Undian','Nama_Siswa','Kapanewon','Final_Wajib','Final_Lempar','Final_Rebutan','Total','Rank','Peringkat'])}`;
+        ${buildBaTable(d.final || [], ['No_Undian','Nama_Siswa','Kapanewon','Final_Wajib','Final_Lempar','Final_Rebutan','Tambahan_Final','Total','Rank','Peringkat'])}`;
     } else {
       const cols = ['No_Undian','Nama_Siswa','Kapanewon'];
       juri.forEach((j, idx) => cols.push('J' + (idx+1)));
@@ -1964,17 +2340,32 @@ input[type=number]{-moz-appearance:textfield}
     const tanggal = acara.tanggal_teks || acara.tanggal || '';
     const tempat = acara.tempat || '';
 
+    const statusLabel = {
+      belum: 'Belum',
+      hadir: 'Hadir',
+      tidak_hadir: 'Tidak Hadir',
+      diskualifikasi: 'Diskualifikasi'
+    };
+
     const body = peserta.map((p, i) => {
       const anggota = [p.Anggota_2, p.Anggota_3].filter(Boolean);
+      const st = p.Status_Kehadiran || 'belum';
+      const stLabel = statusLabel[st] || st;
+      const stStyle = st === 'hadir'
+        ? 'color:#065f46;font-weight:700'
+        : st === 'tidak_hadir'
+          ? 'color:#7f1d1d;font-weight:700'
+          : st === 'diskualifikasi'
+            ? 'color:#5b21b6;font-weight:700'
+            : 'color:#6b7280';
       return `<tr>
-        <td>${i+1}</td>
+        <td>${i + 1}</td>
         <td class="l">${esc(p.No_Undian || '')}</td>
         <td class="l">${esc(p.Nama_Siswa || '')}${anggota.length ? `<br><small style="color:#666">+ ${esc(anggota.join(', '))}</small>` : ''}</td>
         <td class="l">${esc(p.Kapanewon || '')}</td>
         <td class="l">${esc(p.Sekolah || '')}</td>
         <td>${esc(p.Kelas || '')}</td>
-        <td>${esc(p.Status_Kehadiran || '—')}</td>
-        <td style="width:80px;height:32px"></td>
+        <td style="${stStyle}">${esc(stLabel)}</td>
       </tr>`;
     }).join('');
 
@@ -2006,13 +2397,12 @@ input[type=number]{-moz-appearance:textfield}
       <table class="data">
         <thead><tr>
           <th style="width:32px">No</th>
-          <th style="width:70px">No. Undian</th>
+          <th style="width:80px">No. Undian</th>
           <th>Nama Peserta</th>
           <th>Kapanewon</th>
           <th>Sekolah</th>
           <th style="width:50px">Kelas</th>
-          <th style="width:90px">Kehadiran</th>
-          <th style="width:80px">TTD</th>
+          <th style="width:110px">Kehadiran</th>
         </tr></thead>
         <tbody>${body}</tbody>
       </table>
@@ -2047,8 +2437,8 @@ input[type=number]{-moz-appearance:textfield}
       return;
     }
 
-    const sorted = rows.slice().sort((a, b) => (a.No_Undian || '').localeCompare(b.No_Undian || ''));
-    const body = sorted.map(r => {
+    // Backend already sorted by byUndian_ — jangan re-sort dengan localeCompare
+    const body = rows.map(r => {
       const fases = r.fases || {};
       const peny = fases.penyisihan || {};
       const benar = peny.benar ?? '';
@@ -2057,8 +2447,8 @@ input[type=number]{-moz-appearance:textfield}
       return `<tr data-no="${esc(r.No_Undian)}">
         <td class="l"><strong>${esc(r.No_Undian)}</strong>${!blind && r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
         <td>${esc(r.Kapanewon || '—')}</td>
-        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="25" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
-        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="25" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
+        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="25" step="1" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
+        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="25" step="1" placeholder="0-25" ${!penilaianBuka ? 'disabled' : ''}></td>
         <td style="font-weight:800;color:var(--rose-primary)">${skor !== '' ? esc(skor) : '—'}</td>
       </tr>`;
     }).join('');
@@ -2087,10 +2477,13 @@ input[type=number]{-moz-appearance:textfield}
       let err = null;
       $$('#lcpPenyisihanContent tbody tr').forEach(tr => {
         const no = tr.dataset.no;
-        const benar = parseInt(tr.querySelector('[data-key="benar"]').value, 10);
-        const salah = parseInt(tr.querySelector('[data-key="salah"]').value, 10);
-        if (isNaN(benar)) { if (!err) err = `${no}: benar belum diisi`; return; }
+        const benarRaw = tr.querySelector('[data-key="benar"]').value.trim();
+        const salahRaw = tr.querySelector('[data-key="salah"]').value.trim();
+        const benar = benarRaw === '' ? NaN : Number(benarRaw);
+        const salah = salahRaw === '' ? NaN : Number(salahRaw);
+        if (!Number.isInteger(benar)) { if (!err) err = `${no}: benar harus bilangan bulat`; return; }
         if (benar < 0 || benar > 25) { if (!err) err = `${no}: benar harus 0-25`; return; }
+        if (salahRaw !== '' && !Number.isInteger(salah)) { if (!err) err = `${no}: salah harus bilangan bulat`; return; }
         const s = isNaN(salah) ? (25 - benar) : salah;
         if (s < 0 || s > 25) { if (!err) err = `${no}: salah harus 0-25`; return; }
         if (benar + s > 25) { if (!err) err = `${no}: benar+salah > 25`; return; }
@@ -2115,6 +2508,14 @@ input[type=number]{-moz-appearance:textfield}
             }
           });
           toast(res.message, 'success');
+          // Update kolom skor tanpa re-render penuh
+          payload.forEach(p => {
+            const tr = document.querySelector(`#lcpPenyisihanContent tbody tr[data-no="${p.No_Undian}"]`);
+            if (tr) {
+              const skorCell = tr.querySelector('td:last-child');
+              if (skorCell) skorCell.textContent = String(p.benar * 100);
+            }
+          });
           if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
         } catch (e) {
           toast('Gagal: ' + e.message, 'error');
@@ -2165,10 +2566,10 @@ input[type=number]{-moz-appearance:textfield}
 
     let warning = '';
     if (tieBoundary) {
-      warning = `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>Seri di batas 5 besar!</strong> Regu ${grupTambahan.join(', ')} memiliki skor sama.</div></div>`;
+      warning = `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>Seri di batas 5 besar!</strong> Regu ${grupTambahan.map(esc).join(', ')} memiliki skor sama. <a href="#seri" style="color:var(--danger);font-weight:800;text-decoration:underline;">Buka Soal Tambahan →</a></div></div>`;
     }
     if (finalis.size > 0) {
-      warning += `<div class="warn-banner info"><span class="icon">✓</span><div>Finalis: <strong>${[...finalis].join(', ')}</strong></div></div>`;
+      warning += `<div class="warn-banner info"><span class="icon">✓</span><div>Finalis: <strong>${[...finalis].map(esc).join(', ')}</strong></div></div>`;
     }
 
     const canFinalize = !tieBoundary && finalis.size === 0;
@@ -2215,12 +2616,12 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ══════════════════════════════════════════════════════════════
-   * §18 LCP — FINAL
+   * §18 LCP — FINAL (redesigned)
    * ══════════════════════════════════════════════════════════════ */
   const LCP_FINAL_TABS = [
-    { key: 'final_wajib',   label: 'Wajib Timing', maxBenar: 7 },
-    { key: 'final_lempar',  label: 'Lempar Rebut', maxBenar: 35 },
-    { key: 'final_rebutan', label: 'Rebutan',      maxBenar: 10 },
+    { key: 'final_wajib',   label: 'Wajib Timing', maxBenar: 7, mode: 'counter' },
+    { key: 'final_lempar',  label: 'Lempar Rebut', maxBenar: 7, mode: 'wajib-rebut' },
+    { key: 'final_rebutan', label: 'Rebutan',      maxBenar: 10, mode: 'counter2' }
   ];
 
   function renderLcpFinal(tabKey = 'final_wajib') {
@@ -2237,97 +2638,383 @@ input[type=number]{-moz-appearance:textfield}
     }
 
     const tab = LCP_FINAL_TABS.find(t => t.key === tabKey) || LCP_FINAL_TABS[0];
-    const maxBenar = tab.maxBenar;
-    const maxSalah = maxBenar;
-
-    const body = rows.map(r => {
-      const fase = (r.fases || {})[tab.key] || {};
-      const benar = fase.benar ?? '';
-      const salah = fase.salah ?? '';
-      const skor = fase.skor ?? '';
-      return `<tr data-no="${esc(r.No_Undian)}">
-        <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
-        <td>${esc(r.Kapanewon || '—')}</td>
-        <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxBenar}" placeholder="0-${maxBenar}" ${!penilaianBuka ? 'disabled' : ''}></td>
-        <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="${maxSalah}" placeholder="0-${maxSalah}" ${!penilaianBuka ? 'disabled' : ''}></td>
-        <td style="font-weight:800;color:var(--rose-primary)">${skor !== '' ? esc(skor) : '—'}</td>
-      </tr>`;
-    }).join('');
+    const nFinalis = rows.length;
 
     const tabsHtml = LCP_FINAL_TABS.map(t => {
       const ready = rows.every(r => (r.fases || {})[t.key]);
       return `<button class="lcp-tab ${t.key === tabKey ? 'active' : ''}" data-tab="${t.key}">${esc(t.label)} ${ready ? '✓' : ''}</button>`;
     }).join('');
 
+    let bodyHtml = '';
+    let tableHtml = '';
+
+    if (tab.mode === 'counter') {
+      // Wajib Timing: 1 counter benar
+      const maxBenar = tab.maxBenar;
+      tableHtml = rows.map(r => {
+        const fase = (r.fases || {})[tab.key] || {};
+        const benar = fase.benar ?? '';
+        const skor = fase.skor ?? '';
+        return `<tr data-no="${esc(r.No_Undian)}">
+          <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
+          <td>${esc(r.Kapanewon || '—')}</td>
+          <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxBenar}" step="1" placeholder="0-${maxBenar}" ${!penilaianBuka ? 'disabled' : ''}></td>
+          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+        </tr>`;
+      }).join('');
+
+      bodyHtml = `
+        <div class="warn-banner info">
+          <span class="icon">ℹ️</span>
+          <div><strong>${esc(tab.label)}</strong> — ${maxBenar} soal per tim · benar +100 · salah 0.</div>
+        </div>
+        <div class="table-wrap">
+          <table class="lcp-table">
+            <thead><tr>
+              <th style="text-align:left">Regu</th>
+              <th>Kapanewon</th>
+              <th>Benar (0-${maxBenar})</th>
+              <th>Skor</th>
+            </tr></thead>
+            <tbody>${tableHtml}</tbody>
+          </table>
+        </div>`;
+    } else if (tab.mode === 'wajib-rebut') {
+      // Lempar Rebut: string B/S 7 char + rebut B/S counter
+      const maxSoal = tab.maxBenar * nFinalis; // 7 × nFinalis
+      tableHtml = rows.map(r => {
+        const fase = (r.fases || {})[tab.key] || {};
+        const benarTotal = num(fase.benar);
+        const salahTotal = num(fase.salah);
+        // Reverse-engineer: benar = wajib_b + rebut_b, salah = rebut_s
+        // Ambil dari data jika ada (kita simpan raw input di form, bukan dari backend)
+        const wajibStr = fase.wajib_str || '';
+        const rebutB = fase.rebut_b ?? '';
+        const rebutS = fase.rebut_s ?? '';
+        const wajibB = wajibStr ? (wajibStr.match(/B/g) || []).length : '';
+        const skor = fase.skor ?? '';
+        const chips = wajibStr
+          ? wajibStr.split('').map(ch => `<div class="wajib-chip ${ch === 'B' ? 'b' : (ch === 'S' ? 's' : 'empty')}">${ch}</div>`).join('')
+          : Array(7).fill('<div class="wajib-chip empty">·</div>').join('');
+        return `<tr data-no="${esc(r.No_Undian)}">
+          <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
+          <td>${esc(r.Kapanewon || '—')}</td>
+          <td>
+            <input type="text" class="wajib-string" data-key="wajib_str" value="${esc(wajibStr)}" maxlength="7" placeholder="BBBSBSB" ${!penilaianBuka ? 'disabled' : ''}>
+            <div class="wajib-preview" data-preview>${chips}</div>
+            <div style="font-size:0.68rem;color:var(--ink-light);margin-top:2px">Wajib B: <strong data-wajib-count>${wajibB === '' ? '—' : wajibB}</strong>/7</div>
+          </td>
+          <td><input type="number" class="lcp-input" data-key="rebut_b" value="${esc(rebutB)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
+          <td><input type="number" class="lcp-input" data-key="rebut_s" value="${esc(rebutS)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
+          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+        </tr>`;
+      }).join('');
+
+      bodyHtml = `
+        <div class="warn-banner info">
+          <span class="icon">ℹ️</span>
+          <div>
+            <strong>${esc(tab.label)}</strong> — 7 soal wajib per tim (B +100 / S 0). Soal salah direbut tim lain (B +100 / S −50).
+            Input <b>string 7 char</b> (B/S) untuk wajib, lalu counter rebut di kolom sebelah.
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="lcp-table">
+            <thead><tr>
+              <th style="text-align:left">Regu</th>
+              <th>Kapanewon</th>
+              <th>Wajib B/S (7 char)</th>
+              <th>Rebut B</th>
+              <th>Rebut S</th>
+              <th>Skor</th>
+            </tr></thead>
+            <tbody>${tableHtml}</tbody>
+          </table>
+        </div>
+        <div class="pool-info" id="poolInfoLempar">
+          <span>Total wajib benar: <strong data-total-wajib>0</strong>/${maxSoal}</span>
+          <span>Rebut pool: <strong data-pool>0</strong> soal</span>
+          <span>Rebut attempts: <strong data-attempts>0</strong>/<span data-pool-max>0</span></span>
+        </div>`;
+    } else {
+      // Rebutan: 2 counter (benar/salah)
+      const maxSoal = tab.maxBenar;
+      tableHtml = rows.map(r => {
+        const fase = (r.fases || {})[tab.key] || {};
+        const benar = fase.benar ?? '';
+        const salah = fase.salah ?? '';
+        const skor = fase.skor ?? '';
+        return `<tr data-no="${esc(r.No_Undian)}">
+          <td class="l"><strong>${esc(r.No_Undian)}</strong>${r.Nama_Siswa ? `<div style="font-size:0.72rem;color:var(--ink-light)">${esc(r.Nama_Siswa)}</div>` : ''}</td>
+          <td>${esc(r.Kapanewon || '—')}</td>
+          <td><input type="number" class="lcp-input" data-key="benar" value="${esc(benar)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
+          <td><input type="number" class="lcp-input" data-key="salah" value="${esc(salah)}" min="0" max="${maxSoal}" step="1" placeholder="0" ${!penilaianBuka ? 'disabled' : ''}></td>
+          <td style="font-weight:800;color:var(--rose-primary)" data-skor>${skor !== '' ? esc(skor) : '—'}</td>
+        </tr>`;
+      }).join('');
+
+      bodyHtml = `
+        <div class="warn-banner info">
+          <span class="icon">ℹ️</span>
+          <div>
+            <strong>${esc(tab.label)}</strong> — ${maxSoal} soal rebutan bebas.
+            Benar +100 · Salah −100 · Soal mati setelah 1 attempt.
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="lcp-table">
+            <thead><tr>
+              <th style="text-align:left">Regu</th>
+              <th>Kapanewon</th>
+              <th>Benar (0-${maxSoal})</th>
+              <th>Salah (0-${maxSoal})</th>
+              <th>Skor</th>
+            </tr></thead>
+            <tbody>${tableHtml}</tbody>
+          </table>
+        </div>
+        <div class="pool-info" id="poolInfoRebutan">
+          <span>Total soal terpakai: <strong data-terpakai>0</strong>/${maxSoal}</span>
+          <span>Total benar: <strong data-total-benar>0</strong>/${maxSoal}</span>
+        </div>`;
+    }
+
     $('#lcpFinalContent').innerHTML = `
       <div class="lcp-tabs">${tabsHtml}</div>
-      <div class="warn-banner info">
-        <span class="icon">ℹ️</span>
-        <div><strong>${esc(tab.label)}</strong> — Isi jumlah benar (0-${maxBenar}) dan salah (0-${maxSalah}).</div>
-      </div>
-      <div class="table-wrap">
-        <table class="lcp-table">
-          <thead><tr>
-            <th style="text-align:left">Regu</th>
-            <th>Kapanewon</th>
-            <th>Benar</th>
-            <th>Salah</th>
-            <th>Skor</th>
-          </tr></thead>
-          <tbody>${body}</tbody>
-        </table>
-      </div>
+      ${bodyHtml}
       <button class="btn btn-primary" id="btnSaveLcpFinal" style="margin-top:0.5rem" ${!penilaianBuka ? 'disabled' : ''}>💾 Simpan ${esc(tab.label)}</button>`;
 
     $$('.lcp-tab').forEach(b => b.onclick = () => renderLcpFinal(b.dataset.tab));
 
+    // Live update: skor & pool info
+    attachLiveUpdate(tab);
+
     $('#btnSaveLcpFinal').onclick = async e => {
       const btn = e.currentTarget;
       const payload = [];
-      let err = null;
+      const errs = [];
+
       $$('#lcpFinalContent tbody tr').forEach(tr => {
         const no = tr.dataset.no;
-        const benar = parseInt(tr.querySelector('[data-key="benar"]').value, 10);
-        const salah = parseInt(tr.querySelector('[data-key="salah"]').value, 10);
-        if (isNaN(benar)) { if (!err) err = `${no}: benar belum diisi`; return; }
-        if (benar < 0 || benar > maxBenar) { if (!err) err = `${no}: benar harus 0-${maxBenar}`; return; }
-        const s = isNaN(salah) ? 0 : salah;
-        if (s < 0 || s > maxSalah) { if (!err) err = `${no}: salah harus 0-${maxSalah}`; return; }
-        payload.push({ No_Undian: no, benar, salah: s });
+        if (tab.mode === 'counter') {
+          const benarRaw = tr.querySelector('[data-key="benar"]').value.trim();
+          const benar = benarRaw === '' ? NaN : Number(benarRaw);
+          if (!Number.isInteger(benar)) { errs.push(`${no}: benar harus bilangan bulat`); return; }
+          if (benar < 0 || benar > tab.maxBenar) { errs.push(`${no}: benar 0-${tab.maxBenar}`); return; }
+          payload.push({ No_Undian: no, benar, salah: 0 });
+        } else if (tab.mode === 'wajib-rebut') {
+          const wajibStrRaw = tr.querySelector('[data-key="wajib_str"]').value.trim().toUpperCase();
+          const rebutBRaw = tr.querySelector('[data-key="rebut_b"]').value.trim();
+          const rebutSRaw = tr.querySelector('[data-key="rebut_s"]').value.trim();
+
+          if (wajibStrRaw.length !== 7 || !/^[BS]{7}$/.test(wajibStrRaw)) {
+            errs.push(`${no}: wajib harus tepat 7 karakter B/S`); return;
+          }
+          const wajibB = (wajibStrRaw.match(/B/g) || []).length;
+          const rebutB = rebutBRaw === '' ? 0 : Number(rebutBRaw);
+          const rebutS = rebutSRaw === '' ? 0 : Number(rebutSRaw);
+          if (!Number.isInteger(rebutB) || rebutB < 0) { errs.push(`${no}: rebut B harus ≥ 0`); return; }
+          if (!Number.isInteger(rebutS) || rebutS < 0) { errs.push(`${no}: rebut S harus ≥ 0`); return; }
+          payload.push({
+            No_Undian: no,
+            benar: wajibB + rebutB,
+            salah: rebutS,
+            // Extra for client re-render (backend ignores unknown)
+            _wajib_str: wajibStrRaw,
+            _rebut_b: rebutB,
+            _rebut_s: rebutS
+          });
+        } else {
+          const benarRaw = tr.querySelector('[data-key="benar"]').value.trim();
+          const salahRaw = tr.querySelector('[data-key="salah"]').value.trim();
+          const benar = benarRaw === '' ? NaN : Number(benarRaw);
+          const salah = salahRaw === '' ? 0 : Number(salahRaw);
+          if (!Number.isInteger(benar)) { errs.push(`${no}: benar harus bilangan bulat`); return; }
+          if (!Number.isInteger(salah)) { errs.push(`${no}: salah harus bilangan bulat`); return; }
+          if (benar < 0 || benar > tab.maxBenar) { errs.push(`${no}: benar 0-${tab.maxBenar}`); return; }
+          if (salah < 0 || salah > tab.maxBenar) { errs.push(`${no}: salah 0-${tab.maxBenar}`); return; }
+          payload.push({ No_Undian: no, benar, salah });
+        }
       });
-      if (err) return toast(err, 'error');
+
+      // Cross-team validation
+      if (tab.mode === 'wajib-rebut') {
+        const maxSoal = tab.maxBenar * nFinalis;
+        const totalWajibB = payload.reduce((s, x) => s + (x._wajib_str.match(/B/g) || []).length, 0);
+        const totalRebutB = payload.reduce((s, x) => s + x._rebut_b, 0);
+        const totalRebutS = payload.reduce((s, x) => s + x._rebut_s, 0);
+        const pool = maxSoal - totalWajibB;
+        if (totalRebutB > pool) errs.push(`Total rebut benar (${totalRebutB}) melebihi pool (${pool})`);
+        if (totalRebutB + totalRebutS > pool) errs.push(`Total rebut attempts (${totalRebutB + totalRebutS}) melebihi pool (${pool})`);
+      } else if (tab.mode === 'counter2') {
+        const totalB = payload.reduce((s, x) => s + x.benar, 0);
+        const totalS = payload.reduce((s, x) => s + x.salah, 0);
+        if (totalB > tab.maxBenar) errs.push(`Total benar (${totalB}) melebihi ${tab.maxBenar} soal`);
+        if (totalB + totalS > tab.maxBenar) errs.push(`Total attempts (${totalB + totalS}) melebihi ${tab.maxBenar} soal`);
+      }
+
+      if (errs.length) return toast(errs[0] + (errs.length > 1 ? ` (+${errs.length - 1} lagi)` : ''), 'error');
       if (!payload.length) return toast('Belum ada data', 'error');
+
       if (!(await showConfirm(`Simpan ${payload.length} regu untuk ${tab.label}?`, { okText: 'Simpan' }))) return;
+
+      // Strip internal fields before send
+      const cleanPayload = payload.map(p => {
+        const out = { No_Undian: p.No_Undian, benar: p.benar, salah: p.salah };
+        return out;
+      });
 
       await guardAction('save_lcp_' + tab.key, async () => {
         const prevHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-        $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = true);
+        $$('#lcpFinalContent .lcp-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = true);
         try {
-          const res = await api('simpan_lcp', { fase: tab.key, rows: payload }, { timeout: 45000 });
+          const res = await api('simpan_lcp', { fase: tab.key, rows: cleanPayload }, { timeout: 45000 });
           if (res.error) throw new Error(res.message);
+
           const faseCfg = { final_wajib: [100, 0], final_lempar: [100, -50], final_rebutan: [100, -100] }[tab.key];
+
+          // Update State.dashboard with enriched data
           payload.forEach(p => {
             const target = State.dashboard.rows.find(x => x.No_Undian === p.No_Undian);
             if (target) {
               if (!target.fases) target.fases = {};
-              target.fases[tab.key] = {
+              const enriched = {
                 benar: p.benar, salah: p.salah,
                 skor: p.benar * faseCfg[0] + p.salah * faseCfg[1]
               };
+              if (tab.mode === 'wajib-rebut') {
+                enriched.wajib_str = p._wajib_str;
+                enriched.rebut_b = p._rebut_b;
+                enriched.rebut_s = p._rebut_s;
+              }
+              target.fases[tab.key] = enriched;
             }
           });
+
           toast(res.message, 'success');
-          if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
-          $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = false);
+          // Re-render tab untuk refresh UI + status ✓
+          renderLcpFinal(tab.key);
         } catch (e) {
           toast('Gagal: ' + e.message, 'error');
           if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prevHtml; }
-          $$('#lcpFinalContent .lcp-input').forEach(inp => inp.disabled = false);
+          $$('#lcpFinalContent .lcp-input, #lcpFinalContent .wajib-string').forEach(inp => inp.disabled = false);
         }
       });
     };
+  }
+
+  /** Live update skor + pool counter untuk LCP Final tanpa save */
+  function attachLiveUpdate(tab) {
+    const rows = $$('#lcpFinalContent tbody tr');
+    if (!rows.length) return;
+    const nFinalis = rows.length;
+
+    const recalc = () => {
+      if (tab.mode === 'counter') {
+        // Wajib timing
+        const maxBenar = tab.maxBenar;
+        rows.forEach(tr => {
+          const inp = tr.querySelector('[data-key="benar"]');
+          const skorCell = tr.querySelector('[data-skor]');
+          if (!inp || !skorCell) return;
+          const n = Number(inp.value);
+          if (Number.isInteger(n) && n >= 0 && n <= maxBenar) {
+            skorCell.textContent = String(n * 100);
+          } else {
+            skorCell.textContent = '—';
+          }
+        });
+      } else if (tab.mode === 'wajib-rebut') {
+        // Lempar rebut: wajib string + rebut B/S
+        const maxSoal = tab.maxBenar * nFinalis;
+        let totalWajibB = 0, totalRebutB = 0, totalRebutS = 0;
+
+        rows.forEach(tr => {
+          const wajibInp = tr.querySelector('[data-key="wajib_str"]');
+          const rebutBInp = tr.querySelector('[data-key="rebut_b"]');
+          const rebutSInp = tr.querySelector('[data-key="rebut_s"]');
+          const skorCell = tr.querySelector('[data-skor]');
+          const previewEl = tr.querySelector('[data-preview]');
+          const wajibCountEl = tr.querySelector('[data-wajib-count]');
+          if (!wajibInp || !skorCell) return;
+
+          // Normalize wajib string
+          let str = String(wajibInp.value || '').toUpperCase().replace(/[^BS]/g, '').slice(0, 7);
+          if (wajibInp.value !== str) wajibInp.value = str;
+
+          const wajibB = (str.match(/B/g) || []).length;
+          const rebutB = Math.max(0, Math.min(maxSoal, Number(rebutBInp.value) || 0));
+          const rebutS = Math.max(0, Math.min(maxSoal, Number(rebutSInp.value) || 0));
+
+          if (wajibCountEl) wajibCountEl.textContent = str.length ? String(wajibB) : '—';
+
+          if (previewEl) {
+            if (str.length) {
+              previewEl.innerHTML = str.split('').map(ch => `<div class="wajib-chip ${ch === 'B' ? 'b' : 's'}">${ch}</div>`).join('');
+            } else {
+              previewEl.innerHTML = Array(7).fill('<div class="wajib-chip empty">·</div>').join('');
+            }
+          }
+
+          if (str.length === 7) {
+            totalWajibB += wajibB;
+            totalRebutB += rebutB;
+            totalRebutS += rebutS;
+            const skor = (wajibB + rebutB) * 100 - rebutS * 50;
+            skorCell.textContent = String(skor);
+          } else {
+            skorCell.textContent = '—';
+          }
+        });
+
+        const pool = maxSoal - totalWajibB;
+        const attempts = totalRebutB + totalRebutS;
+        const info = $('#poolInfoLempar');
+        if (info) {
+          info.querySelector('[data-total-wajib]').textContent = String(totalWajibB);
+          info.querySelector('[data-pool]').textContent = String(pool);
+          info.querySelector('[data-attempts]').textContent = String(attempts);
+          info.querySelector('[data-pool-max]').textContent = String(pool);
+          info.classList.toggle('error', attempts > pool || totalRebutB > pool);
+        }
+      } else {
+        // Rebutan: benar/salah counter
+        const maxSoal = tab.maxBenar;
+        let totalB = 0, totalS = 0;
+        rows.forEach(tr => {
+          const benarInp = tr.querySelector('[data-key="benar"]');
+          const salahInp = tr.querySelector('[data-key="salah"]');
+          const skorCell = tr.querySelector('[data-skor]');
+          if (!benarInp || !skorCell) return;
+          const b = Math.max(0, Math.min(maxSoal, Number(benarInp.value) || 0));
+          const s = Math.max(0, Math.min(maxSoal, Number(salahInp.value) || 0));
+          if (Number.isInteger(b) && Number.isInteger(s)) {
+            const skor = b * 100 - s * 100;
+            skorCell.textContent = String(skor);
+            totalB += b;
+            totalS += s;
+          }
+        });
+        const terpakai = totalB + totalS;
+        const info = $('#poolInfoRebutan');
+        if (info) {
+          info.querySelector('[data-terpakai]').textContent = String(terpakai);
+          info.querySelector('[data-total-benar]').textContent = String(totalB);
+          info.classList.toggle('error', terpakai > maxSoal || totalB > maxSoal);
+        }
+      }
+    };
+
+    // Bind events
+    rows.forEach(tr => {
+      tr.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', recalc);
+      });
+    });
+
+    recalc();
   }
 
   /* ══════════════════════════════════════════════════════════════
