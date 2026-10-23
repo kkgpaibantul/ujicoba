@@ -315,12 +315,19 @@ img, svg { display: block; max-width: 100%; }
 }
 .lc-main {
   font-family: 'Fraunces', serif;
-  font-size: 1.85rem; /* Sedikit diperbesar karena nama & kapanewon dihapus */
+  font-size: 1.85rem;
   font-weight: 900;
   color: var(--hijau-deep);
   line-height: 1.05;
   letter-spacing: -0.01em;
   word-break: break-word;
+}
+/* Gaya khusus untuk teks "Lomba Telah Selesai" */
+.lc-main.lc-finished {
+  font-size: 1.35rem;
+  color: var(--rose-deep);
+  letter-spacing: 0;
+  margin-top: 0.5rem;
 }
 .lc-timer {
   font-family: 'Fraunces', serif;
@@ -426,6 +433,7 @@ body.is-fullscreen .live-card {
 body.is-fullscreen .lc-title { font-size: 1rem; -webkit-line-clamp: 2; }
 body.is-fullscreen .lc-body { flex: 1; min-height: 0; padding: 0.6rem; }
 body.is-fullscreen .lc-main { font-size: 2.4rem; }
+body.is-fullscreen .lc-main.lc-finished { font-size: 1.6rem; }
 body.is-fullscreen .lc-timer { font-size: 2.4rem; }
 body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
@@ -1009,15 +1017,28 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   function renderLiveCard(c, serverNow) {
     const status = c.status_lomba || 'belum';
     const isLive = status === 'berlangsung';
+    const isSelesai = status === 'selesai';
     const statusLabel = STATUS_LABEL[status] || status;
 
     let bodyHtml = '';
     let footerHtml = '';
 
-    if (c.mode === 'queue') {
+    if (isSelesai) {
+      // Tampilan jika lomba sudah selesai
+      bodyHtml = `
+        <div class="lc-label">Status</div>
+        <div class="lc-main lc-finished">Lomba Telah Selesai</div>
+      `;
+      if (c.mode === 'queue' && c.total_peserta) {
+        footerHtml = `
+          <div class="lc-footer" style="justify-content: center;">
+            <span>Total Peserta: <strong>${c.total_peserta}</strong></span>
+          </div>
+        `;
+      }
+    } else if (c.mode === 'queue') {
       const now = c.sekarang;
       const next = c.berikut;
-      // NAMA DAN KAPANEWON DIHAPUS SESUAI PERMINTAAN
       bodyHtml = `
         <div class="lc-label">Sedang Tampil</div>
         <div class="lc-main">${now ? esc(now.No_Undian) : '—'}</div>
