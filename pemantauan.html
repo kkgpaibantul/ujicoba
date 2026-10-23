@@ -10,6 +10,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://script.google.com" crossorigin />
+<link rel="dns-prefetch" href="https://script.google.com" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <style>
@@ -79,6 +81,10 @@ img, svg { display: block; max-width: 100%; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.15); } }
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
 
 .spinner {
   display: inline-block; width: 24px; height: 24px;
@@ -188,6 +194,7 @@ img, svg { display: block; max-width: 100%; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-bottom: 1rem;
+  transition: var(--trans);
 }
 .conn-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -195,7 +202,9 @@ img, svg { display: block; max-width: 100%; }
   box-shadow: 0 0 0 3px rgba(15, 148, 136, 0.15);
   transition: var(--trans);
 }
+.hero-eyebrow.warn { background: var(--gold-soft); color: #92400E; }
 .hero-eyebrow.warn .conn-dot { background: var(--gold); box-shadow: 0 0 0 3px rgba(229, 166, 67, 0.15); }
+.hero-eyebrow.error { background: #FEE2E2; color: #991B1B; }
 .hero-eyebrow.error .conn-dot { background: var(--danger); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); animation: pulseDot 1.5s infinite; }
 
 .hero h1 {
@@ -306,14 +315,13 @@ img, svg { display: block; max-width: 100%; }
 }
 .lc-main {
   font-family: 'Fraunces', serif;
-  font-size: 1.65rem; font-weight: 900;
+  font-size: 1.85rem; /* Sedikit diperbesar karena nama & kapanewon dihapus */
+  font-weight: 900;
   color: var(--hijau-deep);
   line-height: 1.05;
   letter-spacing: -0.01em;
   word-break: break-word;
 }
-.lc-sub { font-size: 0.88rem; font-weight: 700; color: var(--ink); line-height: 1.3; margin-top: 0.15rem; }
-.lc-sub.lc-muted { font-weight: 500; color: var(--ink-soft); font-size: 0.8rem; }
 .lc-timer {
   font-family: 'Fraunces', serif;
   font-size: 1.9rem; font-weight: 900;
@@ -344,6 +352,26 @@ img, svg { display: block; max-width: 100%; }
 }
 .lc-footer strong { color: var(--rose-deep); font-size: 0.85rem; font-weight: 800; }
 .lc-footer .lc-progress { color: var(--hijau-deep); font-weight: 800; }
+
+/* ---- Skeleton ---- */
+.live-card.skeleton { pointer-events: none; }
+.skel-header { display: flex; justify-content: space-between; align-items: center; }
+.skel-box {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--border) 0%, var(--surface-soft) 50%, var(--border) 100%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 4px;
+}
+.skel-body {
+  background: var(--surface-soft);
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 1rem 0.9rem;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 118px;
+}
 
 /* ============================================================================
  * §6 FULLSCREEN
@@ -397,10 +425,9 @@ body.is-fullscreen .live-card {
 }
 body.is-fullscreen .lc-title { font-size: 1rem; -webkit-line-clamp: 2; }
 body.is-fullscreen .lc-body { flex: 1; min-height: 0; padding: 0.6rem; }
-body.is-fullscreen .lc-main { font-size: 2rem; }
+body.is-fullscreen .lc-main { font-size: 2.4rem; }
 body.is-fullscreen .lc-timer { font-size: 2.4rem; }
 body.is-fullscreen .lc-phase { font-size: 1.5rem; }
-body.is-fullscreen .lc-sub { font-size: 0.95rem; }
 
 /* ============================================================================
  * §7 PESERTA
@@ -601,9 +628,6 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
 
 <a href="#tab-live" class="skip-link">Lompat ke konten</a>
 
-<!-- ============================================================
-     STICKY HEADER
-     ============================================================ -->
 <header class="sticky-header">
   <div class="appbar">
     <div class="brand">
@@ -654,9 +678,6 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   </nav>
 </header>
 
-<!-- ============================================================
-     MAIN
-     ============================================================ -->
 <main class="container">
 
   <div class="fs-title" aria-hidden="true">
@@ -670,14 +691,13 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   <section class="hero" aria-labelledby="heroTitle">
     <div class="hero-eyebrow" id="connBadge">
       <span class="conn-dot" aria-hidden="true"></span>
-      Live Monitor
+      <span id="connLabel">Live Monitor</span>
     </div>
     <h1 id="heroTitle">Pemantauan MTQ 2026</h1>
     <p>Sistem Informasi Live Panggung &amp; Daftar Peserta<br>
        MTQ Pelajar Sekolah Dasar Tingkat Kabupaten Bantul</p>
   </section>
 
-  <!-- Tab: Live -->
   <section id="tab-live" class="tab-pane active" role="tabpanel" aria-labelledby="tabBtnLive">
     <div class="live-grid" id="liveGrid" aria-live="polite" aria-busy="true">
       <div class="empty-state" style="grid-column:1/-1;">
@@ -687,7 +707,6 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
     </div>
   </section>
 
-  <!-- Tab: Peserta -->
   <section id="tab-peserta" class="tab-pane" role="tabpanel" aria-labelledby="tabBtnPeserta">
     <div class="search-wrap">
       <div class="search-box">
@@ -715,9 +734,13 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
   const POLL_INTERVAL = 15000;
   const FETCH_TIMEOUT = 10000;
-  const MIN_REFETCH_GAP = 5000;
   const MAX_BACKOFF = 60000;
+  const BACKOFF_STEP = 5000;
   const SEARCH_DEBOUNCE = 250;
+  const CACHE_TTL_MS = 5 * 60 * 1000;
+
+  const LIVE_CACHE_KEY = 'mtq26_live_v2';
+  const PESERTA_CACHE_KEY = 'mtq26_peserta_v2';
 
   const ORDER = ['MTQ','MTtQ','MHQ','Puitisasi','MAz','LPP','LCP','Lukis','Menyanyi'];
   const STATUS_LABEL = {
@@ -737,7 +760,6 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       controller: null,
       timeoutId: null,
       pollTimeout: null,
-      lastFetchTime: 0,
       lastHash: '',
       serverOffset: 0,
       retryDelay: 0,
@@ -763,17 +785,18 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
 
   const el = {};
   function cacheDom() {
-    el.liveGrid      = $('#liveGrid');
-    el.pesertaGrid   = $('#pesertaGrid');
-    el.searchInput   = $('#searchPeserta');
-    el.connBadge     = $('#connBadge');
-    el.btnFs         = $('#btnFullscreen');
-    el.fsIcon        = $('#fsIcon');
-    el.fsLabel       = $('#fsLabel');
-    el.fsClock       = $('#fsClock');
-    el.tabBtns       = $$('.tab-btn');
-    el.tabPanes      = $$('.tab-pane');
-    el.tabLive       = $('#tab-live');
+    el.liveGrid    = $('#liveGrid');
+    el.pesertaGrid = $('#pesertaGrid');
+    el.searchInput = $('#searchPeserta');
+    el.connBadge   = $('#connBadge');
+    el.connLabel   = $('#connLabel');
+    el.btnFs       = $('#btnFullscreen');
+    el.fsIcon      = $('#fsIcon');
+    el.fsLabel     = $('#fsLabel');
+    el.fsClock     = $('#fsClock');
+    el.tabBtns     = $$('.tab-btn');
+    el.tabPanes    = $$('.tab-pane');
+    el.tabLive     = $('#tab-live');
   }
 
   /* =========================================================================
@@ -796,14 +819,17 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   function setConnBadge(status) {
     if (!el.connBadge) return;
     el.connBadge.classList.remove('warn', 'error');
-    if (status === 'warn') el.connBadge.classList.add('warn');
-    else if (status === 'error') el.connBadge.classList.add('error');
+    if (status === 'warn') {
+      el.connBadge.classList.add('warn');
+      el.connLabel.textContent = 'Menghubungkan...';
+    } else if (status === 'error') {
+      el.connBadge.classList.add('error');
+      el.connLabel.textContent = 'Offline';
+    } else {
+      el.connLabel.textContent = 'Live Monitor';
+    }
   }
 
-  /**
-   * Fast hash for live cabang array — only fields that affect rendering.
-   * Avoids JSON.stringify of the whole payload (deep equality cheating).
-   */
   function hashLiveData(cabangList) {
     let h = '';
     for (const c of cabangList) {
@@ -821,7 +847,32 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §5 API TRANSPORT
+   * §5 CACHE (sessionStorage — instant paint)
+   * ========================================================================= */
+  function saveCache(key, payload) {
+    try {
+      sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), d: payload }));
+    } catch (_) {}
+  }
+
+  function loadCache(key) {
+    try {
+      const raw = sessionStorage.getItem(key);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || !obj.t) return null;
+      if (Date.now() - obj.t > CACHE_TTL_MS) {
+        try { sessionStorage.removeItem(key); } catch (_) {}
+        return null;
+      }
+      return obj.d;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /* =========================================================================
+   * §6 API TRANSPORT
    * ========================================================================= */
   async function fetchApi(action, signal) {
     const res = await fetch(API_URL, {
@@ -835,18 +886,38 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §6 LIVE — LOAD / RENDER / POLL
+   * §7 SKELETON
+   * ========================================================================= */
+  function renderLiveSkeletons() {
+    if (!el.liveGrid) return;
+    const sk = `
+      <article class="live-card skeleton" aria-hidden="true">
+        <div class="skel-header">
+          <span class="skel-box" style="width:48px;height:20px;border-radius:6px"></span>
+          <span class="skel-box" style="width:72px;height:20px;border-radius:var(--r-full)"></span>
+        </div>
+        <span class="skel-box" style="width:80%;height:16px"></span>
+        <div class="skel-body">
+          <span class="skel-box" style="width:60%;height:26px"></span>
+        </div>
+      </article>`;
+    el.liveGrid.innerHTML = Array(9).fill(sk).join('');
+    el.liveGrid.setAttribute('aria-busy', 'true');
+  }
+
+  /* =========================================================================
+   * §8 LIVE — LOAD / RENDER / POLL
    * ========================================================================= */
   async function loadLive() {
     const L = state.live;
     if (L.inFlight) return;
     if (document.hidden) return;
     if (state.activeTab !== 'tab-live') return;
-    if (L.lastFetchTime && Date.now() - L.lastFetchTime < MIN_REFETCH_GAP) return;
+
+    clearTimeout(L.pollTimeout);
+    L.pollTimeout = null;
 
     L.inFlight = true;
-    L.lastFetchTime = Date.now();
-
     const controller = new AbortController();
     L.controller = controller;
     L.timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
@@ -855,7 +926,6 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       const data = await fetchApi('publik_panggung', controller.signal);
       if (controller.signal.aborted) return;
 
-      // Update server offset (used by local timer ticker)
       if (data && data.server_time) {
         const parsed = new Date(data.server_time).getTime();
         if (Number.isFinite(parsed)) L.serverOffset = parsed - Date.now();
@@ -867,6 +937,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
           L.lastHash = newHash;
           renderLive(data.cabang);
         }
+        saveCache(LIVE_CACHE_KEY, data);
         L.retryDelay = 0;
         L.loadedOnce = true;
         setConnBadge('ok');
@@ -876,7 +947,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
     } catch (e) {
       if (e.name === 'AbortError') return;
       console.warn('[live] fetch failed:', e);
-      L.retryDelay = Math.min((L.retryDelay || 0) + 5000, MAX_BACKOFF);
+      L.retryDelay = Math.min((L.retryDelay || 0) + BACKOFF_STEP, MAX_BACKOFF);
       setConnBadge(L.loadedOnce ? 'warn' : 'error');
       if (!L.loadedOnce) renderLiveError();
     } finally {
@@ -899,6 +970,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   function renderLiveError() {
+    if (!el.liveGrid) return;
     el.liveGrid.setAttribute('aria-busy', 'false');
     el.liveGrid.innerHTML = `
       <div class="empty-state" style="grid-column:1/-1;">
@@ -910,6 +982,8 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   function renderLive(cabangList) {
+    if (!el.liveGrid) return;
+
     if (!cabangList.length) {
       el.liveGrid.setAttribute('aria-busy', 'false');
       el.liveGrid.innerHTML = `
@@ -922,16 +996,13 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       return;
     }
 
-    // Sort cabang by predefined order
     const sorted = cabangList.slice().sort((a, b) => ORDER.indexOf(a.key) - ORDER.indexOf(b.key));
     const offset = state.live.serverOffset;
     const serverNow = Date.now() + offset;
 
-    const html = sorted.map(c => renderLiveCard(c, serverNow)).join('');
-    el.liveGrid.innerHTML = html;
+    el.liveGrid.innerHTML = sorted.map(c => renderLiveCard(c, serverNow)).join('');
     el.liveGrid.setAttribute('aria-busy', 'false');
 
-    // Kick local ticker if any active timer exists
     maybeStartTicker();
   }
 
@@ -946,11 +1017,10 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
     if (c.mode === 'queue') {
       const now = c.sekarang;
       const next = c.berikut;
+      // NAMA DAN KAPANEWON DIHAPUS SESUAI PERMINTAAN
       bodyHtml = `
         <div class="lc-label">Sedang Tampil</div>
         <div class="lc-main">${now ? esc(now.No_Undian) : '—'}</div>
-        ${now && now.Nama ? `<div class="lc-sub">${esc(now.Nama)}</div>` : ''}
-        ${now && now.Kapanewon ? `<div class="lc-sub lc-muted">${esc(now.Kapanewon)}</div>` : ''}
       `;
       const progress = (typeof c.sudah_tampil === 'number' && c.total_peserta)
         ? `<span class="lc-progress">${c.sudah_tampil}/${c.total_peserta}</span>` : '';
@@ -1004,7 +1074,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §7 TIMER TICKER (local, no re-fetch)
+   * §9 TIMER TICKER (local, no re-fetch)
    * ========================================================================= */
   function maybeStartTicker() {
     const els = document.querySelectorAll('[data-timer]');
@@ -1020,7 +1090,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   function startTicker() {
     if (state.ticker) return;
     state.ticker = setInterval(tickTimers, 1000);
-    tickTimers(); // immediate paint
+    tickTimers();
   }
 
   function stopTicker() {
@@ -1055,26 +1125,34 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §8 PESERTA — LOAD / RENDER / SEARCH
+   * §10 PESERTA — LOAD / RENDER / SEARCH
    * ========================================================================= */
   async function loadPeserta() {
     const P = state.peserta;
     if (P.inFlight) return;
 
     P.inFlight = true;
-    P.controller = new AbortController();
-    P.timeoutId = setTimeout(() => P.controller.abort(), FETCH_TIMEOUT);
+    const controller = new AbortController();
+    P.controller = controller;
+    P.timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+    if (el.pesertaGrid) el.pesertaGrid.setAttribute('aria-busy', 'true');
 
     try {
-      const data = await fetchApi('publik_peserta_list', P.controller.signal);
-      if (P.controller.signal.aborted) return;
+      const data = await fetchApi('publik_peserta_list', controller.signal);
+      if (controller.signal.aborted) return;
 
       if (data && data.status === 'success' && Array.isArray(data.peserta)) {
         P.data = data.peserta.map(p => decoratePeserta(p));
         P.loaded = true;
-        P.filteredData = P.data;
-        renderPeserta(P.data);
-        if (el.searchInput) el.searchInput.value = ''; // reset on first load
+        saveCache(PESERTA_CACHE_KEY, { peserta: data.peserta });
+
+        const q = el.searchInput ? el.searchInput.value : '';
+        if (q && q.trim()) {
+          applySearch(q);
+        } else {
+          P.filteredData = P.data;
+          renderPeserta(P.data);
+        }
       } else {
         throw new Error((data && data.message) || 'Invalid response');
       }
@@ -1085,33 +1163,29 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
     } finally {
       clearTimeout(P.timeoutId);
       P.timeoutId = null;
-      P.controller = null;
+      if (P.controller === controller) P.controller = null;
       P.inFlight = false;
-      el.pesertaGrid.setAttribute('aria-busy', 'false');
+      if (el.pesertaGrid) el.pesertaGrid.setAttribute('aria-busy', 'false');
     }
   }
 
-  /**
-   * Attach _search index once — cheap string concat, avoids re-building
-   * uppercase strings on every keystroke.
-   */
   function decoratePeserta(p) {
     const primary = p.Sekolah || p.Asal_Sekolah || '';
     const s2 = p.Sekolah_2 || primary;
     const s3 = p.Sekolah_3 || primary;
-    const searchParts = [
-      p.Nama, p.Anggota_2, p.Anggota_3,
-      primary, s2, s3,
-      p.Kapanewon, p.No_Pendaftaran
-    ];
     p._sekolah1 = primary;
     p._sekolah2 = s2;
     p._sekolah3 = s3;
-    p._search = searchParts.filter(Boolean).join(' ').toUpperCase();
+    p._search = [
+      p.Nama, p.Anggota_2, p.Anggota_3,
+      primary, s2, s3,
+      p.Kapanewon, p.No_Pendaftaran
+    ].filter(Boolean).join(' ').toUpperCase();
     return p;
   }
 
   function renderPesertaError() {
+    if (!el.pesertaGrid) return;
     el.pesertaGrid.setAttribute('aria-busy', 'false');
     el.pesertaGrid.innerHTML = `
       <div class="empty-state" style="grid-column:1/-1;">
@@ -1123,6 +1197,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   function renderPeserta(list) {
+    if (!el.pesertaGrid) return;
     el.pesertaGrid.setAttribute('aria-busy', 'false');
 
     if (!list.length) {
@@ -1137,8 +1212,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       return;
     }
 
-    const html = list.map(renderPesertaCard).join('');
-    el.pesertaGrid.innerHTML = html;
+    el.pesertaGrid.innerHTML = list.map(renderPesertaCard).join('');
   }
 
   function renderPesertaCard(p) {
@@ -1224,7 +1298,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §9 TAB SWITCH
+   * §11 TAB SWITCH
    * ========================================================================= */
   function switchTab(target) {
     if (state.activeTab === target) return;
@@ -1240,20 +1314,26 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
     }
 
     if (target === 'tab-live') {
-      // Cancel any pending poll, fetch fresh (guarded)
-      loadLive();
+      clearTimeout(state.live.pollTimeout);
+      state.live.pollTimeout = null;
+      if (!state.live.inFlight) loadLive();
     } else {
-      // Leaving live tab: cancel scheduled poll (in-flight continues)
       clearTimeout(state.live.pollTimeout);
       state.live.pollTimeout = null;
 
-      if (target === 'tab-peserta' && !state.peserta.loaded && !state.peserta.inFlight) {
-        el.pesertaGrid.setAttribute('aria-busy', 'true');
-        loadPeserta();
+      if (target === 'tab-peserta') {
+        if (state.peserta.loaded) {
+          if (el.pesertaGrid && !el.pesertaGrid.querySelector('.peserta-item')) {
+            renderPeserta(state.peserta.filteredData || state.peserta.data);
+          }
+          loadPeserta();
+        } else if (!state.peserta.inFlight) {
+          el.pesertaGrid.setAttribute('aria-busy', 'true');
+          loadPeserta();
+        }
       }
     }
 
-    // Update hash silently (replaceState avoids history clutter)
     const h = target === 'tab-peserta' ? '#peserta' : '#live';
     if (location.hash !== h) {
       try { history.replaceState(null, '', h); } catch (_) {}
@@ -1261,7 +1341,7 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §10 FULLSCREEN + CLOCK
+   * §12 FULLSCREEN + CLOCK
    * ========================================================================= */
   const ICON_ENTER = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
   const ICON_EXIT  = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>';
@@ -1308,15 +1388,13 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
   }
 
   /* =========================================================================
-   * §11 EVENT WIRING
+   * §13 EVENT WIRING
    * ========================================================================= */
   function wireEvents() {
-    // Tabs
     for (const btn of el.tabBtns) {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     }
 
-    // Search (debounced)
     let searchTimer = null;
     el.searchInput.addEventListener('input', (e) => {
       clearTimeout(searchTimer);
@@ -1324,8 +1402,8 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       searchTimer = setTimeout(() => applySearch(value), SEARCH_DEBOUNCE);
     });
 
-    // Fullscreen
     el.btnFs.addEventListener('click', toggleFullscreen);
+
     document.addEventListener('fullscreenchange', () => {
       const nativeFs = !!document.fullscreenElement;
       const bodyFs = document.body.classList.contains('is-fullscreen');
@@ -1340,37 +1418,64 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       }
     });
 
-    // Visibility — pause polling when hidden, resume on show
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         clearTimeout(state.live.pollTimeout);
         state.live.pollTimeout = null;
-      } else {
-        if (state.activeTab === 'tab-live' && !state.live.inFlight) {
-          loadLive();
-        }
+      } else if (state.activeTab === 'tab-live' && !state.live.inFlight) {
+        loadLive();
       }
     });
 
-    // Hash changes from external nav
     window.addEventListener('hashchange', () => {
       const h = location.hash.replace('#', '');
       if (h === 'peserta' && state.activeTab !== 'tab-peserta') switchTab('tab-peserta');
       else if ((h === 'live' || h === '') && state.activeTab !== 'tab-live') switchTab('tab-live');
     });
+
+    window.addEventListener('pagehide', cleanup);
+  }
+
+  function cleanup() {
+    stopTicker();
+    stopFsClock();
+    clearTimeout(state.live.pollTimeout);
+    clearTimeout(state.live.timeoutId);
+    clearTimeout(state.peserta.timeoutId);
+    if (state.live.controller) try { state.live.controller.abort(); } catch (_) {}
+    if (state.peserta.controller) try { state.peserta.controller.abort(); } catch (_) {}
   }
 
   /* =========================================================================
-   * §12 BOOTSTRAP
+   * §14 BOOTSTRAP
    * ========================================================================= */
   function bootstrap() {
     cacheDom();
     wireEvents();
 
-    // Initial route
+    let paintedLive = false;
+    const liveCache = loadCache(LIVE_CACHE_KEY);
+    if (liveCache && Array.isArray(liveCache.cabang) && liveCache.cabang.length) {
+      if (liveCache.server_time) {
+        const parsed = new Date(liveCache.server_time).getTime();
+        if (Number.isFinite(parsed)) state.live.serverOffset = parsed - Date.now();
+      }
+      state.live.lastHash = hashLiveData(liveCache.cabang);
+      renderLive(liveCache.cabang);
+      state.live.loadedOnce = true;
+      setConnBadge('warn');
+      paintedLive = true;
+    }
+
+    const pesertaCache = loadCache(PESERTA_CACHE_KEY);
+    if (pesertaCache && Array.isArray(pesertaCache.peserta)) {
+      state.peserta.data = pesertaCache.peserta.map(p => decoratePeserta(p));
+      state.peserta.loaded = true;
+      state.peserta.filteredData = state.peserta.data;
+    }
+
     const h = location.hash.replace('#', '');
     if (h === 'peserta') {
-      // Force tab display without triggering redundant live fetch
       state.activeTab = 'tab-peserta';
       for (const btn of el.tabBtns) {
         const active = btn.dataset.tab === 'tab-peserta';
@@ -1380,23 +1485,18 @@ body.is-fullscreen .lc-sub { font-size: 0.95rem; }
       for (const pane of el.tabPanes) {
         pane.classList.toggle('active', pane.id === 'tab-peserta');
       }
-      el.pesertaGrid.setAttribute('aria-busy', 'true');
+      if (state.peserta.loaded) {
+        renderPeserta(state.peserta.data);
+      } else {
+        el.pesertaGrid.setAttribute('aria-busy', 'true');
+      }
       loadPeserta();
+      if (!paintedLive) renderLiveSkeletons();
     } else {
+      if (!paintedLive) renderLiveSkeletons();
       loadLive();
     }
   }
-
-  // Free memory on unload (best-effort; browsers usually clean up anyway)
-  window.addEventListener('pagehide', () => {
-    stopTicker();
-    stopFsClock();
-    clearTimeout(state.live.pollTimeout);
-    clearTimeout(state.live.timeoutId);
-    clearTimeout(state.peserta.timeoutId);
-    if (state.live.controller) try { state.live.controller.abort(); } catch (_) {}
-    if (state.peserta.controller) try { state.peserta.controller.abort(); } catch (_) {}
-  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootstrap);
