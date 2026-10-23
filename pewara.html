@@ -866,6 +866,26 @@ input[type=number]{-moz-appearance:textfield}
     };
   }
 
+  // ─── SMART SYNC PANGGUNG ───
+  function syncPanggungAfterSave() {
+    if (!State.dashboard || getState() === 'final') return;
+
+    const allRows = State.dashboard.rows || [];
+    if (!allRows.length) return;
+
+    const firstIncomplete = allRows.find(r => !isRowComplete(r));
+
+    if (firstIncomplete) {
+      api('panggung_update', { action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian }, { timeout: 15000 }).catch(() => {});
+    } else {
+      if (isLcp()) {
+         api('panggung_update', { action_panggung: 'phase_set', phase_label: 'Sidang Kejuaraan' }, { timeout: 15000 }).catch(() => {});
+      } else {
+         api('panggung_update', { action_panggung: 'selesai' }, { timeout: 15000 }).catch(() => {});
+      }
+    }
+  }
+
   /* ══════════════════════════════════════════════════════════════
    * §7 DASHBOARD
    * ══════════════════════════════════════════════════════════════ */
@@ -1579,11 +1599,9 @@ input[type=number]{-moz-appearance:textfield}
         if (silent) showAutoSaveIndicator('✓ ' + no + ' tersimpan', 'success');
         else toast(`${no} tersimpan`, 'success');
         
-        // --- AUTO ADVANCE PANGGUNG ---
-        if (!isLcp() && !silent) {
-           // Panggil API panggung_update (berikutnya) secara background
-           api('panggung_update', { action_panggung: 'berikutnya' }, { timeout: 15000 }).catch(() => {});
-        }
+        // --- SMART SYNC PANGGUNG ---
+        if (!silent) syncPanggungAfterSave();
+        
       } else if (incompleteJuris.length > 0) {
         const juriList = incompleteJuris.map(x => `J${x.juri}(${x.cnt}/${x.total})`).join(', ');
         if (silent) showAutoSaveIndicator(`⏳ ${no}: ${completeRows.length}/${juri.length} juri · ${juriList}`);
@@ -1714,6 +1732,10 @@ input[type=number]{-moz-appearance:textfield}
         updateSaveBarInfo();
         scheduleGlobalUpdate();
         toast(`${res.saved} nilai tersimpan`, 'success');
+
+        // --- SMART SYNC PANGGUNG ---
+        syncPanggungAfterSave();
+
       } catch (e) {
         toast('Gagal: ' + (e.message || 'Network error'), 'error');
       } finally {
@@ -2088,6 +2110,7 @@ input[type=number]{-moz-appearance:textfield}
             <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Wajib Timing">📝 Wajib Timing</button>
             <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Lempar Rebut">🔄 Lempar Rebut</button>
             <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Rebutan">⚡ Rebutan</button>
+            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Sidang Kejuaraan">🏆 Sidang Kejuaraan</button>
           </div>
         ` : '';
 
