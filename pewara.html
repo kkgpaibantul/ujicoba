@@ -1073,6 +1073,12 @@ input[type=number]{-moz-appearance:textfield}
           : await api('toggle_sidang', {}, { timeout: 30000 });
         if (res.error) throw new Error(res.message);
         toast(res.message || 'Berhasil', 'success');
+        
+        // --- SYNC PANGGUNG SAAT FINAL ---
+        if (action === 'sidang_close' && res.new_state === 'final') {
+           await api('panggung_update', { action_panggung: 'selesai' }, { timeout: 15000 }).catch(() => {});
+        }
+
         await loadDashboard(true);
         renderDashboard();
       } catch (err) {
@@ -2056,7 +2062,8 @@ input[type=number]{-moz-appearance:textfield}
             <button class="btn btn-accent" data-act="berikutnya">⏭ Peserta Berikutnya</button>
             <button class="btn btn-ghost" data-act="sebelumnya">⏮ Sebelumnya</button>
             <button class="btn btn-warning" data-act="istirahat">⏸ Istirahat</button>
-            <button class="btn btn-ghost" data-act="reset" style="color:var(--danger)">↺ Reset Antrian</button>
+            <button class="btn btn-danger" data-act="selesai">⏹ Selesai</button>
+            <button class="btn btn-ghost" data-act="reset" style="color:var(--ink-light)">↺ Reset Antrian</button>
           </div>
         `;
       } else if (isTimer) {
@@ -3182,14 +3189,7 @@ input[type=number]{-moz-appearance:textfield}
         </button>
       </div>`;
 
-    $$('.lcp-tab').forEach(b => b.onclick = () => {
-      renderLcpFinal(b.dataset.tab);
-      // Auto-update panggung ke fase yang dipilih
-      if (b.dataset.tab) {
-        const tabName = LCP_FINAL_TABS.find(t => t.key === b.dataset.tab)?.label || b.dataset.tab;
-        api('panggung_update', { action_panggung: 'phase_set', phase_label: 'Final - ' + tabName }).catch(() => {});
-      }
-    });
+    $$('.lcp-tab').forEach(b => b.onclick = () => renderLcpFinal(b.dataset.tab));
 
     $('#lcpFinalContent').addEventListener('click', e => {
       const btn = e.target.closest('.counter-btn');
