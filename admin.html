@@ -5,178 +5,125 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#1E293B" />
 <title>Admin Panel — MTQ 2026</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
 <style>
-/* ============================================================
- * §1 DESIGN TOKENS
- * ============================================================ */
 :root {
-  --cream: #FFF9F0;
-  --rose-deep: #4A2E3F;
-  --rose-primary: #9E5F7B;
-  --rose-light: #F3D5E0;
-  --hijau: #2A9D8F;
-  --hijau-light: #E8F6F4;
-  --gold: #E9C46A;
-  --gold-light: #FEF5E7;
-  --ink: #1E293B;
-  --ink-light: #64748B;
-  --bg: #F8FAFC;
-  --surface: #FFFFFF;
-  --border: #E2E8F0;
-  --border-dark: #CBD5E0;
-  --danger: #E53E3E;
-  --danger-light: #FFF5F5;
-
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
-  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1);
-
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
-  --trans: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --cream:#FFF9F0; --rose-deep:#4A2E3F; --rose-primary:#9E5F7B; --rose-light:#F3D5E0;
+  --hijau:#2A9D8F; --hijau-light:#E8F6F4; --gold:#E9C46A; --gold-light:#FEF5E7;
+  --ink:#1E293B; --ink-light:#64748B; --bg:#F8FAFC; --surface:#FFFFFF;
+  --border:#E2E8F0; --border-dark:#CBD5E0; --danger:#E53E3E; --danger-light:#FFF5F5;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.05); --shadow-md:0 4px 6px -1px rgba(0,0,0,0.07); --shadow-lg:0 10px 25px -3px rgba(0,0,0,0.1);
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --trans:all 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-
-/* ============================================================
- * §2 RESET & BASE
- * ============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { 
-  min-height: 100dvh;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  background-color: var(--bg);
-  color: var(--ink); line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; color: var(--rose-deep); }
-button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-input, select, textarea { font-family: inherit; font-size: 15px; }
-a { color: inherit; text-decoration: none; }
-:focus-visible { outline: 3px solid var(--rose-light); outline-offset: 2px; border-radius: 4px; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; }
-.spinner.dark { border-color: var(--border); border-top-color: var(--rose-primary); }
-
-/* ============================================================
- * §3 APP SHELL & LOGIN
- * ============================================================ */
-#view-login { height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-.login-card { background: var(--surface); border-radius: var(--r-lg); padding: 2.5rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
-.login-card h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
-.login-card p { color: var(--ink-light); font-size: 0.9rem; margin-bottom: 1.5rem; }
-.token-input { text-align: center; letter-spacing: 0.2em; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; padding: 0.8rem; }
-.back-home { position: absolute; top: 1.5rem; left: 1.5rem; font-weight: 700; font-size: 0.9rem; color: var(--ink-light); display: flex; align-items: center; gap: 0.4rem; }
-.back-home:hover { color: var(--rose-primary); }
-
-#app { display: none; flex-direction: column; height: 100dvh; overflow: hidden; }
-.appbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; z-index: 50; box-shadow: var(--shadow-sm); }
-.appbar-brand { font-weight: 800; color: var(--rose-deep); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
-.appbar-brand svg { width: 22px; height: 22px; color: var(--rose-primary); }
-
-.main-layout { display: flex; flex: 1; overflow: hidden; }
-.sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; padding: 1rem 0; }
-.nav-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.8rem; font-weight: 600; color: var(--ink); transition: var(--trans); cursor: pointer; border-left: 4px solid transparent; }
-.nav-item:hover { background: var(--bg); color: var(--rose-primary); }
-.nav-item.active { background: var(--rose-light); color: var(--rose-deep); border-left-color: var(--rose-deep); }
-.nav-item .icon { font-size: 1.1rem; width: 24px; text-align: center; }
-
-.content-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; background: var(--bg); position: relative; }
-.panel { display: none; animation: fadeIn 0.3s ease; }
-.panel.active { display: block; }
-.page-title { font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-
-/* ============================================================
- * §4 UI COMPONENTS
- * ============================================================ */
-.btn { display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem; border-radius: var(--r-md); font-size: 0.85rem; font-weight: 700; transition: var(--trans); border: none; cursor: pointer; }
-.btn:active { transform: translateY(1px); }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn-primary { background: var(--rose-deep); color: #fff; }
-.btn-primary:hover:not(:disabled) { background: var(--rose-primary); }
-.btn-success { background: var(--hijau); color: #fff; }
-.btn-success:hover:not(:disabled) { background: #21867a; }
-.btn-warning { background: var(--gold); color: var(--rose-deep); }
-.btn-warning:hover:not(:disabled) { background: #dcb457; }
-.btn-danger { background: var(--danger-light); color: var(--danger); }
-.btn-danger:hover:not(:disabled) { background: var(--danger); color: #fff; }
-.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
-.btn-ghost:hover:not(:disabled) { border-color: var(--rose-primary); color: var(--rose-primary); }
-.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; border-radius: var(--r-sm); }
-
-.input, .select { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: var(--r-md); background: var(--surface); outline: none; font-weight: 500; transition: var(--trans); }
-.input:focus, .select:focus { border-color: var(--rose-primary); box-shadow: 0 0 0 3px rgba(158,95,123,0.15); }
-.label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-.form-group { margin-bottom: 1rem; }
-
-.badge { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-.badge.draft { background: #E0E7FF; color: #3730A3; }
-.badge.locked { background: var(--gold-light); color: #92400e; }
-.badge.sidang { background: #FCE7F3; color: #9d174d; }
-.badge.final { background: var(--hijau-light); color: #065f46; }
-.badge.aktif { background: var(--hijau-light); color: var(--hijau); }
-.badge.nonaktif { background: var(--danger-light); color: var(--danger); }
-
-/* Stats Grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1.2rem; box-shadow: var(--shadow-sm); }
-.stat-card .lbl { font-size: 0.75rem; font-weight: 800; color: var(--ink-light); text-transform: uppercase; margin-bottom: 0.3rem; }
-.stat-card .val { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; color: var(--rose-deep); line-height: 1; }
-
-/* Tables */
-.table-wrap { background: var(--surface); border-radius: var(--r-md); border: 1px solid var(--border); overflow-x: auto; box-shadow: var(--shadow-sm); }
-table.data { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-table.data th { background: var(--bg); color: var(--ink-light); padding: 0.8rem 1rem; text-align: left; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); white-space: nowrap; }
-table.data td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-table.data tr:hover td { background: #F8FAFC; }
-table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-
-/* Tabs (Untuk status cabang) */
-.cabang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-.cabang-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1.2rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 0.8rem; }
-.cabang-header { display: flex; justify-content: space-between; align-items: flex-start; }
-.cabang-name { font-weight: 800; font-size: 1rem; color: var(--rose-deep); }
-.cabang-actions { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--border); }
-
-/* Modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; transition: opacity 0.2s; }
-.modal-overlay.show { display: flex; opacity: 1; }
-.modal-box { background: var(--surface); border-radius: var(--r-lg); width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); animation: fadeIn 0.3s ease; }
-.modal-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.modal-header h3 { margin: 0; font-size: 1.2rem; }
-.modal-close { font-size: 1.5rem; line-height: 1; color: var(--ink-light); cursor: pointer; }
-.modal-body { padding: 1.5rem; overflow-y: auto; }
-.modal-footer { padding: 1.2rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.5rem; }
-
-/* Toast */
-.toast-container { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
-.toast { background: var(--ink); color: #fff; padding: 0.65rem 1.2rem; border-radius: 99px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: fadeIn 0.3s ease; max-width: 90vw; text-align: center; }
-.toast.success { background: var(--hijau); }
-.toast.error { background: var(--danger); }
-
-/* Config Form */
-.config-row { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
-.config-key { font-weight: 700; font-size: 0.85rem; color: var(--rose-deep); text-transform: capitalize; }
-@media (max-width: 768px) {
-  .main-layout { flex-direction: column; }
-  .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 0; border-right: none; border-bottom: 1px solid var(--border); }
-  .nav-item { padding: 0.8rem 1rem; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
-  .nav-item.active { border-left: none; border-bottom-color: var(--rose-deep); }
-  .content-area { padding: 1rem; }
-  .config-row { grid-template-columns: 1fr; gap: 0.5rem; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100dvh;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;line-height:1.2;color:var(--rose-deep)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:15px}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--rose-light);outline-offset:2px;border-radius:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite}
+.spinner.dark{border-color:var(--border);border-top-color:var(--rose-primary)}
+#view-login{height:100dvh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.login-card{background:var(--surface);border-radius:var(--r-lg);padding:2.5rem;box-shadow:var(--shadow-lg);border:1px solid var(--border);width:100%;max-width:400px;text-align:center}
+.login-card h1{font-size:1.6rem;margin-bottom:0.3rem}
+.login-card p{color:var(--ink-light);font-size:0.9rem;margin-bottom:1.5rem}
+.token-input{text-align:center;letter-spacing:0.2em;font-weight:800;font-size:1.2rem;text-transform:uppercase;padding:0.8rem}
+.back-home{position:absolute;top:1.5rem;left:1.5rem;font-weight:700;font-size:0.9rem;color:var(--ink-light);display:flex;align-items:center;gap:0.4rem}
+.back-home:hover{color:var(--rose-primary)}
+#app{display:none;flex-direction:column;height:100dvh;overflow:hidden}
+.appbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;box-shadow:var(--shadow-sm)}
+.appbar-brand{font-weight:800;color:var(--rose-deep);font-size:1.1rem;display:flex;align-items:center;gap:0.5rem}
+.appbar-brand svg{width:22px;height:22px;color:var(--rose-primary)}
+.main-layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:1rem 0}
+.nav-item{padding:0.8rem 1.5rem;display:flex;align-items:center;gap:0.8rem;font-weight:600;color:var(--ink);transition:var(--trans);cursor:pointer;border-left:4px solid transparent}
+.nav-item:hover{background:var(--bg);color:var(--rose-primary)}
+.nav-item.active{background:var(--rose-light);color:var(--rose-deep);border-left-color:var(--rose-deep)}
+.nav-item .icon{font-size:1.1rem;width:24px;text-align:center}
+.content-area{flex:1;overflow-y:auto;padding:1.5rem 2rem;background:var(--bg);position:relative}
+.panel{display:none;animation:fadeIn 0.3s ease}
+.panel.active{display:block}
+.page-title{font-size:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:0.4rem;padding:0.6rem 1rem;border-radius:var(--r-md);font-size:0.85rem;font-weight:700;transition:var(--trans);border:none;cursor:pointer}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+.btn-primary{background:var(--rose-deep);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--rose-primary)}
+.btn-success{background:var(--hijau);color:#fff}
+.btn-success:hover:not(:disabled){background:#21867a}
+.btn-warning{background:var(--gold);color:var(--rose-deep)}
+.btn-warning:hover:not(:disabled){background:#dcb457}
+.btn-danger{background:var(--danger-light);color:var(--danger)}
+.btn-danger:hover:not(:disabled){background:var(--danger);color:#fff}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--ink)}
+.btn-ghost:hover:not(:disabled){border-color:var(--rose-primary);color:var(--rose-primary)}
+.btn-sm{padding:0.35rem 0.7rem;font-size:0.75rem;border-radius:var(--r-sm)}
+.input,.select{width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface);outline:none;font-weight:500;transition:var(--trans)}
+.input:focus,.select:focus{border-color:var(--rose-primary);box-shadow:0 0 0 3px rgba(158,95,123,0.15)}
+.label{display:block;font-size:0.75rem;font-weight:700;color:var(--ink-light);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem}
+.form-group{margin-bottom:1rem}
+.badge{display:inline-flex;align-items:center;padding:0.2rem 0.6rem;border-radius:99px;font-size:0.7rem;font-weight:800;text-transform:uppercase}
+.badge.menunggu{background:#E0E7FF;color:#3730A3}
+.badge.locked{background:var(--gold-light);color:#92400e}
+.badge.sidang{background:#FCE7F3;color:#9d174d}
+.badge.final{background:var(--hijau-light);color:#065f46}
+.badge.aktif{background:var(--hijau-light);color:var(--hijau)}
+.badge.nonaktif{background:var(--danger-light);color:var(--danger)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem;box-shadow:var(--shadow-sm)}
+.stat-card .lbl{font-size:0.75rem;font-weight:800;color:var(--ink-light);text-transform:uppercase;margin-bottom:0.3rem}
+.stat-card .val{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:var(--rose-deep);line-height:1}
+.table-wrap{background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);overflow-x:auto;box-shadow:var(--shadow-sm)}
+table.data{width:100%;border-collapse:collapse;font-size:0.85rem}
+table.data th{background:var(--bg);color:var(--ink-light);padding:0.8rem 1rem;text-align:left;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid var(--border);white-space:nowrap}
+table.data td{padding:0.8rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+table.data tr:hover td{background:#F8FAFC}
+table.data td .actions{display:flex;gap:0.3rem;flex-wrap:wrap}
+.cabang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.cabang-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:0.8rem}
+.cabang-header{display:flex;justify-content:space-between;align-items:flex-start}
+.cabang-name{font-weight:800;font-size:1rem;color:var(--rose-deep)}
+.cabang-actions{display:flex;gap:0.5rem;margin-top:auto;padding-top:0.8rem;border-top:1px solid var(--border)}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1.5rem;opacity:0;transition:opacity 0.2s}
+.modal-overlay.show{display:flex;opacity:1}
+.modal-box{background:var(--surface);border-radius:var(--r-lg);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);animation:fadeIn 0.3s ease}
+.modal-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{margin:0;font-size:1.2rem}
+.modal-close{font-size:1.5rem;line-height:1;color:var(--ink-light);cursor:pointer}
+.modal-body{padding:1.5rem;overflow-y:auto}
+.modal-footer{padding:1.2rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.5rem}
+.toast-container{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none}
+.toast{background:var(--ink);color:#fff;padding:0.65rem 1.2rem;border-radius:99px;font-size:0.85rem;font-weight:600;box-shadow:var(--shadow-lg);animation:fadeIn 0.3s ease;max-width:90vw;text-align:center}
+.toast.success{background:var(--hijau)}
+.toast.error{background:var(--danger)}
+.config-row{display:grid;grid-template-columns:1fr 2fr;gap:1rem;align-items:center;padding:0.8rem 0;border-bottom:1px solid var(--border)}
+.config-key{font-weight:700;font-size:0.85rem;color:var(--rose-deep);text-transform:capitalize}
+/* Tabs */
+.tabs{display:flex;gap:0.3rem;overflow-x:auto;border-bottom:2px solid var(--border);margin-bottom:1.5rem;padding-bottom:0.3rem}
+.tab-btn{padding:0.6rem 1rem;font-weight:700;font-size:0.85rem;color:var(--ink-light);border-bottom:3px solid transparent;white-space:nowrap}
+.tab-btn.active{color:var(--rose-deep);border-bottom-color:var(--rose-deep)}
+.tab-content{display:none;animation:fadeIn 0.3s ease}
+.tab-content.active{display:block}
+/* Section cards for print */
+.print-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem}
+.print-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+@media (max-width:768px){
+  .main-layout{flex-direction:column}
+  .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:0;border-right:none;border-bottom:1px solid var(--border)}
+  .nav-item{padding:0.8rem 1rem;white-space:nowrap;border-left:none;border-bottom:3px solid transparent}
+  .nav-item.active{border-left:none;border-bottom-color:var(--rose-deep)}
+  .content-area{padding:1rem}
+  .config-row{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ================= LOGIN ================= -->
 <div id="view-login">
   <a href="./index.html" class="back-home">← Beranda</a>
   <div class="login-card">
@@ -185,11 +132,10 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
     <div class="form-group">
       <input type="text" id="inputToken" class="input token-input" placeholder="XXXXXXXXXXXXXX" maxlength="20" autocomplete="off">
     </div>
-    <button class="btn btn-primary" style="width:100%; padding:0.8rem; font-size:1rem;" id="btnLogin">Masuk</button>
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;font-size:1rem;" id="btnLogin">Masuk</button>
   </div>
 </div>
 
-<!-- ================= APP ================= -->
 <div id="app">
   <header class="appbar">
     <div class="appbar-brand">
@@ -204,17 +150,17 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
       <div class="nav-item active" data-target="panel-dashboard"><span class="icon">📊</span> Dashboard</div>
       <div class="nav-item" data-target="panel-peserta"><span class="icon">👥</span> Peserta</div>
       <div class="nav-item" data-target="panel-ofisial"><span class="icon">🆔</span> Ofisial</div>
-      <div class="nav-item" data-target="panel-juri"><span class="icon">⚖️</span> Juri & Pewara</div>
       <div class="nav-item" data-target="panel-sekolah"><span class="icon">🏫</span> Sekolah</div>
+      <div class="nav-item" data-target="panel-pejabat"><span class="icon">👔</span> Juri · Pewara · Panitia</div>
       <div class="nav-item" data-target="panel-undian"><span class="icon">🎲</span> Undian & Status</div>
       <div class="nav-item" data-target="panel-hasil"><span class="icon">🏆</span> Hasil & Klasemen</div>
-      <div class="nav-item" data-target="panel-dokumen"><span class="icon">📄</span> Dokumen & Surat</div>
+      <div class="nav-item" data-target="panel-cetak"><span class="icon">🖨️</span> Cetak Dokumen</div>
       <div class="nav-item" data-target="panel-config"><span class="icon">⚙️</span> Pengaturan</div>
     </aside>
 
     <main class="content-area">
-      
-      <!-- PANEL 1: DASHBOARD -->
+
+      <!-- DASHBOARD -->
       <div id="panel-dashboard" class="panel active">
         <div class="page-title"><span>Dashboard</span></div>
         <div class="stats-grid" id="dashStats">
@@ -224,30 +170,33 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         <div class="cabang-grid" id="dashCabangGrid"></div>
       </div>
 
-      <!-- PANEL 2: PESERTA -->
+      <!-- PESERTA -->
       <div id="panel-peserta" class="panel">
         <div class="page-title">
           <span>Kelola Peserta</span>
           <button class="btn btn-ghost btn-sm" onclick="loadPeserta()">↺ Refresh</button>
         </div>
+        <div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <select id="filterCabangPeserta" class="select" style="max-width:250px;" onchange="loadPeserta()"></select>
+          <select id="filterStatusPeserta" class="select" style="max-width:200px;" onchange="loadPeserta()">
+            <option value="">Semua Status</option>
+            <option value="menunggu">Menunggu</option>
+            <option value="terkunci">Terkunci</option>
+            <option value="diterima">Diterima</option>
+            <option value="ditolak">Ditolak</option>
+          </select>
+        </div>
         <div class="table-wrap">
           <table class="data" id="tablePeserta">
-            <thead>
-              <tr>
-                <th>No. Daftar</th>
-                <th>Nama</th>
-                <th>Kapanewon</th>
-                <th>Cabang</th>
-                <th>Status</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody><tr><td colspan="6" style="text-align:center;">Memuat...</td></tr></tbody>
+            <thead><tr>
+              <th>No. Daftar</th><th>Nama</th><th>Kapanewon</th><th>Cabang</th><th>Undian</th><th>Status</th><th>Aksi</th>
+            </tr></thead>
+            <tbody><tr><td colspan="7" style="text-align:center;">Memuat...</td></tr></tbody>
           </table>
         </div>
       </div>
 
-      <!-- PANEL 3: OFISIAL -->
+      <!-- OFISIAL -->
       <div id="panel-ofisial" class="panel">
         <div class="page-title">
           <span>Kelola Ofisial</span>
@@ -255,89 +204,103 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         </div>
         <div class="table-wrap">
           <table class="data" id="tableOfisial">
-            <thead>
-              <tr>
-                <th>Kapanewon</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>WA</th>
-                <th>Status</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th>Kapanewon</th><th>Nama</th><th>Email</th><th>WA</th><th>Status</th><th>Aksi</th>
+            </tr></thead>
             <tbody><tr><td colspan="6" style="text-align:center;">Memuat...</td></tr></tbody>
           </table>
         </div>
       </div>
 
-      <!-- PANEL 4: JURI & PEWARA -->
-      <div id="panel-juri" class="panel">
-        <div class="page-title"><span>Juri & Pewara</span></div>
-        <div style="margin-bottom:1.5rem; display:flex; gap:0.5rem; overflow-x:auto;">
-          <select id="filterCabangJuri" class="select" style="max-width:300px;"></select>
-        </div>
-        <h3 style="margin-bottom:1rem;">Daftar Juri</h3>
-        <div class="table-wrap">
-          <table class="data" id="tableJuri">
-            <thead>
-              <tr>
-                <th>Urutan</th>
-                <th>Nama Juri</th>
-                <th>NIP</th>
-                <th>Instansi</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody><tr><td colspan="5" style="text-align:center;">Pilih cabang...</td></tr></tbody>
-          </table>
-        </div>
-
-        <h3 style="margin:2rem 0 1rem;">Daftar Pewara</h3>
-        <div class="table-wrap">
-          <table class="data" id="tablePewara">
-            <thead>
-              <tr>
-                <th>Cabang</th>
-                <th>Nama</th>
-                <th>NIP</th>
-                <th>Token</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody><tr><td colspan="5" style="text-align:center;">Memuat...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- PANEL 5: SEKOLAH -->
+      <!-- SEKOLAH -->
       <div id="panel-sekolah" class="panel">
         <div class="page-title">
           <span>Master Sekolah</span>
-          <div style="display:flex; gap:0.5rem;">
+          <div style="display:flex;gap:0.5rem;">
             <button class="btn btn-primary btn-sm" onclick="openModalSekolah()">+ Tambah</button>
             <button class="btn btn-ghost btn-sm" onclick="loadSekolah()">↺ Refresh</button>
           </div>
         </div>
-        <div style="margin-bottom:1rem; display:flex; gap:1rem;">
-          <select id="filterKapanewonSekolah" class="select" style="max-width:300px;"></select>
+        <div style="margin-bottom:1rem;">
+          <select id="filterKapanewonSekolah" class="select" style="max-width:300px;" onchange="loadSekolah()"></select>
         </div>
         <div class="table-wrap">
           <table class="data" id="tableSekolah">
-            <thead>
-              <tr>
-                <th>Kapanewon</th>
-                <th>Nama Sekolah</th>
-                <th>NPSN</th>
-                <th>Status</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th>Kapanewon</th><th>Nama Sekolah</th><th>NPSN</th><th>Status</th><th>Aksi</th>
+            </tr></thead>
             <tbody><tr><td colspan="5" style="text-align:center;">Memuat...</td></tr></tbody>
           </table>
         </div>
       </div>
 
-      <!-- PANEL 6: UNDIAN & STATUS -->
+      <!-- PEJABAT (Juri + Pewara + Panitia) -->
+      <div id="panel-pejabat" class="panel">
+        <div class="page-title"><span>Juri · Pewara · Panitia</span></div>
+
+        <!-- PANITIA & PEJABAT -->
+        <div class="print-card" style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">📋 Panitia & Pejabat</h3>
+          <div class="print-grid">
+            <div class="form-group">
+              <label class="label">Ketua Panitia — Nama</label>
+              <input type="text" id="cfgKetuaPanitiaNama" class="input">
+            </div>
+            <div class="form-group">
+              <label class="label">Ketua Panitia — NIP</label>
+              <input type="text" id="cfgKetuaPanitiaNip" class="input">
+            </div>
+            <div class="form-group">
+              <label class="label">Koordinator Juri — Nama</label>
+              <input type="text" id="cfgKoordinatorJuriNama" class="input">
+            </div>
+            <div class="form-group">
+              <label class="label">Koordinator Juri — NIP</label>
+              <input type="text" id="cfgKoordinatorJuriNip" class="input">
+            </div>
+            <div class="form-group">
+              <label class="label">Kota (untuk BA/SK)</label>
+              <input type="text" id="cfgKotaBa" class="input">
+            </div>
+            <div class="form-group">
+              <label class="label">Nama Pengirim Email</label>
+              <input type="text" id="cfgNamaPengirim" class="input">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="simpanPanitia()">💾 Simpan Data Panitia</button>
+        </div>
+
+        <!-- JURI -->
+        <div class="print-card" style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">⚖️ Daftar Juri</h3>
+          <div style="margin-bottom:1rem;">
+            <select id="filterCabangJuri" class="select" style="max-width:300px;" onchange="loadJuri(this.value)"></select>
+          </div>
+          <div class="table-wrap">
+            <table class="data" id="tableJuri">
+              <thead><tr>
+                <th>Urutan</th><th>Nama Juri</th><th>NIP</th><th>Asal Instansi</th><th>Status</th><th>Aksi</th>
+              </tr></thead>
+              <tbody><tr><td colspan="6" style="text-align:center;">Pilih cabang...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PEWARA -->
+        <div class="print-card">
+          <h3 style="margin-bottom:1rem;">🎤 Daftar Pewara</h3>
+          <div class="table-wrap">
+            <table class="data" id="tablePewara">
+              <thead><tr>
+                <th>Cabang</th><th>Nama</th><th>NIP</th><th>Ruang</th><th>Token</th><th>Aksi</th>
+              </tr></thead>
+              <tbody><tr><td colspan="6" style="text-align:center;">Memuat...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- UNDIAN & STATUS -->
       <div id="panel-undian" class="panel">
         <div class="page-title"><span>Undian & Status Cabang</span></div>
         <div class="cabang-grid" id="adminCabangGrid">
@@ -345,7 +308,7 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         </div>
       </div>
 
-      <!-- PANEL 7: HASIL -->
+      <!-- HASIL -->
       <div id="panel-hasil" class="panel">
         <div class="page-title">
           <span>Hasil & Klasemen</span>
@@ -355,74 +318,199 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         <h3 style="margin:1.5rem 0 1rem;">Klasemen Juara Umum (Preview)</h3>
         <div class="table-wrap">
           <table class="data" id="tableKlasemen">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Kapanewon</th>
-                <th>J1</th>
-                <th>J2</th>
-                <th>J3</th>
-                <th>H1</th>
-                <th>H2</th>
-                <th>Total Poin</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th>Rank</th><th>Kapanewon</th><th>J1</th><th>J2</th><th>J3</th><th>H1</th><th>H2</th><th>Total Poin</th>
+            </tr></thead>
             <tbody><tr><td colspan="8" style="text-align:center;">Memuat...</td></tr></tbody>
           </table>
         </div>
       </div>
 
-      <!-- PANEL 8: DOKUMEN & SURAT (BARU) -->
-      <div id="panel-dokumen" class="panel">
-        <div class="page-title"><span>Administrasi Persuratan & Dokumen</span></div>
-        
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
-          <!-- Card 1: Setup Template & TTD -->
-          <div class="stat-card" style="padding:1.5rem;">
-            <h3 style="margin-bottom:1rem; font-size:1.1rem;">1. Pengaturan Template</h3>
+      <!-- CETAK DOKUMEN -->
+      <div id="panel-cetak" class="panel">
+        <div class="page-title"><span>Cetak Dokumen</span></div>
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-dh">📋 Daftar Hadir</button>
+          <button class="tab-btn" data-tab="tab-nilai">📊 Daftar Nilai</button>
+          <button class="tab-btn" data-tab="tab-ba">📄 Berita Acara</button>
+          <button class="tab-btn" data-tab="tab-bap">📝 BAP</button>
+          <button class="tab-btn" data-tab="tab-sk">🏆 SK Kejuaraan</button>
+          <button class="tab-btn" data-tab="tab-dada">🔢 Nomor Dada</button>
+          <button class="tab-btn" data-tab="tab-piagam">🎖️ Piagam</button>
+          <button class="tab-btn" data-tab="tab-surat">✉️ Surat Edaran</button>
+        </div>
+
+        <!-- DAFTAR HADIR -->
+        <div class="tab-content active" id="tab-dh">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Daftar Hadir Peserta</h3>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="dhCabang" class="select"></select>
+              </div>
+              <div class="form-group">
+                <label class="label">Mode</label>
+                <select id="dhMode" class="select">
+                  <option value="auto">Otomatis (dari data peserta)</option>
+                  <option value="manual">Manual (kosong untuk tulis tangan)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="label">Jumlah Baris (mode manual)</label>
+                <input type="number" id="dhRows" class="input" value="20" min="1" max="60">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="cetakDaftarHadir(this)">🖨️ Cetak Daftar Hadir</button>
+          </div>
+        </div>
+
+        <!-- DAFTAR NILAI -->
+        <div class="tab-content" id="tab-nilai">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Daftar Nilai</h3>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="dnCabang" class="select"></select>
+              </div>
+              <div class="form-group">
+                <label class="label">Mode</label>
+                <select id="dnMode" class="select">
+                  <option value="auto">Otomatis (nama peserta terisi)</option>
+                  <option value="manual">Manual (kosong untuk tulis tangan)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="label">Jumlah Juri</label>
+                <input type="number" id="dnJuri" class="input" value="3" min="1" max="7">
+              </div>
+              <div class="form-group">
+                <label class="label">Jumlah Baris (mode manual)</label>
+                <input type="number" id="dnRows" class="input" value="15" min="1" max="40">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="cetakDaftarNilai(this)">🖨️ Cetak Daftar Nilai</button>
+          </div>
+        </div>
+
+        <!-- BERITA ACARA -->
+        <div class="tab-content" id="tab-ba">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Berita Acara Lomba</h3>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="baCabang" class="select"></select>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn-primary" onclick="cetakBA(this)">📄 Cetak BA (backend)</button>
+              <button class="btn btn-warning" onclick="cetakBAHtml(this)">📄 Cetak BA (HTML)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BAP -->
+        <div class="tab-content" id="tab-bap">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Berita Acara Pelaksanaan (BAP)</h3>
+            <p style="font-size:0.85rem;color:var(--ink-light);margin-bottom:1rem;">Berisi ringkasan pelaksanaan lomba: juri, pewara, peserta hadir, dan penetapan juara.</p>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="bapCabang" class="select"></select>
+              </div>
+              <div class="form-group">
+                <label class="label">Nomor Surat</label>
+                <input type="text" id="bapNomor" class="input" placeholder="otomatis jika kosong">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="cetakBAP(this)">🖨️ Cetak BAP</button>
+          </div>
+        </div>
+
+        <!-- SK KEJUARAAN -->
+        <div class="tab-content" id="tab-sk">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Surat Keputusan Kejuaraan</h3>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="skCabang" class="select"></select>
+              </div>
+              <div class="form-group">
+                <label class="label">Nomor SK</label>
+                <input type="text" id="skNomor" class="input" placeholder="otomatis jika kosong">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="cetakSK(this)">🖨️ Cetak SK Kejuaraan</button>
+          </div>
+        </div>
+
+        <!-- NOMOR DADA -->
+        <div class="tab-content" id="tab-dada">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Nomor Dada Peserta</h3>
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Cabang</label>
+                <select id="ndCabang" class="select"></select>
+              </div>
+              <div class="form-group">
+                <label class="label">Kolom per Baris</label>
+                <select id="ndCols" class="select">
+                  <option value="2">2 kolom</option>
+                  <option value="3" selected>3 kolom</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="cetakNomorDada(this)">🖨️ Cetak Nomor Dada</button>
+          </div>
+        </div>
+
+        <!-- PIAGAM -->
+        <div class="tab-content" id="tab-piagam">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Piagam Kejuaraan</h3>
+            <p style="font-size:0.85rem;color:var(--ink-light);margin-bottom:1rem;">Data piagam juara seluruh cabang yang sudah final.</p>
+            <button class="btn btn-primary" onclick="cetakPiagam(this)">🖨️ Cetak Rekap Piagam</button>
+          </div>
+        </div>
+
+        <!-- SURAT EDARAN -->
+        <div class="tab-content" id="tab-surat">
+          <div class="print-card">
+            <h3 style="margin-bottom:1rem;">Surat Edaran</h3>
             <div class="form-group">
               <label class="label">ID Template Surat (Google Docs)</label>
-              <input type="text" id="cfgTemplateSurat" class="input" placeholder="Contoh: 1A2b3C4d..." onblur="simpanConfig('template_surat_id', this.value)">
+              <input type="text" id="cfgTemplateSurat" class="input" placeholder="Contoh: 1A2b3C4d...">
             </div>
-            <div class="form-group">
-              <label class="label">Upload TTD Ketua Panitia (PNG)</label>
-              <input type="file" id="uploadTtdPanitia" accept="image/png" class="input" onchange="uploadTtd('ketua_panitia', this)">
+            <div class="print-grid">
+              <div class="form-group">
+                <label class="label">Upload TTD Ketua Panitia (PNG)</label>
+                <input type="file" id="uploadTtdPanitia" accept="image/png,image/jpeg" class="input" onchange="uploadTtd('ketua_panitia', this)">
+              </div>
+              <div class="form-group">
+                <label class="label">Upload TTD Ketua KKG (PNG)</label>
+                <input type="file" id="uploadTtdKkg" accept="image/png,image/jpeg" class="input" onchange="uploadTtd('ketua_kkg', this)">
+              </div>
             </div>
-            <div class="form-group">
-              <label class="label">Upload TTD Ketua KKG (PNG)</label>
-              <input type="file" id="uploadTtdKkg" accept="image/png" class="input" onchange="uploadTtd('ketua_kkg', this)">
-            </div>
-          </div>
-
-          <!-- Card 2: Cetak Surat Edaran -->
-          <div class="stat-card" style="padding:1.5rem;">
-            <h3 style="margin-bottom:1rem; font-size:1.1rem;">2. Surat Edaran</h3>
-            <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1rem;">Generate Surat Edaran otomatis untuk 17 Kapanewon (PDF).</p>
-            <button class="btn btn-primary" style="width:100%;" onclick="cetakSurat()">✉️ Cetak Surat Edaran</button>
-          </div>
-
-          <!-- Card 3: Cetak BA & DH -->
-          <div class="stat-card" style="padding:1.5rem;">
-            <h3 style="margin-bottom:1rem; font-size:1.1rem;">3. Berita Acara & Daftar Hadir</h3>
-            <div class="form-group">
-              <label class="label">Pilih Cabang</label>
-              <select id="dokCabang" class="select"></select>
-            </div>
-            <div style="display:flex; gap:0.5rem;">
-              <button class="btn btn-warning" style="flex:1;" onclick="cetakDokumen('BA')">📄 Cetak BA</button>
-              <button class="btn btn-warning" style="flex:1;" onclick="cetakDokumen('DH')">📋 Cetak DH</button>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="simpanTemplateSurat()">💾 Simpan Template</button>
+              <button class="btn btn-success" onclick="cetakSurat(this)">✉️ Generate Surat Edaran</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- PANEL 9: CONFIG -->
+      <!-- CONFIG -->
       <div id="panel-config" class="panel">
         <div class="page-title">
           <span>Pengaturan Sistem</span>
           <button class="btn btn-ghost btn-sm" onclick="loadConfig()">↺ Refresh</button>
         </div>
-        <div style="background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:1.5rem;" id="configContainer">
+        <div style="background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);padding:1.5rem;" id="configContainer">
           <div style="text-align:center;padding:2rem;"><span class="spinner dark"></span></div>
         </div>
       </div>
@@ -431,7 +519,6 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
   </div>
 </div>
 
-<!-- MODAL GLOBAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
     <div class="modal-header">
@@ -450,57 +537,44 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
 (() => {
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
   const LS_TOKEN = 'mtq_admin_token';
-
-  const State = {
-    token: localStorage.getItem(LS_TOKEN) || '',
-    config: {}, cabang: [], kapanewon: [],
-    currentPanel: 'dashboard'
-  };
-
+  const State = { token: localStorage.getItem(LS_TOKEN) || '', config: {}, cabang: [], kapanewon: [], kriteria: {}, currentPanel: 'dashboard' };
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const num = v => Number(String(v ?? '').replace(',', '.')) || 0;
 
-  function toast(msg, type = 'info') {
-    const wrap = $('#toastContainer');
+  function toast(msg, type='info') {
     const el = document.createElement('div');
     el.className = 'toast ' + type;
     el.textContent = msg;
-    wrap.appendChild(el);
-    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3200);
+    $('#toastContainer').appendChild(el);
+    setTimeout(() => { el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, 3200);
   }
 
-  async function api(action, payload = {}) {
+  async function api(action, payload={}) {
     const body = { action, token: State.token, ...payload };
     let res;
-    try {
-      res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
-    } catch (e) {
-      throw new Error('Koneksi gagal. Periksa internet Anda.');
-    }
+    try { res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body) }); }
+    catch(e) { throw new Error('Koneksi gagal. Periksa internet Anda.'); }
     if (!res.ok) throw new Error(`Server error (${res.status})`);
     const data = await res.json();
     if (data && data.error === 'Unauthorized') {
-      localStorage.removeItem(LS_TOKEN);
-      State.token = '';
+      localStorage.removeItem(LS_TOKEN); State.token='';
       toast('Sesi berakhir, silakan login ulang', 'error');
-      setTimeout(() => location.reload(), 900);
+      setTimeout(()=>location.reload(), 900);
       throw new Error('Unauthorized');
     }
     return data;
   }
 
-  // ── MODAL HELPERS ──
-  window.openModal = (title, bodyHtml, footerHtml) => {
+  window.openModal = (title, body, footer) => {
     $('#modalTitle').textContent = title;
-    $('#modalBody').innerHTML = bodyHtml;
-    $('#modalFooter').innerHTML = footerHtml;
+    $('#modalBody').innerHTML = body;
+    $('#modalFooter').innerHTML = footer;
     $('#modalOverlay').classList.add('show');
   };
-  window.closeModal = () => {
-    $('#modalOverlay').classList.remove('show');
-  };
-  $('#modalOverlay').addEventListener('click', (e) => { if (e.target === $('#modalOverlay')) closeModal(); });
+  window.closeModal = () => $('#modalOverlay').classList.remove('show');
+  $('#modalOverlay').addEventListener('click', e => { if (e.target === $('#modalOverlay')) closeModal(); });
 
   // ── NAVIGATION ──
   $$('.nav-item').forEach(item => {
@@ -509,23 +583,38 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
       $$('.panel').forEach(p => p.classList.remove('active'));
       item.classList.add('active');
       const target = item.dataset.target;
-      $('#' + target).classList.add('active');
-      State.currentPanel = target.replace('panel-', '');
-
-      // Lazy load data per panel
+      $('#'+target).classList.add('active');
+      State.currentPanel = target.replace('panel-','');
       if (State.currentPanel === 'dashboard') loadDashboard();
-      else if (State.currentPanel === 'peserta') loadPeserta();
+      else if (State.currentPanel === 'peserta') initPesertaFilter();
       else if (State.currentPanel === 'ofisial') loadOfisial();
-      else if (State.currentPanel === 'juri') initJuriPewara();
       else if (State.currentPanel === 'sekolah') initSekolah();
+      else if (State.currentPanel === 'pejabat') initPejabat();
       else if (State.currentPanel === 'undian') loadAdminCabang();
       else if (State.currentPanel === 'hasil') loadHasil();
-      else if (State.currentPanel === 'dokumen') initDokumen();
+      else if (State.currentPanel === 'cetak') initCetak();
       else if (State.currentPanel === 'config') loadConfig();
     };
   });
 
+  // Tabs
+  $$('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      $$('.tab-btn').forEach(b => b.classList.remove('active'));
+      $$('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('#'+btn.dataset.tab).classList.add('active');
+    };
+  });
+
   // ── LOGIN ──
+  async function bootWithToken() {
+    const opsi = await api('admin_opsi');
+    State.cabang = opsi.cabang || [];
+    State.kapanewon = opsi.kapanewon || [];
+    State.config = opsi.config || {};
+    State.kriteria = opsi.kriteria || {};
+  }
   $('#btnLogin').onclick = async () => {
     const tok = $('#inputToken').value.trim().toUpperCase();
     if (tok.length < 8) return toast('Token terlalu pendek', 'error');
@@ -533,15 +622,8 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
     try {
       const res = await api('login_admin', { token: tok });
       if (res.error) throw new Error(res.message || 'Token salah');
-      
-      State.token = tok;
-      localStorage.setItem(LS_TOKEN, tok);
-      
-      const opsi = await api('admin_opsi');
-      State.cabang = opsi.cabang || [];
-      State.kapanewon = opsi.kapanewon || [];
-      State.config = opsi.config || {};
-
+      State.token = tok; localStorage.setItem(LS_TOKEN, tok);
+      await bootWithToken();
       $('#view-login').style.display = 'none';
       $('#app').style.display = 'flex';
       loadDashboard();
@@ -551,87 +633,103 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
     }
   };
   $('#inputToken').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btnLogin').click(); });
-
-  $('#btnLogout').onclick = () => {
-    if (!confirm('Keluar dari panel admin?')) return;
-    localStorage.removeItem(LS_TOKEN);
-    location.reload();
-  };
+  $('#btnLogout').onclick = () => { if (confirm('Keluar dari panel admin?')) { localStorage.removeItem(LS_TOKEN); location.reload(); } };
 
   // ── 1. DASHBOARD ──
   async function loadDashboard() {
-    const stats = $('#dashStats');
-    const grid = $('#dashCabangGrid');
+    const stats = $('#dashStats'); const grid = $('#dashCabangGrid');
     try {
-      const res = await api('admin_dashboard');
-      const d = res;
-      
+      const d = await api('admin_dashboard');
       stats.innerHTML = `
-        <div class="stat-card"><div class="lbl">Total Peserta Aktif</div><div class="val">${d.peserta_total || 0}</div></div>
-        <div class="stat-card"><div class="lbl">Ofisial Aktif</div><div class="val">${d.ofisial_aktif || 0} <small style="font-size:1rem;color:var(--ink-light)">/ ${d.kapanewon_total}</small></div></div>
-        <div class="stat-card"><div class="lbl">Sekolah Terdaftar</div><div class="val">${d.sekolah_aktif || 0}</div></div>
-        <div class="stat-card"><div class="lbl">Pendaftaran</div><div class="val" style="color:${d.flags.pendaftaran_terbuka ? 'var(--hijau)' : 'var(--danger)'}">${d.flags.pendaftaran_terbuka ? 'BUKA' : 'TUTUP'}</div></div>
-      `;
-
-      grid.innerHTML = (d.per_cabang || []).map(c => `
+        <div class="stat-card"><div class="lbl">Total Peserta Aktif</div><div class="val">${d.peserta_total||0}</div></div>
+        <div class="stat-card"><div class="lbl">Ofisial Aktif</div><div class="val">${d.ofisial_aktif||0} <small style="font-size:1rem;color:var(--ink-light)">/ ${d.kapanewon_total}</small></div></div>
+        <div class="stat-card"><div class="lbl">Sekolah Terdaftar</div><div class="val">${d.sekolah_aktif||0}</div></div>
+        <div class="stat-card"><div class="lbl">Pendaftaran</div><div class="val" style="color:${d.flags.pendaftaran_terbuka?'var(--hijau)':'var(--danger)'}">${d.flags.pendaftaran_terbuka?'BUKA':'TUTUP'}</div></div>`;
+      grid.innerHTML = (d.per_cabang||[]).map(c => `
         <div class="cabang-card">
           <div class="cabang-header">
             <div class="cabang-name">${esc(c.kode)}</div>
             <span class="badge ${c.status_cabang}">${c.status_cabang}</span>
           </div>
-          <div style="font-size:0.85rem; color:var(--ink-light); display:flex; justify-content:space-between;">
+          <div style="font-size:0.85rem;color:var(--ink-light);display:flex;justify-content:space-between;">
             <span>Peserta: <b>${c.total}</b></span>
             <span>Diundi: <b>${c.diundi}</b></span>
           </div>
-        </div>
-      `).join('');
-    } catch (e) {
-      stats.innerHTML = `<div style="color:var(--danger)">Gagal memuat data: ${e.message}</div>`;
-    }
+        </div>`).join('');
+    } catch(e) { stats.innerHTML = `<div style="color:var(--danger)">${e.message}</div>`; }
   }
 
   // ── 2. PESERTA ──
+  function initPesertaFilter() {
+    const sel = $('#filterCabangPeserta');
+    if (!sel.options.length) {
+      sel.innerHTML = '<option value="">Semua Cabang</option>' +
+        (State.cabang||[]).map(c => `<option value="${c.key}">${esc(c.label)}</option>`).join('');
+    }
+    loadPeserta();
+  }
+  const BADGE_MAP = { menunggu:'menunggu', terkunci:'locked', diterima:'aktif', ditolak:'nonaktif' };
   async function loadPeserta() {
     const tbody = $('#tablePeserta tbody');
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;"><span class="spinner dark"></span></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;"><span class="spinner dark"></span></td></tr>';
     try {
-      const res = await api('admin_peserta');
+      const cabang = $('#filterCabangPeserta').value;
+      const status = $('#filterStatusPeserta').value;
+      const payload = {};
+      if (cabang) payload.cabang = cabang;
+      if (status) payload.status = status;
+      const res = await api('admin_peserta', payload);
       const data = res.peserta || [];
-      
-      if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada peserta.</td></tr>';
-        return;
-      }
-
+      if (!data.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada peserta.</td></tr>'; return; }
       tbody.innerHTML = data.map(p => `
         <tr>
           <td><b>${esc(p.No_Pendaftaran)}</b></td>
-          <td>${esc(p.Nama_Lengkap)}<br><small style="color:var(--ink-light)">${esc(p.Asal_Sekolah)}</small></td>
+          <td>${esc(p.Nama_Lengkap)}<br><small style="color:var(--ink-light)">${esc(p.Asal_Sekolah_1)}</small></td>
           <td>${esc(p.Kapanewon)}</td>
           <td>${esc(p.Cabang)}</td>
-          <td><span class="badge ${p.Status === 'diterima' ? 'aktif' : (p.Status === 'ditolak' ? 'nonaktif' : 'locked')}">${p.Status}</span></td>
+          <td>${esc(p.No_Undian||'-')}</td>
+          <td><span class="badge ${BADGE_MAP[p.Status]||'locked'}">${p.Status}</span></td>
           <td>
             <div class="actions">
-              ${p.Status === 'menunggu' ? `
-                <button class="btn btn-success btn-sm" onclick="verifikasiPeserta('${p.ID}', 'diterima')">Terima</button>
-                <button class="btn btn-danger btn-sm" onclick="verifikasiPeserta('${p.ID}', 'ditolak')">Tolak</button>
-              ` : ''}
+              ${p.Status==='menunggu' ? `
+                <button class="btn btn-success btn-sm" onclick="verifikasiPeserta('${p.ID}','diterima')">✓</button>
+                <button class="btn btn-danger btn-sm" onclick="verifikasiPeserta('${p.ID}','ditolak')">✕</button>` : ''}
+              <button class="btn btn-ghost btn-sm" onclick="detailPeserta('${p.ID}')">Detail</button>
             </div>
           </td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
-    }
+        </tr>`).join('');
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`; }
   }
-
   window.verifikasiPeserta = async (id, status) => {
     if (!confirm(`Ubah status peserta menjadi ${status}?`)) return;
+    try { const r = await api('admin_verifikasi',{id,status}); toast(r.message||'OK','success'); loadPeserta(); }
+    catch(e){ toast(e.message,'error'); }
+  };
+  window.detailPeserta = async (id) => {
     try {
-      const res = await api('admin_verifikasi', { id, status });
-      toast(res.message, 'success');
-      loadPeserta();
-    } catch (e) { toast(e.message, 'error'); }
+      const res = await api('admin_peserta', {});
+      const p = (res.peserta||[]).find(x => x.ID === id);
+      if (!p) return toast('Peserta tidak ditemukan','error');
+      const cab = (State.cabang||[]).find(c => c.key === p.Cabang) || {};
+      const isTeam = !!cab.team;
+      openModal('Detail Peserta', `
+        <div class="form-group"><label class="label">No. Pendaftaran</label><div><b>${esc(p.No_Pendaftaran)}</b></div></div>
+        <div class="form-group"><label class="label">Nama</label><div>${esc(p.Nama_Lengkap)}</div></div>
+        <div class="form-group"><label class="label">NISN</label><div>${esc(p.NISN)}</div></div>
+        <div class="form-group"><label class="label">TTL</label><div>${esc(p.Tempat_Lahir)}, ${esc(p.Tanggal_Lahir)}</div></div>
+        <div class="form-group"><label class="label">Kelas</label><div>${esc(p.Kelas)}</div></div>
+        <div class="form-group"><label class="label">Sekolah</label><div>${esc(p.Asal_Sekolah_1)}</div></div>
+        ${isTeam ? `
+          <div class="form-group"><label class="label">Anggota 2</label><div>${esc(p.Anggota_2||'-')} (${esc(p.Asal_Sekolah_2||'-')})</div></div>
+          <div class="form-group"><label class="label">Anggota 3</label><div>${esc(p.Anggota_3||'-')} (${esc(p.Asal_Sekolah_3||'-')})</div></div>` : ''}
+        <div class="form-group"><label class="label">Kapanewon</label><div>${esc(p.Kapanewon)}</div></div>
+        <div class="form-group"><label class="label">Cabang</label><div>${esc(p.Cabang)}</div></div>
+        <div class="form-group"><label class="label">No. Undian</label><div>${esc(p.No_Undian||'-')}</div></div>
+        <div class="form-group"><label class="label">Status</label><div><span class="badge ${BADGE_MAP[p.Status]||'locked'}">${p.Status}</span></div></div>
+        <div class="form-group"><label class="label">Kehadiran</label><div>${esc(p.Status_Kehadiran||'belum')} (penalti ${p.Penalti||0})</div></div>
+        <div class="form-group"><label class="label">Catatan</label><div>${esc(p.Catatan||'-')}</div></div>
+      `, `<button class="btn btn-ghost" onclick="closeModal()">Tutup</button>`);
+    } catch(e){ toast(e.message,'error'); }
   };
 
   // ── 3. OFISIAL ──
@@ -647,129 +745,33 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
           <td>${esc(o.Nama)}</td>
           <td>${esc(o.Email)}</td>
           <td>${esc(o.WA)}</td>
-          <td><span class="badge ${o.Status === 'aktif' ? 'aktif' : 'nonaktif'}">${o.Status}</span></td>
-          <td>
-            <div class="actions">
-              <button class="btn btn-ghost btn-sm" onclick="resetTokenOfisial('${o.ID}')" title="Reset Token">↺ Token</button>
-              <button class="btn btn-ghost btn-sm" onclick="toggleOfisial('${o.ID}', ${o.Status !== 'aktif'})" title="Aktif/Nonaktif">${o.Status === 'aktif' ? '⏸' : '▶'}</button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
-    }
+          <td><span class="badge ${o.Status==='aktif'?'aktif':'nonaktif'}">${o.Status}</span></td>
+          <td><div class="actions">
+            <button class="btn btn-ghost btn-sm" onclick="resetTokenOfisial('${o.ID}')">↺ Token</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleOfisial('${o.ID}',${o.Status!=='aktif'})">${o.Status==='aktif'?'⏸':'▶'}</button>
+          </div></td>
+        </tr>`).join('');
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`; }
   }
-
   window.resetTokenOfisial = async (id) => {
     if (!confirm('Reset token ofisial ini dan kirim ulang ke email?')) return;
-    try {
-      const res = await api('admin_reset_ofisial_token', { id });
-      toast(res.message, 'success');
-    } catch (e) { toast(e.message, 'error'); }
+    try { const r = await api('admin_reset_ofisial_token',{id}); toast(r.message||'OK','success'); }
+    catch(e){ toast(e.message,'error'); }
   };
-
   window.toggleOfisial = async (id, aktif) => {
-    try {
-      await api('admin_ofisial_status', { id, aktif });
-      toast('Status diperbarui', 'success');
-      loadOfisial();
-    } catch (e) { toast(e.message, 'error'); }
+    try { await api('admin_ofisial_status',{id,aktif}); toast('Status diperbarui','success'); loadOfisial(); }
+    catch(e){ toast(e.message,'error'); }
   };
 
-  // ── 4. JURI & PEWARA ──
-  function initJuriPewara() {
-    const sel = $('#filterCabangJuri');
-    if (sel.options.length === 0) {
-      sel.innerHTML = State.cabang.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
-      sel.onchange = () => loadJuri(sel.value);
-    }
-    loadJuri(sel.value || State.cabang[0].key);
-    loadPewara();
-  }
-
-  async function loadJuri(cabang) {
-    const tbody = $('#tableJuri tbody');
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;"><span class="spinner dark"></span></td></tr>';
-    try {
-      const res = await api('admin_juri', { cabang });
-      const data = res.juri || [];
-      tbody.innerHTML = data.map(j => `
-        <tr>
-          <td><b>${j.Urutan}</b></td>
-          <td>${esc(j.Nama_Juri)}</td>
-          <td>${esc(j.NIP)}</td>
-          <td>${esc(j.Asal_Instansi)}</td>
-          <td><button class="btn btn-ghost btn-sm" onclick="editJuri('${cabang}', ${j.Urutan})">Edit</button></td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
-    }
-  }
-
-  window.editJuri = (cabang, urutan) => {
-    openModal('Edit Juri', `
-      <div class="form-group"><label class="label">Nama Juri</label><input type="text" id="mjNama" class="input"></div>
-      <div class="form-group"><label class="label">NIP</label><input type="text" id="mjNip" class="input"></div>
-      <div class="form-group"><label class="label">Asal Instansi</label><input type="text" id="mjInstansi" class="input"></div>
-    `, `
-      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
-      <button class="btn btn-primary" onclick="simpanJuri('${cabang}', ${urutan})">Simpan</button>
-    `);
-  };
-
-  window.simpanJuri = async (cabang, urutan) => {
-    const payload = {
-      Cabang: cabang, Urutan: urutan,
-      Nama_Juri: $('#mjNama').value, NIP: $('#mjNip').value, Asal_Instansi: $('#mjInstansi').value
-    };
-    try {
-      await api('admin_simpan_juri', { payload });
-      toast('Juri disimpan', 'success');
-      closeModal();
-      loadJuri(cabang);
-    } catch (e) { toast(e.message, 'error'); }
-  };
-
-  async function loadPewara() {
-    const tbody = $('#tablePewara tbody');
-    try {
-      const res = await api('admin_opsi');
-      const data = res.pewara || [];
-      tbody.innerHTML = data.map(p => `
-        <tr>
-          <td><b>${esc(p.Kode)}</b></td>
-          <td>${esc(p.Nama)}</td>
-          <td>${esc(p.NIP)}</td>
-          <td style="font-family:monospace;font-weight:700;">${esc(p.Token)}</td>
-          <td><button class="btn btn-warning btn-sm" onclick="revokeToken('${p.ID}')">↺ Reset Token</button></td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
-    }
-  }
-
-  window.revokeToken = async (id) => {
-    if (!confirm('Reset token pewara ini?')) return;
-    try {
-      const res = await api('admin_revoke_token', { pewara_id: id });
-      toast('Token baru: ' + res.token_baru, 'success');
-      loadPewara();
-    } catch (e) { toast(e.message, 'error'); }
-  };
-
-  // ── 5. SEKOLAH ──
+  // ── 4. SEKOLAH ──
   function initSekolah() {
     const sel = $('#filterKapanewonSekolah');
-    if (sel.options.length === 0) {
-      sel.innerHTML = '<option value="">Semua Kapanewon</option>' + State.kapanewon.map(k => `<option value="${k}">${k}</option>`).join('');
-      sel.onchange = () => loadSekolah();
+    if (!sel.options.length) {
+      sel.innerHTML = '<option value="">Semua Kapanewon</option>' +
+        (State.kapanewon||[]).map(k => `<option value="${k}">${k}</option>`).join('');
     }
     loadSekolah();
   }
-
   async function loadSekolah() {
     const tbody = $('#tableSekolah tbody');
     const kap = $('#filterKapanewonSekolah').value;
@@ -781,44 +783,194 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         <tr>
           <td>${esc(s.Kapanewon)}</td>
           <td><b>${esc(s.Nama_Sekolah)}</b></td>
-          <td>${esc(s.NPSN)}</td>
-          <td><span class="badge ${s.Aktif ? 'aktif' : 'nonaktif'}">${s.Aktif ? 'Aktif' : 'Nonaktif'}</span></td>
-          <td><button class="btn btn-danger btn-sm" onclick="hapusSekolah('${s.ID}')">Hapus</button></td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
-    }
+          <td>${esc(s.NPSN||'-')}</td>
+          <td><span class="badge ${String(s.Aktif).toLowerCase()!=='false'?'aktif':'nonaktif'}">${String(s.Aktif).toLowerCase()!=='false'?'Aktif':'Nonaktif'}</span></td>
+          <td><div class="actions">
+            <button class="btn btn-ghost btn-sm" onclick='openModalSekolah(${JSON.stringify(s).replace(/'/g,"&#39;")})'>Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="hapusSekolah('${s.ID}')">Nonaktif</button>
+          </div></td>
+        </tr>`).join('');
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`; }
   }
-
-  window.openModalSekolah = () => {
-    openModal('Tambah Sekolah', `
-      <div class="form-group"><label class="label">Kapanewon</label><select id="msKap" class="select">${State.kapanewon.map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>
-      <div class="form-group"><label class="label">Nama Sekolah</label><input type="text" id="msNama" class="input"></div>
-      <div class="form-group"><label class="label">NPSN</label><input type="text" id="msNpsn" class="input"></div>
+  window.openModalSekolah = (existing) => {
+    const e = existing || {};
+    openModal(e.ID ? 'Edit Sekolah' : 'Tambah Sekolah', `
+      <input type="hidden" id="msId" value="${esc(e.ID||'')}">
+      <div class="form-group"><label class="label">Kapanewon</label>
+        <select id="msKap" class="select">${(State.kapanewon||[]).map(k => `<option value="${k}" ${e.Kapanewon===k?'selected':''}>${k}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="label">Nama Sekolah</label>
+        <input type="text" id="msNama" class="input" value="${esc(e.Nama_Sekolah||'')}"></div>
+      <div class="form-group"><label class="label">NPSN (8 digit, opsional)</label>
+        <input type="text" id="msNpsn" class="input" value="${esc(e.NPSN||'')}" maxlength="8"></div>
+      <div class="form-group"><label class="label">Jenjang</label>
+        <select id="msJenjang" class="select">
+          <option value="SD" ${e.Jenjang==='SD'?'selected':''}>SD</option>
+          <option value="MI" ${e.Jenjang==='MI'?'selected':''}>MI</option>
+        </select></div>
     `, `
       <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
       <button class="btn btn-primary" onclick="simpanSekolah()">Simpan</button>
     `);
   };
-
   window.simpanSekolah = async () => {
-    const payload = { Kapanewon: $('#msKap').value, Nama_Sekolah: $('#msNama').value, NPSN: $('#msNpsn').value };
+    const payload = {
+      ID: $('#msId').value,
+      Kapanewon: $('#msKap').value,
+      Nama_Sekolah: $('#msNama').value,
+      NPSN: $('#msNpsn').value,
+      Jenjang: $('#msJenjang').value
+    };
     try {
-      await api('admin_sekolah_simpan', { payload });
-      toast('Sekolah ditambahkan', 'success');
-      closeModal();
-      loadSekolah();
-    } catch (e) { toast(e.message, 'error'); }
+      const r = await api('admin_sekolah_simpan', { payload });
+      if (r.error) throw new Error(r.message);
+      toast(r.message||'Tersimpan','success'); closeModal(); loadSekolah();
+    } catch(e){ toast(e.message,'error'); }
   };
-
   window.hapusSekolah = async (id) => {
     if (!confirm('Nonaktifkan sekolah ini?')) return;
+    try { await api('admin_sekolah_hapus',{id}); toast('Sekolah dinonaktifkan','success'); loadSekolah(); }
+    catch(e){ toast(e.message,'error'); }
+  };
+
+  // ── 5. PEJABAT (Juri + Pewara + Panitia) ──
+  let _juriCache = {};
+  let _pewaraCache = [];
+  async function initPejabat() {
+    // Panitia fields
+    const c = State.config || {};
+    $('#cfgKetuaPanitiaNama').value = c.ketua_panitia_nama || '';
+    $('#cfgKetuaPanitiaNip').value = c.ketua_panitia_nip || '';
+    $('#cfgKoordinatorJuriNama').value = c.koordinator_juri_nama || '';
+    $('#cfgKoordinatorJuriNip').value = c.koordinator_juri_nip || '';
+    $('#cfgKotaBa').value = c.kota_ba || 'Bantul';
+    $('#cfgNamaPengirim').value = c.nama_pengirim_email || 'Panitia MTQ Bantul 2026';
+
+    const sel = $('#filterCabangJuri');
+    if (!sel.options.length) {
+      sel.innerHTML = (State.cabang||[]).map(c => `<option value="${c.key}">${esc(c.label)}</option>`).join('');
+      sel.onchange = () => loadJuri(sel.value);
+    }
+    const def = sel.value || ((State.cabang[0]||{}).key || '');
+    if (def) loadJuri(def);
+    loadPewara();
+  }
+  window.simpanPanitia = async () => {
+    const fields = {
+      ketua_panitia_nama: $('#cfgKetuaPanitiaNama').value,
+      ketua_panitia_nip: $('#cfgKetuaPanitiaNip').value,
+      koordinator_juri_nama: $('#cfgKoordinatorJuriNama').value,
+      koordinator_juri_nip: $('#cfgKoordinatorJuriNip').value,
+      kota_ba: $('#cfgKotaBa').value,
+      nama_pengirim_email: $('#cfgNamaPengirim').value
+    };
     try {
-      await api('admin_sekolah_hapus', { id });
-      toast('Sekolah dinonaktifkan', 'success');
-      loadSekolah();
-    } catch (e) { toast(e.message, 'error'); }
+      for (const [key, value] of Object.entries(fields)) {
+        await api('admin_set_config', { key, value });
+        State.config[key] = value;
+      }
+      toast('Data panitia tersimpan','success');
+    } catch(e){ toast(e.message,'error'); }
+  };
+
+  async function loadJuri(cabang) {
+    const tbody = $('#tableJuri tbody');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;"><span class="spinner dark"></span></td></tr>';
+    try {
+      const res = await api('admin_juri', { cabang });
+      const data = res.juri || [];
+      _juriCache[cabang] = data;
+      tbody.innerHTML = data.map(j => `
+        <tr>
+          <td><b>${j.Urutan}</b></td>
+          <td>${esc(j.Nama_Juri)}</td>
+          <td>${esc(j.NIP||'-')}</td>
+          <td>${esc(j.Asal_Instansi||'-')}</td>
+          <td><span class="badge ${j.Status==='aktif'?'aktif':'nonaktif'}">${j.Status||'aktif'}</span></td>
+          <td><button class="btn btn-ghost btn-sm" onclick="editJuri('${cabang}',${j.Urutan})">Edit</button></td>
+        </tr>`).join('');
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`; }
+  }
+  window.editJuri = (cabang, urutan) => {
+    const j = (_juriCache[cabang]||[]).find(x => num(x.Urutan) === urutan) || {};
+    openModal('Edit Juri ' + cabang + ' #' + urutan, `
+      <div class="form-group"><label class="label">Nama Juri</label>
+        <input type="text" id="mjNama" class="input" value="${esc(j.Nama_Juri||'')}"></div>
+      <div class="form-group"><label class="label">NIP</label>
+        <input type="text" id="mjNip" class="input" value="${esc(j.NIP||'')}"></div>
+      <div class="form-group"><label class="label">Asal Instansi</label>
+        <input type="text" id="mjInstansi" class="input" value="${esc(j.Asal_Instansi||'')}"></div>
+      <div class="form-group"><label class="label">Jabatan</label>
+        <input type="text" id="mjJabatan" class="input" value="${esc(j.Jabatan||'')}"></div>
+      <div class="form-group"><label class="label">Status</label>
+        <select id="mjStatus" class="select">
+          <option value="aktif" ${j.Status==='aktif'||!j.Status?'selected':''}>Aktif</option>
+          <option value="nonaktif" ${j.Status==='nonaktif'?'selected':''}>Nonaktif</option>
+        </select></div>
+    `, `
+      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" onclick="simpanJuri('${cabang}',${urutan})">Simpan</button>
+    `);
+  };
+  window.simpanJuri = async (cabang, urutan) => {
+    const payload = {
+      Cabang: cabang, Urutan: urutan,
+      Nama_Juri: $('#mjNama').value, NIP: $('#mjNip').value,
+      Asal_Instansi: $('#mjInstansi').value, Jabatan: $('#mjJabatan').value,
+      Status: $('#mjStatus').value
+    };
+    try {
+      await api('admin_simpan_juri', { payload });
+      toast('Juri disimpan','success'); closeModal(); loadJuri(cabang);
+    } catch(e){ toast(e.message,'error'); }
+  };
+
+  async function loadPewara() {
+    const tbody = $('#tablePewara tbody');
+    try {
+      const res = await api('admin_opsi');
+      _pewaraCache = res.pewara || [];
+      tbody.innerHTML = _pewaraCache.map(p => `
+        <tr>
+          <td><b>${esc(p.Kode)}</b></td>
+          <td>${esc(p.Nama)}</td>
+          <td>${esc(p.NIP||'-')}</td>
+          <td>${esc(p.Ruang||'-')}</td>
+          <td style="font-family:monospace;font-weight:700;">${esc(p.Token)}</td>
+          <td><div class="actions">
+            <button class="btn btn-ghost btn-sm" onclick="editPewara('${p.ID}')">Edit</button>
+            <button class="btn btn-warning btn-sm" onclick="revokeToken('${p.ID}')">↺ Token</button>
+          </div></td>
+        </tr>`).join('');
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`; }
+  }
+  window.editPewara = (id) => {
+    const p = _pewaraCache.find(x => x.ID === id);
+    if (!p) return;
+    openModal('Edit Pewara ' + p.Kode, `
+      <div class="form-group"><label class="label">Nama Pewara</label>
+        <input type="text" id="mpNama" class="input" value="${esc(p.Nama||'')}"></div>
+      <div class="form-group"><label class="label">NIP</label>
+        <input type="text" id="mpNip" class="input" value="${esc(p.NIP||'')}"></div>
+      <div class="form-group"><label class="label">Ruang</label>
+        <input type="text" id="mpRuang" class="input" value="${esc(p.Ruang||'')}"></div>
+    `, `
+      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" onclick="simpanPewara('${p.Cabang}')">Simpan</button>
+    `);
+  };
+  window.simpanPewara = async (cabang) => {
+    try {
+      await api('admin_simpan_pewara', { payload: {
+        Cabang: cabang, Nama_Pewara: $('#mpNama').value,
+        NIP: $('#mpNip').value, Ruang: $('#mpRuang').value
+      }});
+      toast('Pewara disimpan','success'); closeModal(); loadPewara();
+    } catch(e){ toast(e.message,'error'); }
+  };
+  window.revokeToken = async (id) => {
+    if (!confirm('Reset token pewara ini?')) return;
+    try { const r = await api('admin_revoke_token',{pewara_id:id}); toast('Token baru: '+r.token_baru,'success'); loadPewara(); }
+    catch(e){ toast(e.message,'error'); }
   };
 
   // ── 6. UNDIAN & STATUS ──
@@ -834,96 +986,577 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
             <div class="cabang-name">${esc(c.kode)}</div>
             <span class="badge ${c.status_cabang}">${c.status_cabang}</span>
           </div>
-          <div style="font-size:0.85rem; color:var(--ink-light); display:flex; justify-content:space-between;">
+          <div style="font-size:0.85rem;color:var(--ink-light);display:flex;justify-content:space-between;">
             <span>Peserta: <b>${c.total}</b></span>
             <span>Diundi: <b>${c.diundi}</b></span>
           </div>
           <div class="cabang-actions">
-            ${c.status_cabang === 'draft' ? `
-              <button class="btn btn-primary btn-sm" onclick="generateUndian('${c.key}')">🎲 Generate Undian</button>
+            ${c.status_cabang==='draft' ? `
+              <button class="btn btn-primary btn-sm" onclick="generateUndian('${c.key}')">🎲 Undi</button>
               <button class="btn btn-ghost btn-sm" onclick="resetUndian('${c.key}')">↺ Reset</button>
-            ` : `<span style="font-size:0.75rem;color:var(--ink-light);font-style:italic;">Undian terkunci (Status: ${c.status_cabang})</span>`}
+            ` : `<span style="font-size:0.75rem;color:var(--ink-light);font-style:italic;">Terkunci (${c.status_cabang})</span>`}
           </div>
-        </div>
-      `).join('');
-    } catch (e) {
-      grid.innerHTML = `<div style="color:var(--danger)">${e.message}</div>`;
-    }
+        </div>`).join('');
+    } catch(e) { grid.innerHTML = `<div style="color:var(--danger)">${e.message}</div>`; }
   }
-
   window.generateUndian = async (cabang) => {
     if (!confirm(`Acak nomor undian untuk cabang ${cabang}?`)) return;
-    try {
-      const res = await api('admin_generate_undian', { cabang });
-      toast(res.message, 'success');
-      loadAdminCabang();
-    } catch (e) { toast(e.message, 'error'); }
+    try { const r = await api('admin_generate_undian',{cabang}); toast(r.message||'OK','success'); loadAdminCabang(); }
+    catch(e){ toast(e.message,'error'); }
   };
-
   window.resetUndian = async (cabang) => {
-    if (!confirm(`Reset undian cabang ${cabang}? Semua nomor urut akan dihapus.`)) return;
-    try {
-      const res = await api('admin_reset_undian', { cabang });
-      toast(res.message, 'success');
-      loadAdminCabang();
-    } catch (e) { toast(e.message, 'error'); }
+    if (!confirm(`Reset undian cabang ${cabang}?`)) return;
+    try { const r = await api('admin_reset_undian',{cabang}); toast(r.message||'OK','success'); loadAdminCabang(); }
+    catch(e){ toast(e.message,'error'); }
   };
 
-  // ── 7. HASIL & KLASEMEN ──
+  // ── 7. HASIL ──
   async function loadHasil() {
-    const stats = $('#hasilStats');
-    const tbody = $('#tableKlasemen tbody');
+    const stats = $('#hasilStats'); const tbody = $('#tableKlasemen tbody');
     stats.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;"><span class="spinner dark"></span></div>';
     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;"><span class="spinner dark"></span></td></tr>';
-
     try {
-      const res = await api('admin_juara_preview');
-      const k = res;
-      
+      const k = await api('admin_juara_preview');
       stats.innerHTML = `
-        <div class="stat-card"><div class="lbl">Cabang Final</div><div class="val">${k.cabang_final_count || 0} <small style="font-size:1rem;color:var(--ink-light)">/ ${k.cabang_total}</small></div></div>
-        <div class="stat-card"><div class="lbl">Cabang Dihitung</div><div class="val">${k.cabang_dihitung?.length || 0}</div></div>
-        <div class="stat-card"><div class="lbl">Status Resmi</div><div class="val" style="font-size:1.2rem;color:${k.resmi ? 'var(--hijau)' : 'var(--gold)'}">${k.resmi ? 'RESMI' : 'PREVIEW'}</div></div>
-      `;
-
-      tbody.innerHTML = (k.klasemen || []).map(x => `
+        <div class="stat-card"><div class="lbl">Cabang Final</div><div class="val">${k.cabang_final_count||0} <small style="font-size:1rem;color:var(--ink-light)">/ ${k.cabang_total}</small></div></div>
+        <div class="stat-card"><div class="lbl">Cabang Dihitung</div><div class="val">${(k.cabang_dihitung||[]).length}</div></div>
+        <div class="stat-card"><div class="lbl">Status Resmi</div><div class="val" style="font-size:1.2rem;color:${k.resmi?'var(--hijau)':'var(--gold)'}">${k.resmi?'RESMI':'PREVIEW'}</div></div>`;
+      tbody.innerHTML = (k.klasemen||[]).map(x => `
         <tr>
           <td><b>${x.Rank}</b></td>
           <td><b>${esc(x.Kapanewon)}</b></td>
-          <td>${x.J1}</td>
-          <td>${x.J2}</td>
-          <td>${x.J3}</td>
-          <td>${x.H1}</td>
-          <td>${x.H2}</td>
+          <td>${x.J1}</td><td>${x.J2}</td><td>${x.J3}</td><td>${x.H1}</td><td>${x.H2}</td>
           <td style="font-weight:900;color:var(--hijau);font-size:1rem;">${x.Poin}</td>
-        </tr>
-      `).join('');
-    } catch (e) {
+        </tr>`).join('');
+    } catch(e) {
       stats.innerHTML = `<div style="color:var(--danger)">${e.message}</div>`;
       tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--danger)">${e.message}</td></tr>`;
     }
   }
 
-  // ── 8. DOKUMEN & SURAT ──
-  function initDokumen() {
-    $('#cfgTemplateSurat').value = State.config.template_surat_id || '';
-    
-    const sel = $('#dokCabang');
-    if (sel.options.length === 0) {
-      sel.innerHTML = State.cabang.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
-    }
+  // ── 8. CETAK DOKUMEN ──
+  let _kopCache = null;
+  async function getKop() {
+    if (_kopCache) return _kopCache;
+    try { const r = await api('config'); _kopCache = r.kop || {}; }
+    catch(e) { _kopCache = { atas:[], tengah:[], bawah:[], logo_kiri:'', logo_kanan:'' }; }
+    return _kopCache;
   }
+  function kopHtml(kop) {
+    const line = (arr, sz, bold) => (arr||[]).map(x => `<div style="font-size:${sz}pt;${bold?'font-weight:bold;':''}text-align:center;">${esc(x.teks)}</div>`).join('');
+    return `
+      <div style="text-align:center;padding-bottom:8px;margin-bottom:14px;border-bottom:3px double #000;">
+        ${line(kop.atas, 13, true)}
+        ${line(kop.tengah, 11, true)}
+        ${line(kop.bawah, 9, false)}
+      </div>`;
+  }
+  function printStyle() {
+    return `
+      @page { size: A4 portrait; margin: 15mm 18mm; }
+      *{box-sizing:border-box}
+      body{font-family:'Times New Roman',Times,serif;font-size:11pt;color:#000;margin:0}
+      h1,h2,h3,h4{margin:4px 0;text-align:center;font-family:'Times New Roman',serif}
+      h2{font-size:14pt} h3{font-size:12pt} h4{font-size:11pt}
+      table.data{width:100%;border-collapse:collapse;margin:12px 0;font-size:10.5pt}
+      table.data th,table.data td{border:1px solid #000;padding:4px 6px;vertical-align:middle}
+      table.data th{background:#e5e5e5;font-weight:bold;text-align:center}
+      .ttd{margin-top:30px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+      .ttd>div{text-align:center;min-width:180px}
+      .ttd .space{height:60px}
+      .signature{display:flex;justify-content:flex-end;margin-top:30px}
+      .signature>div{text-align:center;min-width:220px}
+      .signature .space{height:70px}
+      .info-row{margin:4px 0}
+      .nomor-dada{display:inline-block;border:2px solid #000;padding:10px;text-align:center;page-break-inside:avoid;vertical-align:top;margin:6px}
+      .nomor-dada .kode{font-size:56pt;font-weight:900;line-height:1;margin:8px 0}
+      .nomor-dada .kab{font-size:8pt;letter-spacing:2px;text-transform:uppercase}
+      .nomor-dada .nama{font-size:11pt;font-weight:bold;margin:4px 0}
+      .nomor-dada .sekolah{font-size:9pt}
+      ol,ul{margin:8px 0;padding-left:22px}
+      p{margin:6px 0;line-height:1.5}
+      .text-center{text-align:center}
+      .text-right{text-align:right}
+      .mb-1{margin-bottom:8px} .mb-2{margin-bottom:16px} .mt-2{margin-top:16px}
+    `;
+  }
+  function openPrintWindow(title, htmlBody) {
+    const w = window.open('', '_blank');
+    if (!w) { toast('Popup diblokir. Izinkan popup untuk mencetak.','error'); return null; }
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(title)}</title><style>${printStyle()}</style></head><body>${htmlBody}</body></html>`);
+    w.document.close();
+    setTimeout(() => { w.focus(); w.print(); }, 400);
+    return w;
+  }
+
+  function initCetak() {
+    const selIds = ['#dhCabang','#dnCabang','#baCabang','#bapCabang','#skCabang','#ndCabang'];
+    selIds.forEach(id => {
+      const sel = $(id);
+      if (!sel.options.length) {
+        sel.innerHTML = (State.cabang||[]).map(c => `<option value="${c.key}">${esc(c.label)}</option>`).join('');
+      }
+    });
+    // Template Surat
+    $('#cfgTemplateSurat').value = State.config.template_surat_id || '';
+    $('#cfgTemplateSurat').onblur = () => simpanTemplateSurat();
+  }
+
+  async function simpanTemplateSurat() {
+    const val = $('#cfgTemplateSurat').value.trim();
+    try { await api('admin_set_config', { key: 'template_surat_id', value: val }); State.config.template_surat_id = val; toast('Template disimpan','success'); }
+    catch(e){ toast(e.message,'error'); }
+  }
+
+  // CETAK DAFTAR HADIR
+  window.cetakDaftarHadir = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#dhCabang').value;
+      const mode = $('#dhMode').value;
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      let peserta = [];
+      if (mode === 'auto') {
+        const res = await api('admin_daftar_hadir', { cabang });
+        if (res.error) throw new Error(res.message);
+        peserta = res.peserta || [];
+      } else {
+        const n = Math.max(1, Math.min(60, parseInt($('#dhRows').value,10)||20));
+        peserta = Array.from({length: n}, () => ({ No_Undian:'', Nama_Siswa:'', Sekolah:'' }));
+      }
+      const kop = await getKop();
+      const acara = State.config || {};
+      const rows = peserta.map((p,i) => `
+        <tr>
+          <td style="text-align:center;width:35px">${i+1}</td>
+          <td style="width:80px">${esc(p.No_Undian||'')}</td>
+          <td>${esc(p.Nama_Siswa||'')}</td>
+          <td>${esc(p.Sekolah||'')}</td>
+          <td style="width:90px;height:32px"></td>
+        </tr>`).join('');
+      const html = `
+        ${kopHtml(kop)}
+        <h2>DAFTAR HADIR PESERTA</h2>
+        <h3>${esc(cab.label||'')}</h3>
+        <div class="info-row"><b>Hari/Tanggal:</b> ${esc(acara.tanggal_lomba||'')}</div>
+        <div class="info-row"><b>Tempat:</b> ${esc(acara.tempat_lomba||'')}</div>
+        <table class="data">
+          <thead><tr><th>No</th><th>No. Undian</th><th>Nama Peserta</th><th>Sekolah</th><th>Tanda Tangan</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="signature">
+          <div>
+            ${esc(acara.kota_ba||'Bantul')}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>
+            Pewara<br><div class="space"></div>
+            <b><u>_________________________</u></b>
+          </div>
+        </div>`;
+      openPrintWindow('Daftar Hadir ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Daftar Hadir'; }
+  };
+
+  // CETAK DAFTAR NILAI
+  window.cetakDaftarNilai = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#dnCabang').value;
+      const mode = $('#dnMode').value;
+      const jmlJuri = Math.max(1, Math.min(7, parseInt($('#dnJuri').value,10)||3));
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      let peserta = [];
+      if (mode === 'auto') {
+        const res = await api('admin_peserta', { cabang });
+        peserta = (res.peserta||[]).filter(p => p.No_Undian);
+      } else {
+        const n = Math.max(1, Math.min(40, parseInt($('#dnRows').value,10)||15));
+        peserta = Array.from({length: n}, () => ({ No_Undian:'', Nama_Lengkap:'', Kapanewon:'', Asal_Sekolah_1:'' }));
+      }
+      const kop = await getKop();
+      const acara = State.config || {};
+
+      let headerCols = '', rowsHtml = '';
+      if (cabang === 'LCP') {
+        // LCP: fase columns
+        headerCols = '<th>Penyisihan</th><th>Final Wajib</th><th>Final Lempar</th><th>Final Rebutan</th><th>Total</th>';
+        rowsHtml = peserta.map((p,i) => `
+          <tr>
+            <td style="text-align:center">${i+1}</td>
+            <td>${esc(p.No_Undian||'')}</td>
+            <td>${esc(p.Nama_Lengkap||'')}${p.Anggota_2?'<br><small>+ '+esc(p.Anggota_2)+'</small>':''}</td>
+            <td>${esc(p.Kapanewon||'')}</td>
+            <td style="height:32px"></td><td></td><td></td><td></td><td></td>
+          </tr>`).join('');
+      } else {
+        const kriteria = (State.kriteria[cabang] && State.kriteria[cabang].kriteria) || [];
+        // Header: one block per juri with criteria
+        headerCols = Array.from({length: jmlJuri}, (_, j) =>
+          `<th colspan="${kriteria.length+1}" style="background:#ddd">Juri ${j+1}</th>`
+        ).join('') + '<th rowspan="2" style="background:#aaa">Total</th>';
+        const subCols = Array.from({length: jmlJuri}, () =>
+          kriteria.map(c => `<th>${esc(c.label)}<br><small>max ${c.max}</small></th>`).join('') + '<th>Total</th>'
+        ).join('');
+        rowsHtml = peserta.map((p,i) => `
+          <tr>
+            <td rowspan="2" style="text-align:center">${i+1}</td>
+            <td rowspan="2">${esc(p.No_Undian||'')}</td>
+            <td rowspan="2">${esc(p.Nama_Lengkap||'')}</td>
+            <td rowspan="2">${esc(p.Kapanewon||'')}</td>
+            ${Array.from({length: jmlJuri}, () =>
+              kriteria.map(() => '<td style="height:22px"></td>').join('') + '<td></td>'
+            ).join('')}
+            <td rowspan="2" style="height:44px"></td>
+          </tr>
+          <tr>${Array.from({length: jmlJuri}, () =>
+            kriteria.map(() => '<td></td>').join('') + '<td style="background:#eee"></td>'
+          ).join('')}</tr>`).join('');
+        var lcpExtra = '';
+      }
+      let html;
+      if (cabang === 'LCP') {
+        html = `
+          ${kopHtml(kop)}
+          <h2>DAFTAR NILAI</h2>
+          <h3>${esc(cab.label||'')}</h3>
+          <table class="data">
+            <thead><tr><th>No</th><th>No. Undian</th><th>Nama Tim</th><th>Kapanewon</th>${headerCols}</tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          <div class="ttd">
+            ${Array.from({length: jmlJuri}, (_, j) => `
+              <div>Juri ${j+1}<div class="space"></div><b><u>_________________________</u></b></div>
+            `).join('')}
+          </div>`;
+      } else {
+        html = `
+          ${kopHtml(kop)}
+          <h2>DAFTAR NILAI</h2>
+          <h3>${esc(cab.label||'')}</h3>
+          <table class="data">
+            <thead>
+              <tr><th rowspan="2">No</th><th rowspan="2">No. Undian</th><th rowspan="2">Nama Peserta</th><th rowspan="2">Kapanewon</th>${headerCols}</tr>
+              <tr>${subCols}</tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          <div class="ttd">
+            ${Array.from({length: jmlJuri}, (_, j) => `
+              <div>Juri ${j+1}<div class="space"></div><b><u>_________________________</u></b></div>
+            `).join('')}
+          </div>
+          <div class="signature"><div>
+            Koordinator Juri<br><div class="space"></div>
+            <b><u>${esc((State.config.koordinator_juri_nama)||'_________________________')}</u></b>
+          </div></div>`;
+      }
+      openPrintWindow('Daftar Nilai ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Daftar Nilai'; }
+  };
+
+  // CETAK BA (via backend)
+  window.cetakBA = async (btn) => {
+    const cabang = $('#baCabang').value;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await api('admin_generate_dokumen', { cabang, jenis: 'BA' });
+      if (res.error) throw new Error(res.message);
+      toast('BA berhasil dibuat','success'); window.open(res.url,'_blank');
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '📄 Cetak BA (backend)'; }
+  };
+
+  // CETAK BA (HTML client-side — lebih fleksibel)
+  window.cetakBAHtml = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#baCabang').value;
+      const res = await api('admin_ba', { cabang });
+      if (res.error) throw new Error(res.message);
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      const kop = res.kop || await getKop();
+      const acara = res.acara || {};
+      const pewara = res.pewara || {};
+      const juri = res.juri || [];
+      const ttd = res.ttd || {};
+
+      let hasilRows;
+      if (res.mode === 'lcp') {
+        hasilRows = (res.final||[]).slice(0,10).map((p,i) => `
+          <tr>
+            <td style="text-align:center">${p.Peringkat||p.Rank}</td>
+            <td>${esc(p.No_Undian)}</td>
+            <td>${esc(p.Nama_Siswa)}${p.Anggota_2?' + '+esc(p.Anggota_2):''}${p.Anggota_3?' + '+esc(p.Anggota_3):''}</td>
+            <td>${esc(p.Kapanewon)}</td>
+            <td style="text-align:right">${p.Total}</td>
+          </tr>`).join('');
+      } else {
+        hasilRows = (res.rows||[]).slice(0,10).map(p => `
+          <tr>
+            <td style="text-align:center">${p.Peringkat||p.Rank}</td>
+            <td>${esc(p.No_Undian)}</td>
+            <td>${esc(p.Nama_Siswa)}</td>
+            <td>${esc(p.Kapanewon)}</td>
+            <td style="text-align:right">${p.Total}</td>
+          </tr>`).join('');
+      }
+      const html = `
+        ${kopHtml(kop)}
+        <h2>BERITA ACARA</h2>
+        <h3>${esc(cab.label||'')}</h3>
+        <p style="margin-top:14px">Pada hari ini ${esc(acara.tanggal_teks||acara.tanggal||'-')}, bertempat di ${esc(acara.tempat||'-')}, telah dilaksanakan ${esc(cab.label||'')} pada ${esc(acara.nama||'MTQ 2026')}.</p>
+        <h4 style="text-align:left;margin-top:12px">Pewara</h4>
+        <p>${esc(pewara.Nama||'-')} ${pewara.NIP?'(NIP. '+esc(pewara.NIP)+')':''} — Ruang: ${esc(pewara.Ruang||'-')}</p>
+        <h4 style="text-align:left;margin-top:12px">Dewan Juri</h4>
+        <ol>
+          ${juri.map(j => `<li>${esc(j.Nama)}${j.NIP?' (NIP. '+esc(j.NIP)+')':''} — ${esc(j.Asal||'-')}</li>`).join('')}
+        </ol>
+        <h4 style="text-align:left;margin-top:12px">Hasil Penilaian</h4>
+        <table class="data">
+          <thead><tr><th>Peringkat</th><th>No. Undian</th><th>Nama</th><th>Kapanewon</th><th>Skor</th></tr></thead>
+          <tbody>${hasilRows||'<tr><td colspan="5" style="text-align:center">Belum ada hasil</td></tr>'}</tbody>
+        </table>
+        <p style="margin-top:14px">Demikian Berita Acara ini dibuat dengan sebenarnya untuk dipergunakan sebagaimana mestinya.</p>
+        <div class="signature">
+          <div>
+            ${esc(acara.kota||'Bantul')}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>
+            Ketua Panitia<br><div class="space"></div>
+            <b><u>${esc(ttd.ketua_panitia?.Nama||'_________________________')}</u></b>
+            ${ttd.ketua_panitia?.NIP?'<br>NIP. '+esc(ttd.ketua_panitia.NIP):''}
+          </div>
+        </div>`;
+      openPrintWindow('BA ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '📄 Cetak BA (HTML)'; }
+  };
+
+  // CETAK BAP
+  window.cetakBAP = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#bapCabang').value;
+      const nomor = $('#bapNomor').value.trim() || `____/BAP/MTQ-BTL/XI/2026`;
+      const res = await api('admin_ba', { cabang });
+      if (res.error) throw new Error(res.message);
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      const kop = res.kop || await getKop();
+      const acara = res.acara || {};
+      const pewara = res.pewara || {};
+      const juri = res.juri || [];
+      const ttd = res.ttd || {};
+      const cfg = State.config || {};
+
+      // Aggregate hadir/tidak
+      const tidakIkut = (res.tidak_ikut||[]).map(x => `${esc(x.No_Undian)} ${esc(x.Nama_Siswa||'')}`).join(', ') || '-';
+
+      let juaraRows;
+      if (res.mode === 'lcp') {
+        juaraRows = (res.final||[]).slice(0,5).map(p => `
+          <tr>
+            <td>${esc(p.Peringkat||'-')}</td>
+            <td>${esc(p.No_Undian)}</td>
+            <td>${esc(p.Nama_Siswa)}${p.Anggota_2?' + '+esc(p.Anggota_2):''}${p.Anggota_3?' + '+esc(p.Anggota_3):''}</td>
+            <td>${esc(p.Kapanewon)}</td>
+            <td style="text-align:right">${p.Total}</td>
+          </tr>`).join('');
+      } else {
+        juaraRows = (res.rows||[]).slice(0,5).map(p => `
+          <tr>
+            <td>${esc(p.Peringkat||'-')}</td>
+            <td>${esc(p.No_Undian)}</td>
+            <td>${esc(p.Nama_Siswa)}</td>
+            <td>${esc(p.Kapanewon)}</td>
+            <td style="text-align:right">${p.Total}</td>
+          </tr>`).join('');
+      }
+      const html = `
+        ${kopHtml(kop)}
+        <h2>BERITA ACARA PELAKSANAAN</h2>
+        <h3>${esc(cab.label||'')}</h3>
+        <p class="text-center">Nomor: ${esc(nomor)}</p>
+        <p style="margin-top:12px">Pada hari ini ${esc(acara.tanggal_teks||acara.tanggal||'-')}, bertempat di ${esc(acara.tempat||'-')}, telah dilaksanakan ${esc(cab.label||'')} pada ${esc(acara.nama||'MTQ 2026')} dengan tema "${esc(acara.tema||'-')}".</p>
+        <h4 style="text-align:left;margin-top:14px">1. Pelaksana</h4>
+        <p>Pewara: <b>${esc(pewara.Nama||'-')}</b>${pewara.NIP?' (NIP. '+esc(pewara.NIP)+')':''}<br>
+           Ruang: ${esc(pewara.Ruang||'-')}</p>
+        <p>Dewan Juri:</p>
+        <ol>${juri.map(j => `<li>${esc(j.Nama)}${j.NIP?' (NIP. '+esc(j.NIP)+')':''} — ${esc(j.Asal||'-')}</li>`).join('')}</ol>
+        <h4 style="text-align:left;margin-top:14px">2. Peserta</h4>
+        <p>Peserta yang tidak hadir / mundur: ${tidakIkut}</p>
+        <h4 style="text-align:left;margin-top:14px">3. Hasil Penilaian</h4>
+        <table class="data">
+          <thead><tr><th>Peringkat</th><th>No. Undian</th><th>Nama</th><th>Kapanewon</th><th>Skor</th></tr></thead>
+          <tbody>${juaraRows||'<tr><td colspan="5" style="text-align:center">Belum ada hasil</td></tr>'}</tbody>
+        </table>
+        <h4 style="text-align:left;margin-top:14px">4. Kesimpulan</h4>
+        <p>Berdasarkan hasil penilaian Dewan Juri, ditetapkan juara sebagaimana tercantum pada tabel di atas. Berita Acara Pelaksanaan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
+        <div class="ttd" style="margin-top:36px">
+          <div>Pewara<div class="space"></div><b><u>${esc(pewara.Nama||'_________________________')}</u></b></div>
+          <div>Koordinator Juri<div class="space"></div><b><u>${esc(ttd.koordinator_juri?.Nama||'_________________________')}</u></b></div>
+          <div>Ketua Panitia<div class="space"></div><b><u>${esc(ttd.ketua_panitia?.Nama||'_________________________')}</u></b>${ttd.ketua_panitia?.NIP?'<br>NIP. '+esc(ttd.ketua_panitia.NIP):''}</div>
+        </div>`;
+      openPrintWindow('BAP ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak BAP'; }
+  };
+
+  // CETAK SK KEJUARAAN
+  window.cetakSK = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#skCabang').value;
+      const nomor = $('#skNomor').value.trim() || `____/SK/MTQ-BTL/XI/2026`;
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      const kop = await getKop();
+      const acara = State.config || {};
+
+      // Use admin_rekap to get juara
+      const rekap = await api('admin_rekap');
+      if (rekap.error) throw new Error(rekap.message);
+      const r = (rekap.rekap||{})[cabang] || {};
+      const juara = r.juara || [];
+
+      let juaraRows = juara.map((j, i) => `
+        <tr>
+          <td style="text-align:center">${i+1}</td>
+          <td>${esc(j.label||'-')}</td>
+          <td>${esc(j.No_Undian||'-')}</td>
+          <td>${esc(j.Nama||'-')}${j.Anggota&&j.Anggota.length?' + '+j.Anggota.filter(Boolean).map(esc).join(' + '):''}</td>
+          <td>${esc(j.Kapanewon||'-')}</td>
+          <td>${esc(j.Sekolah||'-')}</td>
+        </tr>`).join('');
+
+      const html = `
+        ${kopHtml(kop)}
+        <h2 style="margin-top:14px">SURAT KEPUTUSAN</h2>
+        <p class="text-center" style="font-size:11pt;margin:0">Nomor: ${esc(nomor)}</p>
+        <h3 style="margin-top:6px">TENTANG<br>PENETAPAN JUARA ${esc((cab.label||'').toUpperCase())}<br>PADA ${esc((acara.nama_acara||'MTQ 2026').toUpperCase())}</h3>
+        <div style="margin-top:14px;text-align:left">
+          <p><b>Menimbang:</b> bahwa untuk kelancaran dan ketertiban penetapan juara, perlu ditetapkan Surat Keputusan Penetapan Juara.</p>
+          <p><b>Mengingat:</b></p>
+          <ol>
+            <li>Program Kerja Panitia MTQ Pelajar SD Kabupaten Bantul Tahun 2026;</li>
+            <li>Hasil penilaian Dewan Juri yang telah ditetapkan secara musyawarah.</li>
+          </ol>
+          <p><b>Memperhatikan:</b> Hasil rapat pleno Dewan Juri tanggal ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}.</p>
+        </div>
+        <h3 style="margin-top:10px">MEMUTUSKAN</h3>
+        <div style="text-align:left">
+          <p><b>Menetapkan:</b> Juara ${esc(cab.label||'')} pada ${esc(acara.nama_acara||'MTQ 2026')} sebagai berikut:</p>
+        </div>
+        <table class="data">
+          <thead><tr><th>No</th><th>Peringkat</th><th>No. Undian</th><th>Nama</th><th>Kapanewon</th><th>Sekolah</th></tr></thead>
+          <tbody>${juaraRows || '<tr><td colspan="6" style="text-align:center">Belum ada juara final</td></tr>'}</tbody>
+        </table>
+        <p style="text-align:left">Keputusan ini berlaku sejak tanggal ditetapkan, dan apabila terdapat kekeliruan akan diperbaiki sebagaimana mestinya.</p>
+        <div class="signature">
+          <div>
+            Ditetapkan di ${esc(acara.kota_ba||'Bantul')}<br>
+            Pada tanggal ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>
+            Ketua Panitia<br><div class="space"></div>
+            <b><u>${esc(acara.ketua_panitia_nama||'_________________________')}</u></b>
+            ${acara.ketua_panitia_nip?'<br>NIP. '+esc(acara.ketua_panitia_nip):''}
+          </div>
+        </div>`;
+      openPrintWindow('SK ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak SK Kejuaraan'; }
+  };
+
+  // CETAK NOMOR DADA
+  window.cetakNomorDada = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const cabang = $('#ndCabang').value;
+      const cols = parseInt($('#ndCols').value,10) || 3;
+      const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      const res = await api('admin_peserta', { cabang });
+      const peserta = (res.peserta||[]).filter(p => p.No_Undian).sort((a,b) => {
+        const na = parseInt(String(a.No_Undian||'').replace(/\D/g,''),10)||0;
+        const nb = parseInt(String(b.No_Undian||'').replace(/\D/g,''),10)||0;
+        return na-nb;
+      });
+      if (!peserta.length) throw new Error('Tidak ada peserta berundian untuk cabang ini.');
+
+      const widthPct = Math.floor(100/cols) - 1;
+      const cards = peserta.map(p => `
+        <div class="nomor-dada" style="width:calc(${widthPct}% - 12px)">
+          <div class="kab">${esc((State.config.nama_acara||'').substring(0,40)||'MTQ KAB. BANTUL 2026')}</div>
+          <div class="kode">${esc(p.No_Undian)}</div>
+          <div class="nama">${esc(p.Nama_Lengkap||'')}</div>
+          <div class="sekolah">${esc(p.Asal_Sekolah_1||'')}</div>
+          <div style="font-size:8pt;margin-top:4px">${esc(p.Kapanewon||'')}</div>
+        </div>`).join('');
+
+      const html = `
+        <div style="text-align:center;margin-bottom:10px;font-size:10pt">
+          <b>NOMOR DADA — ${esc(cab.label||'')}</b>
+        </div>
+        <div style="text-align:left">${cards}</div>`;
+      openPrintWindow('Nomor Dada ' + (cab.label||cabang), html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Nomor Dada'; }
+  };
+
+  // CETAK PIAGAM
+  window.cetakPiagam = async (btn) => {
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await api('admin_data_piagam');
+      if (res.error) throw new Error(res.message);
+      const kop = res.kop || await getKop();
+      const acara = res.acara || {};
+      const piagam = res.piagam || [];
+
+      if (!piagam.length) throw new Error('Belum ada cabang final.');
+
+      const rows = piagam.map(p => `
+        <tr>
+          <td>${esc(p.label_cabang)}</td>
+          <td>${esc(p.peringkat)}</td>
+          <td>${esc(p.Nama)}${p.Anggota&&p.Anggota.length?' + '+p.Anggota.map(esc).join(' + '):''}</td>
+          <td>${esc(p.Kapanewon)}</td>
+          <td>${esc(p.Sekolah||'')}</td>
+          <td style="text-align:right">${p.total||'-'}</td>
+        </tr>`).join('');
+
+      const html = `
+        ${kopHtml(kop)}
+        <h2>REKAPITULASI PIAGAM KEJUARAAN</h2>
+        <h3>${esc(acara.nama||'MTQ 2026')}</h3>
+        <table class="data">
+          <thead><tr><th>Cabang</th><th>Peringkat</th><th>Nama</th><th>Kapanewon</th><th>Sekolah</th><th>Skor</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="signature">
+          <div>
+            ${esc(acara.kota||'Bantul')}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>
+            Ketua Panitia<br><div class="space"></div>
+            <b><u>${esc(State.config.ketua_panitia_nama||'_________________________')}</u></b>
+            ${State.config.ketua_panitia_nip?'<br>NIP. '+esc(State.config.ketua_panitia_nip):''}
+          </div>
+        </div>`;
+      openPrintWindow('Piagam MTQ', html);
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Rekap Piagam'; }
+  };
+
+  // CETAK SURAT EDARAN (backend)
+  window.cetakSurat = async (btn) => {
+    if (!confirm('Generate 17 Surat Edaran sekarang? Proses ini memakan waktu beberapa detik.')) return;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Memproses...';
+    try {
+      const res = await api('admin_generate_surat');
+      if (res.error) throw new Error(res.message);
+      toast('Surat berhasil dibuat!','success'); window.open(res.url,'_blank');
+    } catch(e){ toast(e.message,'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '✉️ Generate Surat Edaran'; }
+  };
 
   window.uploadTtd = async (jenis, inputEl) => {
     const file = inputEl.files[0];
     if (!file) return;
-    
-    // Batasi 1MB untuk gambar
-    if (file.size > 1024 * 1024) return toast('Maksimal 1 MB', 'error');
-    
-    const oldVal = inputEl.value;
+    if (file.size > 1024*1024) return toast('Maksimal 1 MB','error');
     inputEl.disabled = true;
-    
     try {
       const b64 = await new Promise((resolve, reject) => {
         const r = new FileReader();
@@ -931,121 +1564,68 @@ table.data td .actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         r.onerror = reject;
         r.readAsDataURL(file);
       });
-      
       const res = await api('admin_upload_ttd', { jenis, file_base64: b64, mime_type: file.type });
       if (res.error) throw new Error(res.message);
-      toast('TTD berhasil diunggah!', 'success');
-    } catch (e) {
-      toast(e.message, 'error');
-      inputEl.value = '';
-    } finally {
-      inputEl.disabled = false;
-    }
-  };
-
-  window.cetakSurat = async (btn) => {
-    if (!confirm('Generate 17 Surat Edaran sekarang? Proses ini memakan waktu beberapa detik.')) return;
-    const btnEl = event.currentTarget;
-    btnEl.disabled = true; btnEl.innerHTML = '<span class="spinner"></span> Memproses...';
-    
-    try {
-      const res = await api('admin_generate_surat');
-      if (res.error) throw new Error(res.message);
-      toast('Surat berhasil dibuat!', 'success');
-      window.open(res.url, '_blank');
-    } catch (e) {
-      toast(e.message, 'error');
-    } finally {
-      btnEl.disabled = false; btnEl.innerHTML = '✉️ Cetak Surat Edaran';
-    }
-  };
-
-  window.cetakDokumen = async (jenis) => {
-    const cabang = $('#dokCabang').value;
-    const btnEl = event.currentTarget;
-    btnEl.disabled = true; btnEl.innerHTML = '<span class="spinner"></span>';
-    
-    try {
-      const res = await api('admin_generate_dokumen', { cabang, jenis });
-      if (res.error) throw new Error(res.message);
-      toast(`${jenis} berhasil dibuat!`, 'success');
-      window.open(res.url, '_blank');
-    } catch (e) {
-      toast(e.message, 'error');
-    } finally {
-      btnEl.disabled = false; 
-      btnEl.innerHTML = jenis === 'BA' ? '📄 Cetak BA' : '📋 Cetak DH';
-    }
+      toast('TTD berhasil diunggah!','success');
+    } catch(e) { toast(e.message,'error'); inputEl.value=''; }
+    finally { inputEl.disabled = false; }
   };
 
   // ── 9. CONFIG ──
+  const CONFIG_BLACKLIST = new Set(['admin_token']);
   async function loadConfig() {
     const box = $('#configContainer');
     box.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner dark"></span></div>';
     try {
       const res = await api('admin_opsi');
       const cfg = res.config || {};
-      
-      const keys = Object.keys(cfg).sort();
+      State.config = cfg;
+      const keys = Object.keys(cfg).filter(k => !CONFIG_BLACKLIST.has(k)).sort();
       box.innerHTML = keys.map(k => {
-        let val = cfg[k];
-        let inputHtml = '';
-        
+        const val = cfg[k];
+        let inputHtml;
         if (val === 'true' || val === 'false') {
           inputHtml = `<select class="select" onchange="simpanConfig('${k}', this.value)">
-            <option value="true" ${val === 'true' ? 'selected' : ''}>True (Aktif)</option>
-            <option value="false" ${val === 'false' ? 'selected' : ''}>False (Nonaktif)</option>
+            <option value="true" ${val==='true'?'selected':''}>True (Aktif)</option>
+            <option value="false" ${val==='false'?'selected':''}>False (Nonaktif)</option>
           </select>`;
         } else {
           inputHtml = `<input type="text" class="input" value="${esc(val)}" onblur="simpanConfig('${k}', this.value)">`;
         }
-
-        return `
-          <div class="config-row">
-            <div class="config-key">${esc(k.replace(/_/g, ' '))}</div>
-            ${inputHtml}
-          </div>
-        `;
+        return `<div class="config-row">
+          <div class="config-key">${esc(k.replace(/_/g,' '))}</div>
+          ${inputHtml}
+        </div>`;
       }).join('');
-    } catch (e) {
+    } catch(e) {
       box.innerHTML = `<div style="color:var(--danger)">${e.message}</div>`;
     }
   }
-
   window.simpanConfig = async (key, value) => {
     try {
       await api('admin_set_config', { key, value });
-      toast(`Config '${key}' diperbarui`, 'success');
-    } catch (e) { toast(e.message, 'error'); }
+      if (!State.config) State.config = {};
+      State.config[key] = value;
+      toast(`Config '${key}' diperbarui`,'success');
+    } catch(e){ toast(e.message,'error'); }
   };
 
-  // ── BOOT CHECK ──
+  // ── BOOT ──
   async function boot() {
-    if (State.token) {
-      try {
-        const res = await api('login_admin');
-        if (res.error) throw new Error('Invalid token');
-        
-        const opsi = await api('admin_opsi');
-        State.cabang = opsi.cabang || [];
-        State.kapanewon = opsi.kapanewon || [];
-        State.config = opsi.config || {};
-
-        $('#view-login').style.display = 'none';
-        $('#app').style.display = 'flex';
-        loadDashboard();
-      } catch (e) {
-        localStorage.removeItem(LS_TOKEN);
-        State.token = '';
-        $('#view-login').style.display = 'flex';
-      }
-    } else {
+    if (!State.token) { $('#view-login').style.display = 'flex'; return; }
+    try {
+      const res = await api('login_admin');
+      if (res.error) throw new Error('Invalid token');
+      await bootWithToken();
+      $('#view-login').style.display = 'none';
+      $('#app').style.display = 'flex';
+      loadDashboard();
+    } catch(e) {
+      localStorage.removeItem(LS_TOKEN); State.token = '';
       $('#view-login').style.display = 'flex';
     }
   }
-
   boot();
-
 })();
 </script>
 </body>
