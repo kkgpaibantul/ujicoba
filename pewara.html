@@ -2105,14 +2105,24 @@ input[type=number]{-moz-appearance:textfield}
         // LCP Mode
         const currentLabel = p.phase_label || defaultPhaseLabel;
         
-        const quickFinalBtns = currentTahap === 'final' ? `
-          <div style="display:flex;gap:0.4rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
-            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Wajib Timing">📝 Wajib Timing</button>
-            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Lempar Rebut">🔄 Lempar Rebut</button>
-            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Final - Rebutan">⚡ Rebutan</button>
-            <button class="btn btn-ghost btn-sm" data-act="phase_quick" data-label="Sidang Kejuaraan">🏆 Sidang Kejuaraan</button>
-          </div>
-        ` : '';
+        let quickBtnsHtml = '';
+        if (currentTahap === 'final') {
+          quickBtnsHtml = `
+            <div style="display:flex;gap:0.4rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
+              <button class="btn ${currentLabel === 'Final - Wajib Timing' ? 'btn-primary' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Final - Wajib Timing">📝 Wajib Timing</button>
+              <button class="btn ${currentLabel === 'Final - Lempar Rebut' ? 'btn-primary' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Final - Lempar Rebut">🔄 Lempar Rebut</button>
+              <button class="btn ${currentLabel === 'Final - Rebutan' ? 'btn-primary' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Final - Rebutan">⚡ Rebutan</button>
+              <button class="btn ${currentLabel === 'Sidang Kejuaraan' ? 'btn-accent' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Sidang Kejuaraan">🏆 Sidang Kejuaraan</button>
+            </div>
+          `;
+        } else {
+          quickBtnsHtml = `
+            <div style="display:flex;gap:0.4rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
+              <button class="btn ${currentLabel === 'Babak Penyisihan' ? 'btn-primary' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Babak Penyisihan">Babak Penyisihan</button>
+              <button class="btn ${currentLabel === 'Sidang Kejuaraan' ? 'btn-accent' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Sidang Kejuaraan">🏆 Sidang Kejuaraan</button>
+            </div>
+          `;
+        }
 
         html += `
           <div style="background:var(--surface-2);padding:1.5rem;border-radius:8px;margin-bottom:1rem;">
@@ -2120,12 +2130,15 @@ input[type=number]{-moz-appearance:textfield}
             <div style="font-size:1.5rem;font-weight:800;color:var(--rose-deep);margin-top:0.4rem">${esc(currentLabel)}</div>
           </div>
 
-          ${quickFinalBtns}
+          ${quickBtnsHtml}
           
-          <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;align-items:center;">
-            <input type="text" id="inputPhaseLabel" class="input" value="${esc(currentLabel)}" style="max-width:250px" placeholder="Ketik label kustom...">
-            <button class="btn btn-ghost btn-sm" id="btnSetPhase" data-act="phase_set">💾 Set Label</button>
-          </div>
+          <details style="margin-bottom:1.5rem;text-align:center">
+            <summary style="font-size:0.75rem;color:var(--ink-light);cursor:pointer;user-select:none">⚙️ Ubah Label Kustom (Opsional)</summary>
+            <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:0.5rem;align-items:center;">
+              <input type="text" id="inputPhaseLabel" class="input" value="${esc(currentLabel)}" style="max-width:250px" placeholder="Ketik label kustom...">
+              <button class="btn btn-ghost btn-sm" id="btnSetPhase" data-act="phase_set">💾 Set</button>
+            </div>
+          </details>
 
           <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
             <button class="btn btn-primary" data-act="mulai">▶ Mulai / Lanjut</button>
@@ -3031,6 +3044,68 @@ input[type=number]{-moz-appearance:textfield}
     `;
   }
 
+  function backupLcpDraft(tabKey) {
+    if (!isLcp() || getTahap() !== 'final') return;
+    const rows = $$('#lcpFinalContent tbody tr');
+    const data = {};
+    rows.forEach(tr => {
+      const no = tr.dataset.no;
+      data[no] = {};
+      tr.querySelectorAll('input').forEach(inp => {
+        if (inp.dataset.key) data[no][inp.dataset.key] = inp.value;
+      });
+    });
+    try { localStorage.setItem(`mtq_draft_LCP_${tabKey}`, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function restoreLcpDraft(tabKey) {
+    const str = localStorage.getItem(`mtq_draft_LCP_${tabKey}`);
+    if (!str) return;
+    try {
+      const data = JSON.parse(str);
+      let restoredCount = 0;
+      Object.keys(data).forEach(no => {
+        const tr = document.querySelector(`#lcpFinalContent tbody tr[data-no="${no}"]`);
+        if (!tr || tr.querySelector('[data-save-row]') === null) return; // Skip jika sudah tersimpan (ada tombol simpan artinya belum tersimpan)
+        
+        Object.keys(data[no]).forEach(key => {
+          const inp = tr.querySelector(`[data-key="${key}"]`);
+          if (inp && !inp.readOnly) {
+            inp.value = data[no][key];
+            restoredCount++;
+          }
+        });
+      });
+      if (restoredCount > 0) {
+        toast(`🔄 Mengembalikan draft nilai yang belum tersimpan`, 'warning');
+        attachLiveUpdate(LCP_FINAL_TABS.find(t => t.key === tabKey)); // Trigger hitung ulang skor
+      }
+    } catch(e) {}
+  }
+
+  function syncPanggungLcpFinal(tabKey) {
+    if (!isLcp() || getTahap() !== 'final') return;
+
+    const finalisSet = new Set(State.dashboard.finalis || []);
+    const finalistRows = (State.dashboard.rows || []).filter(r => finalisSet.has(r.No_Undian));
+    if (!finalistRows.length) return;
+
+    // Cek apakah SEMUA finalis sudah punya nilai di fase ini
+    const allSaved = finalistRows.every(r => r.fases && r.fases[tabKey]);
+
+    if (allSaved) {
+      let nextLabel = '';
+      if (tabKey === 'final_wajib') nextLabel = 'Final - Lempar Rebut';
+      else if (tabKey === 'final_lempar') nextLabel = 'Final - Rebutan';
+      else if (tabKey === 'final_rebutan') nextLabel = 'Sidang Kejuaraan';
+
+      if (nextLabel) {
+        api('panggung_update', { action_panggung: 'phase_set', phase_label: nextLabel }, { timeout: 15000 }).catch(() => {});
+        toast(`✓ Fase selesai. Panggung otomatis lanjut ke: ${nextLabel}`, 'success');
+      }
+    }
+  }
+
   function renderLcpFinal(tabKey = 'final_wajib') {
     showView('lcp-final');
     const d = State.dashboard;
@@ -3212,65 +3287,99 @@ input[type=number]{-moz-appearance:textfield}
         </button>
       </div>`;
 
-    $$('.lcp-tab').forEach(b => b.onclick = () => renderLcpFinal(b.dataset.tab));
+    // Restore draft localstorage jika ada
+    restoreLcpDraft(tabKey);
 
-    $('#lcpFinalContent').addEventListener('click', e => {
-      const btn = e.target.closest('.counter-btn');
-      if (!btn || btn.disabled) return;
-      
-      const group = btn.closest('.counter-group');
-      const inp = group.querySelector('.counter-input');
-      if (inp.readOnly) return;
+    $$('.lcp-tab').forEach(b => b.onclick = () => {
+      // Backup tab saat ini sebelum pindah
+      backupLcpDraft(tabKey); 
+      renderLcpFinal(b.dataset.tab);
+    });
 
-      const min = parseInt(inp.getAttribute('min') || 0, 10);
-      const max = parseInt(inp.getAttribute('max') || 99, 10);
-      let val = parseInt(inp.value || 0, 10);
-      
-      if (isNaN(val)) val = 0;
-
-      if (btn.dataset.act === 'plus') val = Math.min(max, val + 1);
-      else if (btn.dataset.act === 'minus') val = Math.max(min, val - 1);
-      
-      inp.value = val;
-      inp.dispatchEvent(new Event('input', { bubbles: true }));
+    // Bind input event untuk backup otomatis
+    $$('#lcpFinalContent input').forEach(inp => {
+      inp.addEventListener('input', () => backupLcpDraft(tabKey));
     });
 
     $$('button[data-save-row]').forEach(btn => {
-      btn.onclick = () => saveLcpRow(btn.dataset.saveRow, tab);
+      btn.onclick = () => saveLcpRow(btn.dataset.saveRow, tab, tabKey);
     });
 
     attachLiveUpdate(tab);
 
+    // --- PERBAIKAN TIMEOUT: BATCH SAVE SEMUA SISA ---
     $('#btnSaveLcpFinal').onclick = async e => {
       const btn = e.currentTarget;
       const unsavedRows = rows.filter(r => !r.fases[tab.key] || isSidangMode);
       
       if (!unsavedRows.length) return toast('Semua regu sudah tersimpan.', 'info');
-
-      if (!(await showConfirm(`Simpan ${unsavedRows.length} regu yang belum tersimpan?`, { okText: 'Simpan Semua' }))) return;
+      if (!(await showConfirm(`Simpan ${unsavedRows.length} regu sekaligus?`, { okText: 'Simpan' }))) return;
 
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
       
-      try {
-        for (const r of unsavedRows) {
-          const tr = document.querySelector(`#lcpFinalContent tbody tr[data-no="${r.No_Undian}"]`);
-          if (tr) {
-            await executeSaveRow(r.No_Undian, tab, true);
-          }
+      const payload = [];
+      const errs = [];
+
+      // Kumpulkan SEMUA data dari DOM ke dalam 1 array payload
+      unsavedRows.forEach(r => {
+        const tr = document.querySelector(`#lcpFinalContent tbody tr[data-no="${r.No_Undian}"]`);
+        if (!tr) return;
+
+        if (tab.mode === 'counter') {
+          const b = Number(tr.querySelector('[data-key="benar"]').value || 0);
+          payload.push({ No_Undian: r.No_Undian, benar: b, salah: 0 });
+        } else if (tab.mode === 'wajib-rebut') {
+          const wajib = tr.querySelector('[data-key="wajib_str"]').value.toUpperCase();
+          if (wajib.length !== 7) { errs.push(`${r.No_Undian}: Wajib 7 char`); return; }
+          const wb = (wajib.match(/B/g) || []).length;
+          const rb = Number(tr.querySelector('[data-key="rebut_b"]').value || 0);
+          const rs = Number(tr.querySelector('[data-key="rebut_s"]').value || 0);
+          payload.push({ No_Undian: r.No_Undian, benar: wb + rb, salah: rs });
+        } else {
+          const b = Number(tr.querySelector('[data-key="benar"]').value || 0);
+          const s = Number(tr.querySelector('[data-key="salah"]').value || 0);
+          payload.push({ No_Undian: r.No_Undian, benar: b, salah: s });
         }
-        toast('Semua data berhasil disimpan', 'success');
+      });
+
+      if (errs.length) {
+        btn.disabled = false; btn.innerHTML = '💾 Simpan Semua (Sisa)';
+        return toast(errs[0], 'error');
+      }
+
+      try {
+        // 1 API CALL SAJA untuk semua baris (mencegah timeout)
+        const res = await api('simpan_lcp', { fase: tab.key, rows: payload }, { timeout: 60000 });
+        if (res.error) throw new Error(res.message);
+
+        // Update state lokal & hapus draft
+        payload.forEach(p => {
+           const target = State.dashboard.rows.find(x => x.No_Undian === p.No_Undian);
+           if (target) {
+              if (!target.fases) target.fases = {};
+              const cfg = { final_wajib: [100, 0], final_lempar: [100, -50], final_rebutan: [100, -100] }[tab.key];
+              target.fases[tab.key] = { benar: p.benar, salah: p.salah, skor: p.benar * cfg[0] + p.salah * cfg[1] };
+           }
+        });
+        
+        localStorage.removeItem(`mtq_draft_LCP_${tabKey}`);
+        toast('Semua data berhasil disimpan sekaligus', 'success');
+        
+        // Auto-Advance Panggung
+        syncPanggungLcpFinal(tab.key); 
+        
         await loadDashboard(true);
         renderLcpFinal(tab.key);
       } catch (err) {
-        toast('Gagal menyimpan beberapa data: ' + err.message, 'error');
+        toast('Gagal: ' + err.message, 'error');
       } finally {
         if (btn.isConnected) { btn.disabled = false; btn.innerHTML = '💾 Simpan Semua (Sisa)'; }
       }
     };
   }
 
-  async function saveLcpRow(no, tab) {
+  async function saveLcpRow(no, tab, tabKey) {
     if (!(await showConfirm(`Simpan & kunci nilai untuk ${no}?\nData yang disimpan tidak dapat diedit.`, { okText: 'Simpan' }))) return;
     
     const tr = document.querySelector(`#lcpFinalContent tbody tr[data-no="${no}"]`);
@@ -3284,7 +3393,17 @@ input[type=number]{-moz-appearance:textfield}
     try {
       await executeSaveRow(no, tab, false);
       toast(`${no} berhasil disimpan & dikunci.`, 'success');
+      
+      // Hapus draft baris ini dari LocalStorage (karena sudah tersimpan ke server)
+      const draftStr = localStorage.getItem(`mtq_draft_LCP_${tabKey}`);
+      if (draftStr) {
+        const draft = JSON.parse(draftStr);
+        delete draft[no];
+        localStorage.setItem(`mtq_draft_LCP_${tabKey}`, JSON.stringify(draft));
+      }
+
       await loadDashboard(true);
+      syncPanggungLcpFinal(tab.key); 
       renderLcpFinal(tab.key);
     } catch (err) {
       toast('Gagal: ' + err.message, 'error');
@@ -3475,6 +3594,27 @@ input[type=number]{-moz-appearance:textfield}
   $('#btnLogout').onclick = async () => {
     if (await showConfirm('Keluar dari portal pewara?', { okText: 'Keluar' })) doLogout();
   };
+
+  // --- GLOBAL EVENT UNTUK COUNTER LCP FINAL (Didaftarkan 1x untuk mencegah bug +7) ---
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('#lcpFinalContent .counter-btn');
+    if (!btn || btn.disabled) return;
+    
+    const group = btn.closest('.counter-group');
+    const inp = group.querySelector('.counter-input');
+    if (inp.readOnly) return;
+
+    const min = parseInt(inp.getAttribute('min') || 0, 10);
+    const max = parseInt(inp.getAttribute('max') || 99, 10);
+    let val = parseInt(inp.value || 0, 10);
+    
+    if (isNaN(val)) val = 0;
+    if (btn.dataset.act === 'plus') val = Math.min(max, val + 1);
+    else if (btn.dataset.act === 'minus') val = Math.max(min, val - 1);
+    
+    inp.value = val;
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  });
 
   window.addEventListener('hashchange', async e => {
     const newHash = (location.hash || '').slice(1);
