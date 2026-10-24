@@ -437,7 +437,7 @@ body.is-fullscreen .lc-timer { font-size: 2.4rem; }
 body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
 /* ============================================================================
- * §7 PESERTA (UPDATED: Flexbox & Equal Height)
+ * §7 PESERTA (UPDATED: Modern List Dashboard)
  * ============================================================================ */
 .search-wrap {
   position: sticky; top: calc(var(--header-h) + 0.5rem);
@@ -471,138 +471,131 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   pointer-events: none;
 }
 
-.peserta-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.25rem;
-  align-items: stretch; /* Memaksa tinggi kartu sejajar dalam satu baris */
+/* Container List */
+.peserta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.peserta-item {
+/* Baris Peserta */
+.peserta-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
   background: var(--surface);
   border: 1.5px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.25rem;
-  display: flex; 
-  flex-direction: column; 
-  height: 100%; /* Memenuhi tinggi grid */
+  border-radius: var(--r-md);
+  overflow: hidden;
   transition: var(--trans);
   box-shadow: var(--shadow-sm);
   position: relative;
-  overflow: hidden;
 }
-.peserta-item::before {
+.peserta-row::before {
   content: ''; position: absolute;
   left: 0; top: 0; bottom: 0; width: 4px;
   background: var(--hijau); opacity: 0;
   transition: var(--trans);
 }
-.peserta-item:hover {
+.peserta-row:hover {
   border-color: var(--hijau);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateX(2px);
 }
-.peserta-item:hover::before { opacity: 1; }
+.peserta-row:hover::before { opacity: 1; }
 
-.pi-header { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-.pi-no {
-  font-family: 'Plus Jakarta Sans', monospace;
-  font-size: 0.75rem; font-weight: 800;
-  color: var(--hijau-deep);
-  background: var(--hijau-soft);
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  letter-spacing: 0.04em;
-  border: 1px solid rgba(15, 148, 136, 0.15);
+/* Kolom Kiri (Kode & Cabang) */
+.pr-left {
+  flex: 0 0 180px;
+  padding: 1.25rem;
+  background: var(--surface-soft);
+  border-right: 1.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
 }
-.pi-kode {
-  font-size: 0.68rem; font-weight: 800;
+.pr-no {
+  font-family: 'Plus Jakarta Sans', monospace;
+  font-size: 0.8rem; font-weight: 800;
+  color: var(--hijau-deep);
+  letter-spacing: 0.04em;
+}
+.pr-kode {
+  font-size: 0.7rem; font-weight: 800;
   text-transform: uppercase;
   color: var(--rose-deep);
   background: var(--rose-soft);
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--r-full);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  align-self: flex-start;
   letter-spacing: 0.05em;
 }
 
-/* Pembungkus konten utama agar bisa mendorong meta ke bawah */
-.pi-content {
+/* Kolom Tengah (Nama / Anggota) */
+.pr-main {
   flex: 1;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
-
-.pi-name {
+.pr-name {
   font-family: 'Fraunces', serif;
   font-size: 1.15rem; font-weight: 800;
   color: var(--ink);
   line-height: 1.3;
-  letter-spacing: -0.005em;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
-
-.pi-team {
+.pr-team-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   background: var(--surface-soft);
-  border: 1.5px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 0.85rem 0.9rem;
-}
-.pi-team-label {
-  font-size: 0.66rem; font-weight: 800;
-  color: var(--hijau-deep);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 0.6rem;
-  display: flex; align-items: center; gap: 0.4rem;
-}
-.pi-team-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
-.pi-team-list li {
-  display: flex; align-items: flex-start; gap: 0.55rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
   border-radius: var(--r-sm);
-  padding: 0.5rem 0.7rem;
+  border: 1px dashed var(--border-strong);
+  margin-top: 0.5rem;
 }
-.pi-team-num {
-  width: 22px; height: 22px;
-  display: grid; place-items: center;
-  font-size: 0.68rem; font-weight: 800;
-  color: var(--ink-soft);
-  background: var(--bg);
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 1px;
+.pr-team-list li {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  font-size: 0.85rem; line-height: 1.4;
 }
-.pi-member {
-  display: flex; flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-  flex: 1;
-}
-.pi-member-name {
-  font-size: 0.9rem; font-weight: 700;
-  color: var(--ink);
-  line-height: 1.3;
-  word-break: break-word;
-}
-.pi-member-school {
-  font-size: 0.74rem; font-weight: 500;
+.pr-team-num {
+  font-size: 0.7rem; font-weight: 800;
   color: var(--ink-muted);
-  line-height: 1.35;
-  word-break: break-word;
+  min-width: 12px;
+}
+.pr-team-name { font-weight: 600; color: var(--ink); }
+.pr-team-school { font-size: 0.75rem; color: var(--ink-muted); }
+
+/* Kolom Kanan (Kapanewon & Sekolah) */
+.pr-right {
+  flex: 0 0 240px;
+  padding: 1.25rem;
+  border-left: 1.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  background: var(--surface);
+}
+.pr-meta-row {
+  display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.45;
+}
+.pr-meta-row svg {
+  width: 15px; height: 15px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
-/* Desain Meta yang didorong ke bawah */
-.pi-meta { 
-  display: flex; flex-direction: column; gap: 0.4rem; 
-  font-size: 0.83rem; color: var(--ink-soft); 
-  margin-top: auto; /* Mendorong elemen ini ke dasar kartu */
-  padding-top: 1rem;
-  border-top: 1px dashed var(--border-strong);
-}
-.pi-meta-row { display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.45; }
-.pi-meta-row svg { width: 15px; height: 15px; color: var(--ink-muted); flex-shrink: 0; margin-top: 2px; }
-
+/* Empty State */
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
@@ -629,7 +622,27 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   body.is-fullscreen .live-grid { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; gap: 1rem; }
   body.is-fullscreen .live-card { height: auto; min-height: 200px; }
   body.is-fullscreen .fs-title { font-size: 1.2rem; padding: 0.9rem 1rem 0.5rem; }
+  
+  /* Responsif untuk List Peserta */
+  .peserta-row { flex-direction: column; }
+  .pr-left { 
+    flex: none; 
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-right: none; 
+    border-bottom: 1.5px solid var(--border); 
+    padding: 1rem; 
+  }
+  .pr-right { 
+    flex: none; 
+    border-left: none; 
+    border-top: 1.5px dashed var(--border-strong); 
+    padding: 1rem; 
+  }
+  .pr-main { padding: 1rem; }
 }
+
 @media (max-width: 640px) {
   :root { --header-h: 108px; }
   .container { padding: 1.5rem 1rem 5rem; }
@@ -638,7 +651,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   .btn-ghost { padding: 0.45rem 0.75rem; font-size: 0.8rem; }
   .hero h1 { font-size: 1.75rem; }
   .hero p { font-size: 0.88rem; }
-  .live-grid, .peserta-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .live-grid { grid-template-columns: 1fr; gap: 1rem; }
   .search-wrap { top: calc(var(--header-h) + 0.25rem); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -742,8 +755,10 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
         <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, kapanewon, atau no. pendaftaran..." autocomplete="off" spellcheck="false">
       </div>
     </div>
-    <div class="peserta-grid" id="pesertaGrid" aria-live="polite" aria-busy="false">
-      <div class="empty-state" style="grid-column:1/-1;">
+    
+    <!-- Container menggunakan list, bukan grid card -->
+    <div class="peserta-list" id="pesertaGrid" aria-live="polite" aria-busy="false">
+      <div class="empty-state">
         <span class="spinner" aria-label="Memuat"></span>
       </div>
     </div>
@@ -1226,7 +1241,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
     if (!el.pesertaGrid) return;
     el.pesertaGrid.setAttribute('aria-busy', 'false');
     el.pesertaGrid.innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1;">
+      <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
         </svg>
@@ -1240,7 +1255,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
     if (!list.length) {
       el.pesertaGrid.innerHTML = `
-        <div class="empty-state" style="grid-column:1/-1;">
+        <div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
@@ -1250,34 +1265,51 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
       return;
     }
 
-    el.pesertaGrid.innerHTML = list.map(renderPesertaCard).join('');
+    el.pesertaGrid.innerHTML = list.map(renderPesertaRow).join('');
   }
 
-  function renderPesertaCard(p) {
+  function renderPesertaRow(p) {
     const isTeam = p.Cabang === 'LCP';
 
-    let titleHtml = `<h3 class="pi-name">${esc(p.Nama)}</h3>`;
-    let teamHtml = '';
-
+    // Kolom tengah: Nama atau Tim
+    let mainHtml = `<div class="pr-name">${esc(p.Nama)}</div>`;
+    
     if (isTeam) {
-      titleHtml = `<h3 class="pi-name">Tim ${esc(p.Kapanewon)}</h3>`;
-      teamHtml = renderTeamBlock(p);
+      const members = [];
+      if (p.Nama) members.push({ num: 1, name: p.Nama, school: p._sekolah1 });
+      if (p.Anggota_2) members.push({ num: 2, name: p.Anggota_2, school: p._sekolah2 });
+      if (p.Anggota_3) members.push({ num: 3, name: p.Anggota_3, school: p._sekolah3 });
+
+      mainHtml = `
+        <div class="pr-name">Tim ${esc(p.Kapanewon)}</div>
+        <ul class="pr-team-list">
+          ${members.map(m => `
+            <li>
+              <span class="pr-team-num">${m.num}.</span>
+              <span class="pr-team-name">${esc(m.name)}</span>
+              <span class="pr-team-school">${esc(m.school)}</span>
+            </li>
+          `).join('')}
+        </ul>
+      `;
     }
 
     return `
-      <article class="peserta-item">
-        <div class="pi-header">
-          <span class="pi-no">${esc(p.No_Pendaftaran || '-')}</span>
-          <span class="pi-kode">${esc(p.Cabang)}</span>
+      <article class="peserta-row">
+        <!-- Kolom Kiri: ID & Kode Cabang -->
+        <div class="pr-left">
+          <div class="pr-no">${esc(p.No_Pendaftaran || '-')}</div>
+          <div class="pr-kode">${esc(p.Cabang)}</div>
         </div>
         
-        <div class="pi-content">
-          ${titleHtml}
-          ${teamHtml}
+        <!-- Kolom Tengah: Nama / Anggota -->
+        <div class="pr-main">
+          ${mainHtml}
         </div>
         
-        <div class="pi-meta">
-          <div class="pi-meta-row">
+        <!-- Kolom Kanan: Kapanewon & Sekolah -->
+        <div class="pr-right">
+          <div class="pr-meta-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
@@ -1285,7 +1317,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
             <span>${esc(p.Kapanewon)}</span>
           </div>
           ${!isTeam ? `
-          <div class="pi-meta-row">
+          <div class="pr-meta-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4a3 3 0 0 1 6 0v4"/>
             </svg>
@@ -1293,36 +1325,6 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
           </div>` : ''}
         </div>
       </article>
-    `;
-  }
-
-  function renderTeamBlock(p) {
-    const member = (num, nama, sekolah) => `
-      <li>
-        <span class="pi-team-num" aria-hidden="true">${num}</span>
-        <div class="pi-member">
-          <span class="pi-member-name">${esc(nama)}</span>
-          ${sekolah ? `<span class="pi-member-school">${esc(sekolah)}</span>` : ''}
-        </div>
-      </li>`;
-
-    return `
-      <div class="pi-team">
-        <div class="pi-team-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Anggota Tim
-        </div>
-        <ul class="pi-team-list">
-          ${member(1, p.Nama, p._sekolah1)}
-          ${p.Anggota_2 ? member(2, p.Anggota_2, p._sekolah2) : ''}
-          ${p.Anggota_3 ? member(3, p.Anggota_3, p._sekolah3) : ''}
-        </ul>
-      </div>
     `;
   }
 
@@ -1365,7 +1367,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
       if (target === 'tab-peserta') {
         if (state.peserta.loaded) {
-          if (el.pesertaGrid && !el.pesertaGrid.querySelector('.peserta-item')) {
+          if (el.pesertaGrid && !el.pesertaGrid.querySelector('.peserta-row')) {
             renderPeserta(state.peserta.filteredData || state.peserta.data);
           }
           loadPeserta();
