@@ -866,7 +866,7 @@ input[type=number]{-moz-appearance:textfield}
     };
   }
 
-  // ─── SMART SYNC PANGGUNG ───
+  // ─── SMART SYNC PANGGUNG (AFTER SAVE) ───
   function syncPanggungAfterSave() {
     if (!State.dashboard || getState() === 'final') return;
 
@@ -882,6 +882,59 @@ input[type=number]{-moz-appearance:textfield}
          api('panggung_update', { action_panggung: 'phase_set', phase_label: 'Sidang Kejuaraan' }, { timeout: 15000 }).catch(() => {});
       } else {
          api('panggung_update', { action_panggung: 'selesai' }, { timeout: 15000 }).catch(() => {});
+      }
+    }
+  }
+
+  // ─── SMART SYNC PANGGUNG (ON BOOT / REFRESH) ───
+  async function syncPanggungOnBoot() {
+    if (!State.dashboard) return;
+
+    const state = getState();
+    const cabang = getCab();
+    const rows = State.dashboard.rows || [];
+
+    // 1. Jika sudah FINAL (sidang ditutup), matikan panggung
+    if (state === 'final') {
+      await api('panggung_update', { action_panggung: 'selesai' }, { timeout: 10000 }).catch(() => {});
+      return;
+    }
+
+    // 2. Jika LCP
+    if (cabang === 'LCP') {
+      if (getTahap() === 'penyisihan') {
+         // Cek apakah semua regu sudah punya nilai penyisihan
+         const allPenyisihan = rows.length > 0 && rows.every(r => r.fases && r.fases.penyisihan);
+         const label = allPenyisihan ? 'Sidang Finalis' : 'Babak Penyisihan';
+         await api('panggung_update', { action_panggung: 'phase_set', phase_label: label }, { timeout: 10000 }).catch(() => {});
+      
+      } else if (getTahap() === 'final') {
+         // Khusus Final, cek per fase
+         const finalisSet = new Set(State.dashboard.finalis || []);
+         const finalisRows = rows.filter(r => finalisSet.has(r.No_Undian));
+         if (!finalisRows.length) return;
+
+         const allRebutan = finalisRows.every(r => r.fases && r.fases.final_rebutan);
+         const allLempar = finalisRows.every(r => r.fases && r.fases.final_lempar);
+         const allWajib = finalisRows.every(r => r.fases && r.fases.final_wajib);
+         
+         let label = 'Final - Wajib Timing';
+         if (allRebutan) label = 'Sidang Kejuaraan';
+         else if (allLempar) label = 'Final - Rebutan';
+         else if (allWajib) label = 'Final - Lempar Rebut';
+         
+         await api('panggung_update', { action_panggung: 'phase_set', phase_label: label }, { timeout: 10000 }).catch(() => {});
+      }
+    
+    // 3. Jika Non-LCP
+    } else {
+      const firstIncomplete = rows.find(r => !isRowComplete(r));
+      
+      if (firstIncomplete) {
+        await api('panggung_update', { action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian }, { timeout: 10000 }).catch(() => {});
+      } else if (rows.length > 0) {
+        const lastRow = rows[rows.length - 1];
+        await api('panggung_update', { action_panggung: 'set_manual', no_undian: lastRow.No_Undian }, { timeout: 10000 }).catch(() => {});
       }
     }
   }
@@ -2119,7 +2172,7 @@ input[type=number]{-moz-appearance:textfield}
           quickBtnsHtml = `
             <div style="display:flex;gap:0.4rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
               <button class="btn ${currentLabel === 'Babak Penyisihan' ? 'btn-primary' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Babak Penyisihan">Babak Penyisihan</button>
-              <button class="btn ${currentLabel === 'Sidang Kejuaraan' ? 'btn-accent' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Sidang Kejuaraan">🏆 Sidang Kejuaraan</button>
+              <button class="btn ${currentLabel === 'Sidang Finalis' ? 'btn-accent' : 'btn-ghost'} btn-sm" data-act="phase_quick" data-label="Sidang Finalis">🏆 Sidang Finalis</button>
             </div>
           `;
         }
@@ -3174,9 +3227,13 @@ input[type=number]{-moz-appearance:textfield}
       tableHtml = rows.map(r => {
         const fase = (r.fases || {})[tab.key] || {};
         const isSaved = !!r.fases[tab.key] && !isSidangMode;
-        const wajibStr = fase.wajib_str || '';
-        const rebutB = fase.rebut_b ?? '';
-        const rebutS = fase.rebut_s ?? '';
+        
+        // --- PERBAIKAN: Baca dari `jawaban` jika `wajib_str` kosong ---
+        const parts = String(fase.jawaban || '').split('|');
+        const wajibStr = fase.wajib_str || parts[0] || '';
+        const rebutB = fase.rebut_b !== undefined ? fase.rebut_b : (parts[1] || '');
+        const rebutS = fase.rebut_s !== undefined ? fase.rebut_s : (parts[2] || '');
+
         const wajibB = wajibStr ? (wajibStr.match(/B/g) || []).length : '';
         const skor = fase.skor ?? '';
         const chips = wajibStr
@@ -3680,7 +3737,15 @@ input[type=number]{-moz-appearance:textfield}
         const res = await api('login_pewara', {}, { timeout: 15000 });
         if (res.error) throw new Error('token invalid');
         State.login = res;
+        
+        // Load dashboard dulu
         await loadDashboard();
+        
+        // Panggil sync panggung (hanya jika bukan di halaman login)
+        if (location.hash !== '#login') {
+          syncPanggungOnBoot();
+        }
+        
         const target = location.hash && location.hash !== '#login' ? location.hash : '#dashboard';
         if (location.hash === target) route();
         else location.hash = target;
