@@ -777,8 +777,8 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   const SEARCH_DEBOUNCE = 250;
   const CACHE_TTL_MS = 5 * 60 * 1000;
 
-  const LIVE_CACHE_KEY = 'mtq26_live_v3';
-  const PESERTA_CACHE_KEY = 'mtq26_peserta_v3';
+  const LIVE_CACHE_KEY = 'mtq26_live_v4';
+  const PESERTA_CACHE_KEY = 'mtq26_peserta_v4';
 
   const ORDER = ['MTQ','MTtQ','MHQ','Puitisasi','MAz','LPP','LCP','Lukis','Menyanyi'];
   const STATUS_LABEL = {
@@ -1220,7 +1220,6 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   }
 
   function decoratePeserta(p) {
-    // Menyesuaikan dengan nama kolom dari skema database terbaru
     const nama1 = p.Nama_Lengkap || p.Nama || '';
     const sekolah1 = p.Asal_Sekolah_1 || p.Asal_Sekolah || p.Sekolah || '';
     const sekolah2 = p.Asal_Sekolah_2 || p.Sekolah_2 || sekolah1;
@@ -1278,25 +1277,30 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
     const sekolah2 = p._sekolah2;
     const sekolah3 = p._sekolah3;
 
-    // Kolom tengah: Nama atau Tim
     let mainHtml = `<div class="pr-name">${esc(nama1)}</div>`;
     
+    // Perbaikan: Judul Tim LCP menggunakan Nama Kapanewon agar tidak dobel dengan nama anggota 1
     if (isTeam) {
-      const members = [];
-      if (nama1) members.push({ num: 1, name: nama1, school: sekolah1 });
-      if (p.Anggota_2) members.push({ num: 2, name: p.Anggota_2, school: sekolah2 });
-      if (p.Anggota_3) members.push({ num: 3, name: p.Anggota_3, school: sekolah3 });
-
       mainHtml = `
-        <div class="pr-name">${esc(nama1)}</div>
+        <div class="pr-name">Tim ${esc(p.Kapanewon)}</div>
         <ul class="pr-team-list">
-          ${members.map(m => `
-            <li>
-              <span class="pr-team-num">${m.num}.</span>
-              <span class="pr-team-name">${esc(m.name)}</span>
-              <span class="pr-team-school">${esc(m.school)}</span>
-            </li>
-          `).join('')}
+          <li>
+            <span class="pr-team-num">1.</span>
+            <span class="pr-team-name">${esc(nama1)}</span>
+            <span class="pr-team-school">${esc(sekolah1)}</span>
+          </li>
+          ${p.Anggota_2 ? `
+          <li>
+            <span class="pr-team-num">2.</span>
+            <span class="pr-team-name">${esc(p.Anggota_2)}</span>
+            <span class="pr-team-school">${esc(sekolah2)}</span>
+          </li>` : ''}
+          ${p.Anggota_3 ? `
+          <li>
+            <span class="pr-team-num">3.</span>
+            <span class="pr-team-name">${esc(p.Anggota_3)}</span>
+            <span class="pr-team-school">${esc(sekolah3)}</span>
+          </li>` : ''}
         </ul>
       `;
     }
