@@ -1245,6 +1245,9 @@ input[type=number]{-moz-appearance:textfield}
       b.onclick = () => focusRow(b.dataset.no);
     });
 
+    // Restore draft untuk Non-LCP
+    restoreNonLcpDraft();
+
     buildCellIndex();
     calculateLiveRank();
     updateSaveBarInfo();
@@ -1562,6 +1565,48 @@ input[type=number]{-moz-appearance:textfield}
     _asTimer = setTimeout(() => el.classList.remove('show'), 1800);
   }
 
+  function backupNonLcpDraft(tr) {
+    const cab = getCab();
+    const no = tr.dataset.no;
+    const data = {};
+    tr.querySelectorAll('.input-cell').forEach(inp => {
+      data[inp.dataset.juri + '|' + inp.dataset.key] = inp.value;
+    });
+    try { localStorage.setItem(`mtq_draft_${cab}_${no}`, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function restoreNonLcpDraft() {
+    const cab = getCab();
+    let restoredCount = 0;
+    $$('.input-table tbody tr').forEach(tr => {
+      const no = tr.dataset.no;
+      const str = localStorage.getItem(`mtq_draft_${cab}_${no}`);
+      if (!str) return;
+      try {
+        const data = JSON.parse(str);
+        Object.keys(data).forEach(key => {
+          const [juri, col] = key.split('|');
+          const inp = tr.querySelector(`[data-juri="${juri}"][data-key="${col}"]`);
+          if (inp && !inp.readOnly) {
+            inp.value = data[key];
+            restoredCount++;
+          }
+        });
+        updateRowOnly(tr);
+        markRowDirty(no);
+        scheduleAutoSave(no);
+      } catch(e) {}
+    });
+    if (restoredCount > 0) {
+      toast('🔄 Nilai yang belum tersimpan berhasil dipulihkan', 'warning');
+      scheduleGlobalUpdate();
+    }
+  }
+
+  function clearNonLcpDraft(no) {
+    localStorage.removeItem(`mtq_draft_${getCab()}_${no}`);
+  }
+
   async function saveRow(no, opts = {}) {
     const silent = !!opts.silent;
     if (!no) return;
@@ -1649,6 +1694,7 @@ input[type=number]{-moz-appearance:textfield}
 
       if (valuesMatch && incompleteJuris.length === 0) {
         _dirtyRows.delete(no);
+        clearNonLcpDraft(no);
         if (silent) showAutoSaveIndicator('✓ ' + no + ' tersimpan', 'success');
         else toast(`${no} tersimpan`, 'success');
         
@@ -1775,9 +1821,12 @@ input[type=number]{-moz-appearance:textfield}
         targetTrs.forEach(tr => {
           const no = tr.dataset.no;
           const snap = sentSnapshot.get(no);
-          if (!snap) { _dirtyRows.delete(no); return; }
+          if (!snap) { _dirtyRows.delete(no); clearNonLcpDraft(no); return; }
           const sentRows = Object.entries(snap).map(([j, vals]) => ({ juri: parseInt(j, 10), ...vals }));
-          if (rowValuesMatch(tr, sentRows, juri, crit)) _dirtyRows.delete(no);
+          if (rowValuesMatch(tr, sentRows, juri, crit)) {
+             _dirtyRows.delete(no);
+             clearNonLcpDraft(no);
+          }
           else scheduleAutoSave(no);
         });
 
@@ -2003,49 +2052,75 @@ input[type=number]{-moz-appearance:textfield}
     }
 
     if (readonly) {
-      $('#kehadiranContent').innerHTML = `<div class="warn-banner info"><span class="icon">🔒</span><div>Status ${state.toUpperCase()}. Kehadiran sudah terkunci.</div></div>` + buildKehadiranCards(rows, blind, true);
+      $('#kehadiranContent').innerHTML = `<div class="warn-banner info"><span class="icon">🔒</span><div>Status ${state.toUpperCase()}. Kehadiran sudah terkunci.</div></div>` + buildKehadiranTable(rows, blind, true);
     } else {
-      $('#kehadiranContent').innerHTML = buildKehadiranCards(rows, blind, false);
+      $('#kehadiranContent').innerHTML = buildKehadiranTable(rows, blind, false);
       bindKehadiranActions();
     }
   }
 
-  function buildKehadiranCards(rows, blind, readonly) {
-    return `<div class="card-grid">${rows.map(r => {
-      const st = r.Status_Kehadiran || 'belum';
-      const cls = st === 'hadir' ? 'hadir' : (st === 'tidak_hadir' ? 'tidak_hadir' : (st === 'diskualifikasi' ? 'diskualifikasi' : ''));
-      const penalty = num(r.Penalti);
-      const isLate = st === 'hadir' && penalty > 0;
-      const labelMap = { belum: 'Belum', hadir: 'Hadir', tidak_hadir: 'Tidak Hadir', diskualifikasi: 'Diskualifikasi' };
-      return `<div class="peserta-card ${cls}" data-no="${esc(r.No_Undian)}">
-        <div class="head">
-          <span class="nomor">${esc(r.No_Undian)}</span>
-          <div class="info">
-            ${blind ? '<strong>🔒 Blind</strong>' : `<strong>${esc(r.Nama_Siswa || '')}</strong><small>${esc(r.Kapanewon || '')}</small>`}
-          </div>
-          <span class="status-chip ${isLate ? 'terlambat' : st}">${labelMap[st] || st}${isLate ? ' ⏱' : ''}</span>
-        </div>
-        ${penalty > 0 ? `<div style="font-size:0.78rem;color:var(--danger);font-weight:700">⚠ Penalti: -${penalty} poin</div>` : ''}
-        <div class="actions">
-          ${readonly ? '' : `
-            <button data-act="hadir" ${st === 'hadir' ? 'class="active"' : ''}>✓ Hadir</button>
-            <button data-act="tidak_hadir" ${st === 'tidak_hadir' ? 'class="active"' : ''}>✗ Tidak</button>
-            <button data-act="terlambat">⏱ Terlambat</button>
-            <button data-act="alat_bantu" style="color:var(--danger)">🚫 DQ</button>
-            <button data-act="tidak_sportif">⚠ Peringatan</button>
-            ${penalty > 0 || st === 'diskualifikasi' ? '<button data-act="cabut" style="color:var(--ink-light)">↺ Cabut</button>' : ''}
-          `}
-        </div>
-      </div>`;
-    }).join('')}</div>`;
+  function buildKehadiranTable(rows, blind, readonly) {
+    return `
+      <div class="table-wrap">
+        <table class="input-table" style="min-width: 600px">
+          <thead>
+            <tr>
+              <th style="text-align:left; width: 100px;">Peserta</th>
+              ${!blind ? '<th style="text-align:left">Kapanewon</th>' : ''}
+              <th style="width: 100px;">Status</th>
+              <th style="text-align:center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => {
+              const st = r.Status_Kehadiran || 'belum';
+              const penalty = num(r.Penalti);
+              const isLate = st === 'hadir' && penalty > 0;
+              const labelMap = { belum: 'Belum', hadir: 'Hadir', tidak_hadir: 'Tidak Hadir', diskualifikasi: 'Diskualifikasi' };
+              
+              let rowStyle = '';
+              if (st === 'hadir') rowStyle = 'background:#F0FDF4';
+              else if (st === 'tidak_hadir') rowStyle = 'background:#FFF5F5';
+              else if (st === 'diskualifikasi') rowStyle = 'background:#F5F3FF';
+              
+              return `<tr data-no="${esc(r.No_Undian)}" style="${rowStyle}">
+                <td class="sticky-l" style="min-width:100px; padding: 8px;">
+                  <strong style="font-family:'Fraunces',serif;font-size:1rem;color:var(--rose-deep)">${esc(r.No_Undian)}</strong>
+                  ${!blind ? `<div style="font-size:0.75rem;color:var(--ink-light)">${esc(r.Nama_Siswa || '')}</div>` : '<div style="font-size:0.75rem;color:var(--ink-light)">🔒 Blind</div>'}
+                </td>
+                ${!blind ? `<td style="text-align:left; padding: 8px; font-size:0.85rem">${esc(r.Kapanewon || '—')}</td>` : ''}
+                <td style="padding: 8px;">
+                  <span class="status-chip ${isLate ? 'terlambat' : st}">
+                    ${labelMap[st] || st}${isLate ? ' ⏱' : ''}
+                  </span>
+                  ${penalty > 0 ? `<div style="font-size:0.7rem;color:var(--danger);margin-top:2px">-${penalty} poin</div>` : ''}
+                </td>
+                <td style="text-align:center; padding: 8px;">
+                  <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
+                    ${readonly ? '' : `
+                      <button class="btn btn-sm ${st === 'hadir' ? 'btn-accent' : 'btn-ghost'}" data-act="hadir" title="Hadir">✓</button>
+                      <button class="btn btn-sm ${st === 'tidak_hadir' ? 'btn-danger' : 'btn-ghost'}" data-act="tidak_hadir" title="Tidak Hadir">✗</button>
+                      <button class="btn btn-sm btn-ghost" data-act="terlambat" title="Terlambat">⏱</button>
+                      <button class="btn btn-sm btn-ghost" data-act="alat_bantu" style="color:var(--danger)" title="Diskualifikasi">🚫</button>
+                      <button class="btn btn-sm btn-ghost" data-act="tidak_sportif" title="Peringatan">⚠</button>
+                      ${penalty > 0 || st === 'diskualifikasi' ? '<button class="btn btn-sm btn-ghost" data-act="cabut" style="color:var(--ink-light)" title="Cabut">↺</button>' : ''}
+                    `}
+                  </div>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
   }
 
   function bindKehadiranActions() {
     if (!isPenilaianBuka()) return;
-    $$('.peserta-card .actions button').forEach(btn => {
+    $$('.input-table .actions button').forEach(btn => {
       btn.onclick = async () => {
-        const card = btn.closest('.peserta-card');
-        const no = card.dataset.no;
+        const tr = btn.closest('tr');
+        const no = tr.dataset.no;
         const jenis = btn.dataset.act;
         const labels = {
           hadir: 'tandai HADIR', tidak_hadir: 'tandai TIDAK HADIR',
@@ -2057,7 +2132,7 @@ input[type=number]{-moz-appearance:textfield}
         await guardAction(`sanksi_${no}_${jenis}`, async () => {
           const prevHtml = btn.innerHTML;
           btn.disabled = true;
-          btn.innerHTML = '<span class="spinner" style="width:12px;height:12px"></span>';
+          btn.innerHTML = '<span class="spinner" style="width:10px;height:10px"></span>';
           try {
             const res = await api('catat_sanksi', { No_Undian: no, jenis }, { timeout: 20000 });
             if (res.error) throw new Error(res.message);
@@ -2076,7 +2151,7 @@ input[type=number]{-moz-appearance:textfield}
   /* ══════════════════════════════════════════════════════════════
    * §14 PANGGUNG CONTROL (Kendali Panggung)
    * ══════════════════════════════════════════════════════════════ */
-  function renderPanggung() {
+  async function renderPanggung() {
     showView('panggung');
     const d = State.dashboard;
     if (!d) return;
@@ -2101,6 +2176,9 @@ input[type=number]{-moz-appearance:textfield}
         <span class="spinner dark"></span> Memuat status panggung...
       </div>
     `;
+
+    // Panggil fungsi sinkronisasi sebelum memuat UI panggung
+    await syncPanggungOnBoot();
 
     loadPanggungStatus(isQueue, isTimer, isPhase, currentTahap, defaultPhaseLabel);
   }
@@ -2133,7 +2211,7 @@ input[type=number]{-moz-appearance:textfield}
             </div>
           </div>
           <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-primary" data-act="mulai">▶ Mulai Lomba</button>
+            <button class="btn btn-primary" data-act="smart_start">▶ Mulai Lomba</button>
             <button class="btn btn-accent" data-act="berikutnya">⏭ Peserta Berikutnya</button>
             <button class="btn btn-ghost" data-act="sebelumnya">⏮ Sebelumnya</button>
             <button class="btn btn-warning" data-act="istirahat">⏸ Istirahat</button>
@@ -2194,7 +2272,7 @@ input[type=number]{-moz-appearance:textfield}
           </details>
 
           <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-primary" data-act="mulai">▶ Mulai / Lanjut</button>
+            <button class="btn btn-primary" data-act="smart_start">▶ Mulai / Lanjut</button>
             <button class="btn btn-warning" data-act="istirahat">⏸ Istirahat</button>
             <button class="btn btn-accent" data-act="selesai">⏹ Selesai</button>
           </div>
@@ -2214,6 +2292,8 @@ input[type=number]{-moz-appearance:textfield}
             const val = $('#inputPhaseLabel').value.trim();
             if (!val) return toast('Label fase tidak boleh kosong', 'error');
             doPanggungAction(act, btn, { phase_label: val });
+          } else if (act === 'smart_start') {
+            handleSmartStart(btn, isQueue, currentTahap);
           } else {
             doPanggungAction(act, btn);
           }
@@ -2222,6 +2302,55 @@ input[type=number]{-moz-appearance:textfield}
 
     } catch (e) {
       $('#panggungControls').innerHTML = `<div style="color:var(--danger)">Gagal memuat: ${esc(e.message)}</div>`;
+    }
+  }
+
+  async function handleSmartStart(btn, isQueue, currentTahap) {
+    const prev = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Sinkronisasi...';
+
+    try {
+      const d = State.dashboard;
+      const rows = d.rows || [];
+
+      if (isLcp()) {
+        // LCP Logic
+        const finalisSet = new Set(d.finalis || []);
+        if (currentTahap === 'final') {
+          const finalisRows = rows.filter(r => finalisSet.has(r.No_Undian));
+          const allRebutan = finalisRows.every(r => r.fases && r.fases.final_rebutan);
+          const allLempar = finalisRows.every(r => r.fases && r.fases.final_lempar);
+          const allWajib = finalisRows.every(r => r.fases && r.fases.final_wajib);
+          
+          let label = 'Final - Wajib Timing';
+          if (allRebutan) label = 'Sidang Kejuaraan';
+          else if (allLempar) label = 'Final - Rebutan';
+          else if (allWajib) label = 'Final - Lempar Rebut';
+          
+          await api('panggung_update', { action_panggung: 'phase_set', phase_label: label }, { timeout: 15000 });
+        } else {
+          const allPenyisihan = rows.length > 0 && rows.every(r => r.fases && r.fases.penyisihan);
+          const label = allPenyisihan ? 'Sidang Finalis' : 'Babak Penyisihan';
+          await api('panggung_update', { action_panggung: 'phase_set', phase_label: label }, { timeout: 15000 });
+        }
+      } else {
+        // Non-LCP Logic
+        const firstIncomplete = rows.find(r => !isRowComplete(r));
+        if (firstIncomplete) {
+          await api('panggung_update', { action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian }, { timeout: 15000 });
+        } else if (rows.length > 0) {
+          const lastRow = rows[rows.length - 1];
+          await api('panggung_update', { action_panggung: 'set_manual', no_undian: lastRow.No_Undian }, { timeout: 15000 });
+        }
+      }
+      
+      toast('Panggung berhasil disinkronkan', 'success');
+      loadPanggungStatus(isQueue, false, isLcp(), currentTahap, '');
+    } catch (e) {
+      toast('Gagal: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.innerHTML = prev;
     }
   }
 
@@ -3495,7 +3624,10 @@ input[type=number]{-moz-appearance:textfield}
       payload.push({
         No_Undian: no,
         benar: wajibB + rebutB,
-        salah: rebutS
+        salah: rebutS,
+        _wajib_str: wajibStrRaw,
+        _rebut_b: rebutB,
+        _rebut_s: rebutS
       });
       
       tr.dataset.tmp_wajib = wajibStrRaw;
@@ -3528,6 +3660,7 @@ input[type=number]{-moz-appearance:textfield}
         enriched.wajib_str = tr.dataset.tmp_wajib;
         enriched.rebut_b = Number(tr.dataset.tmp_rb);
         enriched.rebut_s = Number(tr.dataset.tmp_rs);
+        enriched.jawaban = `${enriched.wajib_str}|${enriched.rebut_b}|${enriched.rebut_s}`; // Simpan string untuk sinkronisasi
       }
       target.fases[tab.key] = enriched;
     }
