@@ -111,7 +111,7 @@
   .cabang-actions { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
 
   /* ============================================================
-   * §4 MODAL & TOAST (Custom Browser Override)
+   * §4 MODAL & TOAST
    * ============================================================ */
   .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 1rem; opacity: 0; transition: opacity 0.2s; }
   .modal-overlay.show { display: flex; opacity: 1; }
@@ -128,7 +128,7 @@
   .toast.error { background: var(--danger); }
 
   /* ============================================================
-   * §5 OTHERS
+   * §5 OTHERS (Tabs, Config, Print)
    * ============================================================ */
   .config-row { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
   .config-key { font-weight: 700; font-size: 0.85rem; color: var(--rose-deep); text-transform: capitalize; }
@@ -181,6 +181,7 @@
       <div class="nav-item" data-target="panel-sekolah"><span class="icon">🏫</span> Sekolah</div>
       <div class="nav-item" data-target="panel-pejabat"><span class="icon">👔</span> Juri · Pewara · Panitia</div>
       <div class="nav-item" data-target="panel-undian"><span class="icon">🎲</span> Undian & Status</div>
+      <div class="nav-item" data-target="panel-panggung"><span class="icon">🎙️</span> Kendali Panggung</div>
       <div class="nav-item" data-target="panel-hasil"><span class="icon">🏆</span> Hasil & Klasemen</div>
       <div class="nav-item" data-target="panel-cetak"><span class="icon">🖨️</span> Cetak Dokumen</div>
       <div class="nav-item" data-target="panel-config"><span class="icon">⚙️</span> Pengaturan</div>
@@ -201,9 +202,7 @@
       <div id="panel-peserta" class="panel">
         <div class="page-title">
           <span>Kelola Peserta</span>
-          <div style="display:flex; gap:0.5rem;">
-            <button class="btn btn-ghost btn-sm" onclick="loadPeserta()">↺ Refresh</button>
-          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadPeserta()">↺ Refresh</button>
         </div>
         <div style="margin-bottom:1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
           <select id="filterCabangPeserta" class="select" style="max-width:250px;" onchange="loadPeserta()"></select>
@@ -268,7 +267,6 @@
       <div id="panel-pejabat" class="panel">
         <div class="page-title"><span>Juri · Pewara · Panitia</span></div>
 
-        <!-- Panitia -->
         <div class="stat-card" style="margin-bottom:1.5rem;">
           <h3 style="margin-bottom:1rem;">📋 Panitia & Pejabat (Tampil di Dokumen)</h3>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1rem;">
@@ -279,7 +277,6 @@
           <button class="btn btn-primary btn-sm" onclick="simpanPanitia()">💾 Simpan Data Panitia</button>
         </div>
 
-        <!-- Juri -->
         <div class="stat-card" style="margin-bottom:1.5rem;">
           <h3 style="margin-bottom:1rem;">⚖️ Daftar Juri (Penentu Juara & TTD)</h3>
           <div style="margin-bottom:1rem;"><select id="filterCabangJuri" class="select" style="max-width:300px;" onchange="loadJuri(this.value)"></select></div>
@@ -291,7 +288,6 @@
           </div>
         </div>
 
-        <!-- Pewara -->
         <div class="stat-card">
           <h3 style="margin-bottom:1rem;">🎤 Daftar Pewara</h3>
           <div class="table-wrap">
@@ -311,7 +307,21 @@
         </div>
       </div>
 
-      <!-- 7. HASIL -->
+      <!-- 7. PANGGUNG -->
+      <div id="panel-panggung" class="panel">
+        <div class="page-title">
+          <span>Kendali Panggung (Override)</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadPanggungAdmin()">↺ Refresh</button>
+        </div>
+        <div style="margin-bottom:1rem; display:flex; gap:1rem;">
+          <select id="filterCabangPanggung" class="select" style="max-width:300px;" onchange="loadPanggungAdmin()"></select>
+        </div>
+        <div class="stat-card" id="panggungControlBox">
+          <div style="text-align:center; padding: 2rem;">Pilih cabang untuk melihat kendali panggung.</div>
+        </div>
+      </div>
+
+      <!-- 8. HASIL -->
       <div id="panel-hasil" class="panel">
         <div class="page-title">
           <span>Hasil & Klasemen</span>
@@ -330,16 +340,16 @@
         </div>
       </div>
 
-      <!-- 8. CETAK DOKUMEN -->
+      <!-- 9. CETAK DOKUMEN -->
       <div id="panel-cetak" class="panel">
         <div class="page-title"><span>Cetak Dokumen</span></div>
         <div class="tabs">
           <button class="tab-btn active" data-tab="tab-dh">📋 Daftar Hadir</button>
-          <button class="tab-btn" data-tab="tab-nilai">📊 Daftar Nilai</button>
+          <button class="tab-btn" data-tab="tab-nilai">📊 Daftar Nilai (Blind)</button>
           <button class="tab-btn" data-tab="tab-ba">📄 Berita Acara</button>
           <button class="tab-btn" data-tab="tab-bap">📝 BAP</button>
           <button class="tab-btn" data-tab="tab-sk">🏆 SK Kejuaraan</button>
-          <button class="tab-btn" data-tab="tab-dada">🔢 Nomor Dada</button>
+          <button class="tab-btn" data-tab="tab-dada">🔢 Nomor Dada (A6)</button>
           <button class="tab-btn" data-tab="tab-piagam">🎖️ Piagam</button>
           <button class="tab-btn" data-tab="tab-surat">✉️ Surat Edaran</button>
         </div>
@@ -358,7 +368,8 @@
 
         <div class="tab-content" id="tab-nilai">
           <div class="stat-card">
-            <h3 style="margin-bottom:1rem;">Daftar Nilai</h3>
+            <h3 style="margin-bottom:1rem;">Daftar Nilai (Full Blind)</h3>
+            <p style="font-size:0.85rem;color:var(--ink-light);margin-bottom:1rem;">Nama, Kapanewon, dan Sekolah disembunyikan. Hanya No. Undian.</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
               <div class="form-group"><label class="label">Cabang</label><select id="dnCabang" class="select"></select></div>
               <div class="form-group"><label class="label">Mode</label><select id="dnMode" class="select"><option value="auto">Otomatis</option><option value="manual">Manual (Kosong)</option></select></div>
@@ -401,10 +412,10 @@
 
         <div class="tab-content" id="tab-dada">
           <div class="stat-card">
-            <h3 style="margin-bottom:1rem;">Nomor Dada Peserta</h3>
+            <h3 style="margin-bottom:1rem;">Nomor Dada Peserta (Blind)</h3>
+            <p style="font-size:0.85rem;color:var(--ink-light);margin-bottom:1rem;">Format A6 (10.5 x 14.8 cm) - 4 per A4. Tanpa Nama, Tanpa Kapanewon.</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
               <div class="form-group"><label class="label">Cabang</label><select id="ndCabang" class="select"></select></div>
-              <div class="form-group"><label class="label">Kolom per Baris</label><select id="ndCols" class="select"><option value="2">2 kolom</option><option value="3" selected>3 kolom</option></select></div>
             </div>
             <button class="btn btn-primary" onclick="cetakNomorDada(this)">🖨️ Cetak Nomor Dada</button>
           </div>
@@ -430,7 +441,7 @@
         </div>
       </div>
 
-      <!-- 9. CONFIG -->
+      <!-- 10. CONFIG -->
       <div id="panel-config" class="panel">
         <div class="page-title">
           <span>Pengaturan Sistem</span>
@@ -522,7 +533,7 @@
     return data;
   }
 
-  // Modal Helpers & Custom Confirm (No Native Alert)
+  // Modal Helpers & Custom Confirm
   window.openModal = (title, bodyHtml, footerHtml) => {
     $('#modalTitle').textContent = title;
     $('#modalBody').innerHTML = bodyHtml;
@@ -565,6 +576,7 @@
       else if (State.currentPanel === 'sekolah') initSekolah();
       else if (State.currentPanel === 'pejabat') initPejabat();
       else if (State.currentPanel === 'undian') loadAdminCabang();
+      else if (State.currentPanel === 'panggung') initPanggung();
       else if (State.currentPanel === 'hasil') loadHasil();
       else if (State.currentPanel === 'cetak') initCetak();
       else if (State.currentPanel === 'config') loadConfig();
@@ -691,8 +703,12 @@
     openModal('Ganti Peserta', `
       <div class="form-group"><label class="label">Surat Dokter (Wajib)</label><input type="checkbox" id="gpSurat" style="width:20px;height:20px;"></div>
       <div class="form-group"><label class="label">Nama Peserta Baru</label><input type="text" id="gpNama" class="input"></div>
-      <div class="form-group"><label class="label">NISN Baru</label><input type="text" id="gpNisn" class="input"></div>
-      <div class="form-group"><label class="label">TTL Baru</label><input type="date" id="gpTgl" class="input"></div>
+      <div class="form-group"><label class="label">Jenis Kelamin</label>
+        <select id="gpJk" class="select"><option value="L">Laki-laki (L)</option><option value="P">Perempuan (P)</option></select>
+      </div>
+      <div class="form-group"><label class="label">Tempat Lahir</label><input type="text" id="gpTl" class="input" placeholder="Contoh: Bantul"></div>
+      <div class="form-group"><label class="label">Tanggal Lahir</label><input type="date" id="gpTgl" class="input"></div>
+      <div class="form-group"><label class="label">NISN Baru (10 digit)</label><input type="text" id="gpNisn" class="input"></div>
       <div class="form-group"><label class="label">Kelas</label><input type="number" id="gpKelas" class="input"></div>
       <div class="form-group"><label class="label">Sekolah</label><input type="text" id="gpSekolah" class="input"></div>
     `, `<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-warning" onclick="prosesGantiPeserta('${id}')">Proses</button>`);
@@ -702,9 +718,14 @@
     try {
       const res = await api('admin_ganti_peserta', {
         ID: id, surat_dokter: true, payload: {
-          Nama_Lengkap: $('#gpNama').value, NISN: $('#gpNisn').value,
-          Tanggal_Lahir: $('#gpTgl').value, Kelas: $('#gpKelas').value,
-          Asal_Sekolah_1: $('#gpSekolah').value, Jenis_Kelamin: 'L', Tempat_Lahir: 'Bantul', Sekolah_Manual_1: true 
+          Nama_Lengkap: $('#gpNama').value, 
+          Jenis_Kelamin: $('#gpJk').value,
+          Tempat_Lahir: $('#gpTl').value,
+          Tanggal_Lahir: $('#gpTgl').value, 
+          NISN: $('#gpNisn').value,
+          Kelas: $('#gpKelas').value,
+          Asal_Sekolah_1: $('#gpSekolah').value, 
+          Sekolah_Manual_1: true 
         }
       });
       if (res.error) throw new Error(res.message);
@@ -929,7 +950,7 @@
             tombolAksi = `<button class="btn btn-ghost btn-sm" onclick="resetUndian('${c.key}')">↺ Reset Undian</button>`;
           }
         } else {
-          tombolAksi = `<span style="font-size:0.75rem;color:var(--ink-light);font-style:italic;padding:0.4rem 0;">Terkunci (${c.status_cabang})</span>`;
+          tombolAksi = `<button class="btn btn-warning btn-sm" onclick="paksaStatus('${c.key}')">⚙️ Ubah Status</button>`;
         }
         return `
         <div class="cabang-card">
@@ -952,8 +973,129 @@
     try { const r = await api('admin_reset_undian',{cabang}); toast(r.message||'OK','success'); loadAdminCabang(); }
     catch(e){ toast(e.message,'error'); }
   };
+  window.paksaStatus = async (cabang) => {
+    openModal('Paksa Ubah Status ' + cabang, `
+      <p style="font-size:0.85rem;color:var(--ink-light);margin-bottom:1rem;">Hati-hati! Mengubah status ke <b>DRAFT</b> akan mereset tahapan LCP dan membuka kunci penilaian.</p>
+      <div class="form-group">
+        <label class="label">Pilih Status Baru</label>
+        <select id="psStatus" class="select">
+          <option value="draft">DRAFT (Reset ke Awal)</option>
+          <option value="locked">LOCKED (Kunci Nilai)</option>
+          <option value="sidang">SIDANG (Buka Koreksi)</option>
+          <option value="final">FINAL (Kunci Permanen)</option>
+        </select>
+      </div>
+    `, `<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-danger" onclick="prosesPaksaStatus('${cabang}')">Proses Ubah</button>`);
+  };
+  window.prosesPaksaStatus = async (cabang) => {
+    const st = $('#psStatus').value;
+    try {
+      const res = await api('admin_set_status', { cabang, status: st });
+      if (res.error) throw new Error(res.message);
+      toast(res.message, 'success'); closeModal(); loadAdminCabang();
+    } catch(e){ toast(e.message, 'error'); }
+  };
 
-  // ── 7. HASIL ──
+  // ── 7. PANGGUNG (ADMIN OVERRIDE) ──
+  function initPanggung() {
+    const sel = $('#filterCabangPanggung');
+    if (!sel.options.length) {
+      sel.innerHTML = (State.cabang||[]).map(c => `<option value="${c.key}">${esc(c.label)}</option>`).join('');
+    }
+    loadPanggungAdmin();
+  }
+  async function loadPanggungAdmin() {
+    const box = $('#panggungControlBox');
+    const cabangKey = $('#filterCabangPanggung').value || (State.cabang[0]?.key);
+    if (!cabangKey) return;
+    
+    box.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner dark"></span></div>';
+    try {
+      const res = await api('publik_panggung');
+      const p = (res.cabang || []).find(c => c.key === cabangKey);
+      if (!p) throw new Error('Data panggung tidak ditemukan.');
+      
+      const cabConfig = (State.cabang||[]).find(c => c.key === cabangKey) || {};
+      const isQueue = cabConfig.mode === 'queue';
+      const isTimer = cabConfig.mode === 'timer';
+      
+      let controlsHtml = '';
+      if (isQueue) {
+        const sek = p.sekarang ? `<strong>${esc(p.sekarang.No_Undian)}</strong> (${esc(p.sekarang.Nama)})` : '—';
+        const next = p.berikut ? `<strong>${esc(p.berikut.No_Undian)}</strong> (${esc(p.berikut.Nama)})` : '—';
+        controlsHtml = `
+          <div style="display:flex; justify-content:space-between; background:var(--bg); padding:1rem; border-radius:8px; margin-bottom:1rem;">
+            <div><small style="color:var(--ink-light)">Tampil:</small><br>${sek}</div>
+            <div><small style="color:var(--ink-light)">Berikutnya:</small><br>${next}</div>
+            <div><small style="color:var(--ink-light)">Progress:</small><br><b>${p.sudah_tampil || 0} / ${p.total_peserta}</b></div>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+            <button class="btn btn-primary btn-sm" onclick="adminPanggungAction('mulai','${cabangKey}')">▶ Mulai</button>
+            <button class="btn btn-success btn-sm" onclick="adminPanggungAction('berikutnya','${cabangKey}')">⏭ Next</button>
+            <button class="btn btn-ghost btn-sm" onclick="adminPanggungAction('sebelumnya','${cabangKey}')">⏮ Prev</button>
+            <button class="btn btn-warning btn-sm" onclick="adminPanggungAction('istirahat','${cabangKey}')">⏸ Istirahat</button>
+            <button class="btn btn-danger btn-sm" onclick="adminPanggungAction('selesai','${cabangKey}')">⏹ Selesai</button>
+            <button class="btn btn-ghost btn-sm" onclick="adminPanggungAction('reset','${cabangKey}')">↺ Reset</button>
+          </div>`;
+      } else if (isTimer) {
+        controlsHtml = `
+          <div style="text-align:center; margin-bottom:1rem;">
+            <h2 style="font-size:2rem; color:var(--rose-deep);">${p.timer_start ? 'Berjalan...' : 'Siap'}</h2>
+          </div>
+          <div style="display:flex; gap:0.5rem; justify-content:center;">
+            <button class="btn btn-primary btn-sm" onclick="adminPanggungAction('timer_mulai','${cabangKey}')">▶ Mulai Timer</button>
+            <button class="btn btn-warning btn-sm" onclick="adminPanggungAction('timer_akhiri','${cabangKey}')">⏹ Hentikan</button>
+            <button class="btn btn-ghost btn-sm" onclick="adminPanggungAction('timer_reset','${cabangKey}')">↺ Reset</button>
+          </div>`;
+      } else {
+        controlsHtml = `
+          <div style="text-align:center; margin-bottom:1rem;">
+            <div style="font-size:0.8rem; color:var(--ink-light);">Fase Saat Ini</div>
+            <h2 style="font-size:1.5rem; color:var(--rose-deep);">${esc(p.phase_label || '—')}</h2>
+          </div>
+          <div style="display:flex; gap:0.5rem; justify-content:center; margin-bottom:1rem;">
+            <input type="text" id="adminPhaseLabel" class="input" placeholder="Ketik label fase (cth: Final)" style="max-width:250px;">
+            <button class="btn btn-primary btn-sm" onclick="adminSetPhase('${cabangKey}')">Set Fase</button>
+          </div>
+          <div style="display:flex; gap:0.5rem; justify-content:center;">
+            <button class="btn btn-warning btn-sm" onclick="adminPanggungAction('istirahat','${cabangKey}')">⏸ Istirahat</button>
+            <button class="btn btn-danger btn-sm" onclick="adminPanggungAction('selesai','${cabangKey}')">⏹ Selesai</button>
+            <button class="btn btn-ghost btn-sm" onclick="adminPanggungAction('reset','${cabangKey}')">↺ Reset</button>
+          </div>`;
+      }
+
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">
+          <div>
+            <h3 style="margin:0;">${esc(p.kode)} - ${esc(p.label)}</h3>
+            <span class="badge ${p.status_lomba === 'berlangsung' ? 'aktif' : (p.status_lomba === 'selesai' ? 'final' : 'draft')}">${p.status_lomba.toUpperCase()}</span>
+          </div>
+        </div>
+        ${controlsHtml}
+      `;
+    } catch(e) {
+      box.innerHTML = `<div style="color:var(--danger); text-align:center;">${e.message}</div>`;
+    }
+  }
+  window.adminPanggungAction = async (action, cabang) => {
+    if (!await confirmPromise('Konfirmasi Aksi', `Jalankan aksi <b>${action}</b> untuk ${cabang}?`)) return;
+    try {
+      await api('admin_override_panggung', { cabang, action_panggung: action });
+      toast('Panggung diperbarui', 'success');
+      loadPanggungAdmin();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+  window.adminSetPhase = async (cabang) => {
+    const label = $('#adminPhaseLabel').value.trim();
+    if (!label) return toast('Label fase harus diisi', 'error');
+    try {
+      await api('admin_override_panggung', { cabang, action_panggung: 'phase_set', phase_label: label });
+      toast('Fase diperbarui', 'success');
+      loadPanggungAdmin();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+
+  // ── 8. HASIL ──
   async function loadHasil() {
     const stats = $('#hasilStats'); const tbody = $('#tableKlasemen tbody');
     stats.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;"><span class="spinner dark"></span></div>';
@@ -978,7 +1120,7 @@
     } catch(e) { toast(e.message,'error'); }
   };
 
-  // ── 8. CETAK DOKUMEN ──
+  // ── 9. CETAK DOKUMEN ──
   let _kopCache = null;
   async function getKop() {
     if (_kopCache) return _kopCache;
@@ -1001,8 +1143,10 @@
       .ttd{margin-top:30px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;text-align:center}
       .ttd .space{height:60px}
       .signature{display:flex;justify-content:flex-end;margin-top:30px} .signature .space{height:70px}
-      .nomor-dada{display:inline-block;border:2px solid #000;padding:10px;text-align:center;page-break-inside:avoid;vertical-align:top;margin:6px}
-      .nomor-dada .kode{font-size:56pt;font-weight:900;line-height:1;margin:8px 0}
+      .nomor-dada{width: 105mm; height: 148mm; border: 2px solid #000; padding: 10mm; text-align: center; display: flex; flex-direction: column; justify-content: space-between; page-break-inside: avoid; box-sizing: border-box; float: left;}
+      .nomor-dada .title{font-size: 14pt; font-weight: bold;}
+      .nomor-dada .kode{font-size: 100pt; font-weight: 900; line-height: 1;}
+      .nomor-dada .cabang{font-size: 12pt; font-weight: bold;}
     `;
   }
   function openPrintWindow(title, htmlBody) {
@@ -1045,43 +1189,54 @@
     } catch(e){ toast(e.message,'error'); } finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Daftar Hadir'; }
   };
 
+  // ── CETAK DAFTAR NILAI (FULL BLIND) ──
   window.cetakDaftarNilai = async (btn) => {
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
     try {
       const cabang = $('#dnCabang').value;
       const jmlJuri = Math.max(1, Math.min(7, parseInt($('#dnJuri').value,10)||3));
       const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
+      
+      if (!State.juriCache[cabang]) {
+        const rj = await api('admin_juri', { cabang });
+        State.juriCache[cabang] = rj.juri || [];
+      }
       const daftarJuri = State.juriCache[cabang] || [];
+      
       let peserta = [];
       if ($('#dnMode').value === 'auto') {
         const res = await api('admin_peserta', { cabang });
         peserta = (res.peserta||[]).filter(p => p.No_Undian);
       } else {
         const n = Math.max(1, Math.min(40, parseInt($('#dnRows').value,10)||15));
-        peserta = Array.from({length: n}, () => ({ No_Undian:'', Nama_Lengkap:'', Kapanewon:'' }));
+        peserta = Array.from({length: n}, () => ({ No_Undian:'' }));
       }
       const kop = await getKop();
       let headerCols = '', rowsHtml = '';
+      
       if (cabang === 'LCP') {
         headerCols = '<th>Penyisihan</th><th>Final Wajib</th><th>Final Lempar</th><th>Final Rebutan</th><th>Total</th>';
-        rowsHtml = peserta.map((p,i) => `<tr><td style="text-align:center">${i+1}</td><td>${esc(p.No_Undian||'')}</td><td>${esc(p.Nama_Lengkap||'')}</td><td>${esc(p.Kapanewon||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('');
+        rowsHtml = peserta.map((p,i) => `<tr><td style="text-align:center">${i+1}</td><td>${esc(p.No_Undian||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('');
       } else {
         const kriteria = (State.kriteria[cabang] && State.kriteria[cabang].kriteria) || [];
         headerCols = Array.from({length: jmlJuri}, (_, j) => `<th colspan="${kriteria.length+1}" style="background:#ddd">Juri ${j+1}</th>`).join('') + '<th rowspan="2" style="background:#aaa">Total</th>';
         const subCols = Array.from({length: jmlJuri}, () => kriteria.map(c => `<th>${esc(c.label)}<br><small>max ${c.max}</small></th>`).join('') + '<th>Total</th>').join('');
         rowsHtml = peserta.map((p,i) => `
-          <tr><td rowspan="2" style="text-align:center">${i+1}</td><td rowspan="2">${esc(p.No_Undian||'')}</td><td rowspan="2">${esc(p.Nama_Lengkap||'')}</td><td rowspan="2">${esc(p.Kapanewon||'')}</td>
+          <tr><td rowspan="2" style="text-align:center">${i+1}</td><td rowspan="2">${esc(p.No_Undian||'')}</td>
           ${Array.from({length: jmlJuri}, () => kriteria.map(() => '<td style="height:22px"></td>').join('') + '<td></td>').join('')}<td rowspan="2" style="height:44px"></td></tr>
           <tr>${Array.from({length: jmlJuri}, () => kriteria.map(() => '<td></td>').join('') + '<td style="background:#eee"></td>').join('')}</tr>`).join('');
       }
+      
+      // TTD Juri tanpa NIP
       const ttdJuriHtml = daftarJuri.map(j => `<div>Juri ${j.Urutan}<div class="space"></div><b><u>${esc(j.Nama_Juri)}</u></b></div>`).join('');
+      
       const html = cabang === 'LCP' ? `
         ${kopHtml(kop)}<h2>DAFTAR NILAI</h2><h3>${esc(cab.label||'')}</h3>
-        <table class="data"><thead><tr><th>No</th><th>No. Undian</th><th>Nama Tim</th><th>Kapanewon</th>${headerCols}</tr></thead><tbody>${rowsHtml}</tbody></table>
+        <table class="data"><thead><tr><th>No</th><th>No. Undian</th>${headerCols}</tr></thead><tbody>${rowsHtml}</tbody></table>
         <div class="ttd">${ttdJuriHtml}</div>
       ` : `
         ${kopHtml(kop)}<h2>DAFTAR NILAI</h2><h3>${esc(cab.label||'')}</h3>
-        <table class="data"><thead><tr><th rowspan="2">No</th><th rowspan="2">No. Undian</th><th rowspan="2">Nama Peserta</th><th rowspan="2">Kapanewon</th>${headerCols}</tr><tr>${subCols}</tr></thead><tbody>${rowsHtml}</tbody></table>
+        <table class="data"><thead><tr><th rowspan="2">No</th><th rowspan="2">No. Undian</th>${headerCols}</tr><tr>${subCols}</tr></thead><tbody>${rowsHtml}</tbody></table>
         <div class="ttd">${ttdJuriHtml}</div>
       `;
       openPrintWindow('Daftar Nilai', html);
@@ -1096,18 +1251,21 @@
       const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
       const kop = res.kop || await getKop(); const acara = res.acara || {}; const pewara = res.pewara || {}; const juri = res.juri || []; const ttd = res.ttd || {};
       let hasilRows = (res.mode === 'lcp' ? res.final : res.rows || []).slice(0,10).map(p => `<tr><td style="text-align:center">${p.Peringkat||p.Rank}</td><td>${esc(p.No_Undian)}</td><td>${esc(p.Nama_Siswa)}</td><td>${esc(p.Kapanewon)}</td><td style="text-align:right">${p.Total}</td></tr>`).join('');
+      
+      // TTD Juri tanpa NIP
       const ttdJuriList = juri.map(j => `<div style="margin-bottom:10px;">Juri ${j.Urutan}: <b><u>${esc(j.Nama)}</u></b></div>`).join('');
+      
       openPrintWindow('BA ' + cabang, `
         ${kopHtml(kop)}<h2>BERITA ACARA</h2><h3>${esc(cab.label||'')}</h3>
         <p style="margin-top:14px">Pada hari ini ${esc(acara.tanggal_teks||acara.tanggal||'-')}, bertempat di ${esc(acara.tempat||'-')}, telah dilaksanakan ${esc(cab.label||'')}.</p>
-        <h4 style="text-align:left;margin-top:12px">Pewara</h4><p>${esc(pewara.Nama||'-')} ${pewara.NIP?'(NIP. '+esc(pewara.NIP)+')':''}</p>
+        <h4 style="text-align:left;margin-top:12px">Pewara</h4><p>${esc(pewara.Nama||'-')}</p>
         <h4 style="text-align:left;margin-top:12px">Dewan Juri</h4><ol>${juri.map(j => `<li>${esc(j.Nama)}</li>`).join('')}</ol>
         <h4 style="text-align:left;margin-top:12px">Hasil Penilaian</h4>
         <table class="data"><thead><tr><th>Peringkat</th><th>No. Undian</th><th>Nama</th><th>Kapanewon</th><th>Skor</th></tr></thead><tbody>${hasilRows||'<tr><td colspan="5" style="text-align:center">Belum ada hasil</td></tr>'}</tbody></table>
         <div class="ttd" style="margin-top:30px; display:flex; justify-content:space-around;">
           <div style="text-align:center;">Pewara<br><div class="space"></div><b><u>${esc(pewara.Nama||'_________________________')}</u></b></div>
           <div style="text-align:center; flex:1; margin: 0 20px;">Dewan Juri:<br>${ttdJuriList}</div>
-          <div style="text-align:center;">${esc(acara.kota||'Bantul')}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>Ketua Panitia<br><div class="space"></div><b><u>${esc(ttd.ketua_panitia?.Nama||'_________________________')}</u></b></div>
+          <div style="text-align:center;">${esc(acara.kota||'Bantul')}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}<br>Ketua KKG<br><div class="space"></div><b><u>${esc(ttd.ketua_kkg?.Nama||'_________________________')}</u></b></div>
         </div>
       `);
     } catch(e){ toast(e.message,'error'); } finally { btn.disabled = false; btn.innerHTML = '📄 Cetak BA'; }
@@ -1123,7 +1281,10 @@
       const kop = res.kop || await getKop(); const acara = res.acara || {}; const pewara = res.pewara || {}; const juri = res.juri || []; const ttd = res.ttd || {};
       const tidakIkut = (res.tidak_ikut||[]).map(x => `${esc(x.No_Undian)} ${esc(x.Nama_Siswa||'')}`).join(', ') || '-';
       let juaraRows = (res.mode === 'lcp' ? res.final : res.rows || []).slice(0,5).map(p => `<tr><td>${esc(p.Peringkat||'-')}</td><td>${esc(p.No_Undian)}</td><td>${esc(p.Nama_Siswa)}</td><td>${esc(p.Kapanewon)}</td><td style="text-align:right">${p.Total}</td></tr>`).join('');
+      
+      // TTD Juri tanpa NIP
       const ttdJuriList = juri.map(j => `<div style="margin-bottom:5px;">Juri ${j.Urutan}: <b><u>${esc(j.Nama)}</u></b></div>`).join('');
+      
       openPrintWindow('BAP ' + cabang, `
         ${kopHtml(kop)}<h2>BERITA ACARA PELAKSANAAN</h2><h3>${esc(cab.label||'')}</h3><p class="text-center">Nomor: ${esc(nomor)}</p>
         <p style="margin-top:12px">Pada hari ini ${esc(acara.tanggal_teks||acara.tanggal||'-')}, bertempat di ${esc(acara.tempat||'-')}, telah dilaksanakan ${esc(cab.label||'')}.</p>
@@ -1161,23 +1322,28 @@
     } catch(e){ toast(e.message,'error'); } finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak SK'; }
   };
 
+  // ── CETAK NOMOR DADA (BLIND, A6) ──
   window.cetakNomorDada = async (btn) => {
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
     try {
       const cabang = $('#ndCabang').value;
-      const cols = parseInt($('#ndCols').value,10) || 3;
       const cab = (State.cabang||[]).find(c => c.key === cabang) || {};
       const res = await api('admin_peserta', { cabang });
       const peserta = (res.peserta||[]).filter(p => p.No_Undian).sort((a,b) => (parseInt(a.No_Undian.replace(/\D/g,''),10)||0) - (parseInt(b.No_Undian.replace(/\D/g,''),10)||0));
+      
       if (!peserta.length) throw new Error('Tidak ada peserta berundian.');
-      const widthPct = Math.floor(100/cols) - 1;
+      
+      const acara = State.config.nama_acara || 'MTQ PELAJAR SD BANTUL 2026';
+      const cabLabel = cab.label || cabang;
+
       const cards = peserta.map(p => `
-        <div class="nomor-dada" style="width:calc(${widthPct}% - 12px)">
-          <div style="font-size:8pt;letter-spacing:2px;text-transform:uppercase;">${esc((State.config.nama_acara||'').substring(0,40)||'MTQ KAB. BANTUL 2026')}</div>
-          <div class="kode">${esc(p.No_Undian)}</div><div style="font-size:11pt;font-weight:bold;margin:4px 0;">${esc(p.Nama_Lengkap||'')}</div>
-          <div style="font-size:8pt;margin-top:4px">${esc(p.Kapanewon||'')}</div>
+        <div class="nomor-dada">
+          <div class="title">${esc(acara.substring(0,35))}</div>
+          <div class="kode">${esc(p.No_Undian)}</div>
+          <div class="cabang">${esc(cabLabel)}</div>
         </div>`).join('');
-      openPrintWindow('Nomor Dada', `<div style="text-align:center;margin-bottom:10px;font-size:10pt"><b>NOMOR DADA — ${esc(cab.label||'')}</b></div><div style="text-align:left">${cards}</div>`);
+        
+      openPrintWindow('Nomor Dada', `<div style="overflow:hidden;">${cards}</div>`);
     } catch(e){ toast(e.message,'error'); } finally { btn.disabled = false; btn.innerHTML = '🖨️ Cetak Nomor Dada'; }
   };
 
@@ -1218,7 +1384,7 @@
     } catch(e) { toast(e.message,'error'); inputEl.value=''; } finally { inputEl.disabled = false; }
   };
 
-  // ── 9. CONFIG ──
+  // ── 10. CONFIG ──
   const CONFIG_BLACKLIST = new Set(['admin_token']);
   async function loadConfig() {
     const box = $('#configContainer');
