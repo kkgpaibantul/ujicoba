@@ -437,7 +437,7 @@ body.is-fullscreen .lc-timer { font-size: 2.4rem; }
 body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
 /* ============================================================================
- * §7 PESERTA (UPDATED: Modern List Dashboard)
+ * §7 PESERTA (Modern List Dashboard)
  * ============================================================================ */
 .search-wrap {
   position: sticky; top: calc(var(--header-h) + 0.5rem);
@@ -506,32 +506,35 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 }
 .peserta-row:hover::before { opacity: 1; }
 
-/* Kolom Kiri (Kode & Cabang) */
+/* Kolom Kiri (Cabang & Kapanewon) */
 .pr-left {
-  flex: 0 0 180px;
-  padding: 1.25rem;
+  flex: 0 0 140px;
+  padding: 1.25rem 1rem;
   background: var(--surface-soft);
   border-right: 1.5px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.6rem;
+  text-align: center;
 }
-.pr-no {
-  font-family: 'Plus Jakarta Sans', monospace;
-  font-size: 0.8rem; font-weight: 800;
-  color: var(--hijau-deep);
-  letter-spacing: 0.04em;
-}
-.pr-kode {
-  font-size: 0.7rem; font-weight: 800;
+.pr-meta-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  margin-bottom: 0.1rem;
+}
+.pr-cabang {
+  font-size: 1.1rem;
+  font-weight: 800;
   color: var(--rose-deep);
-  background: var(--rose-soft);
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  align-self: flex-start;
-  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+.pr-kapanewon {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 /* Kolom Tengah (Nama / Anggota) */
@@ -547,7 +550,7 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   font-size: 1.15rem; font-weight: 800;
   color: var(--ink);
   line-height: 1.3;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 .pr-team-list {
   list-style: none;
@@ -572,32 +575,25 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 .pr-team-name { font-weight: 600; color: var(--ink); }
 .pr-team-school { font-size: 0.75rem; color: var(--ink-muted); }
 
-/* Kolom Kanan (Kapanewon & Sekolah) */
+/* Kolom Kanan (Asal Sekolah) */
 .pr-right {
-  flex: 0 0 240px;
+  flex: 0 0 220px;
   padding: 1.25rem;
   border-left: 1.5px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.6rem;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
   background: var(--surface);
 }
-.pr-meta-row {
-  display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.45;
-}
-.pr-meta-row svg {
-  width: 15px; height: 15px;
-  color: var(--ink-muted);
-  flex-shrink: 0;
-  margin-top: 2px;
+.pr-right .pr-meta-val {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  line-height: 1.4;
 }
 
 /* Empty State */
 .empty-state {
-  grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 1rem;
   color: var(--ink-soft);
@@ -628,12 +624,14 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   .pr-left { 
     flex: none; 
     flex-direction: row; 
-    justify-content: space-between; 
-    align-items: center; 
+    justify-content: flex-start; 
+    gap: 1.5rem;
     border-right: none; 
     border-bottom: 1.5px solid var(--border); 
     padding: 1rem; 
+    text-align: left;
   }
+  .pr-left .pr-meta-label { display: none; }
   .pr-right { 
     flex: none; 
     border-left: none; 
@@ -752,11 +750,10 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
         </svg>
-        <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, kapanewon, atau no. pendaftaran..." autocomplete="off" spellcheck="false">
+        <input type="text" id="searchPeserta" placeholder="Cari nama, sekolah, kapanewon, atau cabang..." autocomplete="off" spellcheck="false">
       </div>
     </div>
     
-    <!-- Container menggunakan list, bukan grid card -->
     <div class="peserta-list" id="pesertaGrid" aria-live="polite" aria-busy="false">
       <div class="empty-state">
         <span class="spinner" aria-label="Memuat"></span>
@@ -780,8 +777,8 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   const SEARCH_DEBOUNCE = 250;
   const CACHE_TTL_MS = 5 * 60 * 1000;
 
-  const LIVE_CACHE_KEY = 'mtq26_live_v2';
-  const PESERTA_CACHE_KEY = 'mtq26_peserta_v2';
+  const LIVE_CACHE_KEY = 'mtq26_live_v3';
+  const PESERTA_CACHE_KEY = 'mtq26_peserta_v3';
 
   const ORDER = ['MTQ','MTtQ','MHQ','Puitisasi','MAz','LPP','LCP','Lukis','Menyanyi'];
   const STATUS_LABEL = {
@@ -1223,17 +1220,23 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
   }
 
   function decoratePeserta(p) {
-    const primary = p.Sekolah || p.Asal_Sekolah || '';
-    const s2 = p.Sekolah_2 || primary;
-    const s3 = p.Sekolah_3 || primary;
-    p._sekolah1 = primary;
-    p._sekolah2 = s2;
-    p._sekolah3 = s3;
+    // Menyesuaikan dengan nama kolom dari skema database terbaru
+    const nama1 = p.Nama_Lengkap || p.Nama || '';
+    const sekolah1 = p.Asal_Sekolah_1 || p.Asal_Sekolah || p.Sekolah || '';
+    const sekolah2 = p.Asal_Sekolah_2 || p.Sekolah_2 || sekolah1;
+    const sekolah3 = p.Asal_Sekolah_3 || p.Sekolah_3 || sekolah1;
+
+    p._nama1 = nama1;
+    p._sekolah1 = sekolah1;
+    p._sekolah2 = sekolah2;
+    p._sekolah3 = sekolah3;
+
     p._search = [
-      p.Nama, p.Anggota_2, p.Anggota_3,
-      primary, s2, s3,
+      nama1, p.Anggota_2, p.Anggota_3,
+      sekolah1, sekolah2, sekolah3,
       p.Kapanewon, p.No_Pendaftaran
     ].filter(Boolean).join(' ').toUpperCase();
+    
     return p;
   }
 
@@ -1270,18 +1273,22 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
 
   function renderPesertaRow(p) {
     const isTeam = p.Cabang === 'LCP';
+    const nama1 = p._nama1;
+    const sekolah1 = p._sekolah1;
+    const sekolah2 = p._sekolah2;
+    const sekolah3 = p._sekolah3;
 
     // Kolom tengah: Nama atau Tim
-    let mainHtml = `<div class="pr-name">${esc(p.Nama)}</div>`;
+    let mainHtml = `<div class="pr-name">${esc(nama1)}</div>`;
     
     if (isTeam) {
       const members = [];
-      if (p.Nama) members.push({ num: 1, name: p.Nama, school: p._sekolah1 });
-      if (p.Anggota_2) members.push({ num: 2, name: p.Anggota_2, school: p._sekolah2 });
-      if (p.Anggota_3) members.push({ num: 3, name: p.Anggota_3, school: p._sekolah3 });
+      if (nama1) members.push({ num: 1, name: nama1, school: sekolah1 });
+      if (p.Anggota_2) members.push({ num: 2, name: p.Anggota_2, school: sekolah2 });
+      if (p.Anggota_3) members.push({ num: 3, name: p.Anggota_3, school: sekolah3 });
 
       mainHtml = `
-        <div class="pr-name">Tim ${esc(p.Kapanewon)}</div>
+        <div class="pr-name">${esc(nama1)}</div>
         <ul class="pr-team-list">
           ${members.map(m => `
             <li>
@@ -1294,36 +1301,32 @@ body.is-fullscreen .lc-phase { font-size: 1.5rem; }
       `;
     }
 
+    // Kolom Kanan (Asal Sekolah - hanya untuk non-tim)
+    const rightCol = !isTeam ? `
+      <div class="pr-right">
+        <div class="pr-meta-label">Asal Sekolah</div>
+        <div class="pr-meta-val">${esc(sekolah1)}</div>
+      </div>
+    ` : '';
+
     return `
       <article class="peserta-row">
-        <!-- Kolom Kiri: ID & Kode Cabang -->
+        <!-- Kolom Kiri: Cabang & Kapanewon (2 Baris) -->
         <div class="pr-left">
-          <div class="pr-no">${esc(p.No_Pendaftaran || '-')}</div>
-          <div class="pr-kode">${esc(p.Cabang)}</div>
+          <div class="pr-meta-label">CABANG</div>
+          <div class="pr-cabang">${esc(p.Cabang)}</div>
+          
+          <div class="pr-meta-label" style="margin-top: 0.6rem;">KAPANEWON</div>
+          <div class="pr-kapanewon">${esc(p.Kapanewon)}</div>
         </div>
-        
+
         <!-- Kolom Tengah: Nama / Anggota -->
         <div class="pr-main">
           ${mainHtml}
         </div>
-        
-        <!-- Kolom Kanan: Kapanewon & Sekolah -->
-        <div class="pr-right">
-          <div class="pr-meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            <span>${esc(p.Kapanewon)}</span>
-          </div>
-          ${!isTeam ? `
-          <div class="pr-meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4a3 3 0 0 1 6 0v4"/>
-            </svg>
-            <span>${esc(p._sekolah1)}</span>
-          </div>` : ''}
-        </div>
+
+        <!-- Kolom Kanan: Asal Sekolah (Jika ada) -->
+        ${rightCol}
       </article>
     `;
   }
