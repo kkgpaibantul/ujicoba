@@ -514,9 +514,9 @@ input[type=number]{-moz-appearance:textfield}
    * ═══════════════════════════════════════════════════════════════ */
   const API_URL = 'https://script.google.com/macros/s/AKfycbxK9HQwo5_qqME-Vus5JNbHMO3HaJRELMAhlVjsOfO65uKlh_MdjwaexaQyRIQ2FVQlQQ/exec';
   const LS_TOKEN = 'mtq_pewara_token';
-  const LS_LCP_BREAKDOWN = 'mtq_lcp_breakdown_v2';  // Fix H1: persist breakdown
-  const LS_NON_LCP_DRAFT = 'mtq_draft_v2_';        // Non-LCP draft per row
-  const LS_LCP_DRAFT = 'mtq_lcp_draft_v2_';        // LCP final draft per tab
+  const LS_LCP_BREAKDOWN = 'mtq_lcp_breakdown_v2';  
+  const LS_NON_LCP_DRAFT = 'mtq_draft_v2_';        
+  const LS_LCP_DRAFT = 'mtq_lcp_draft_v2_';        
 
   const CFG = Object.freeze({
     AUTOSAVE_DELAY: 1500,
@@ -524,12 +524,11 @@ input[type=number]{-moz-appearance:textfield}
     TOAST_DURATION: 3200,
     MAX_TOASTS: 3,
     API_TIMEOUT: 30000,
-    DASHBOARD_STALE_MS: 3000,       // Consider fresh if <3s old
+    DASHBOARD_STALE_MS: 3000,       
     LIVE_RANK_DEBOUNCE: 150,
     SAVE_WAIT_TIMEOUT: 15000,
   });
 
-  // LCP final phase config (dynamic from dashboard if available)
   const LCP_FINAL_TABS = Object.freeze([
     { key: 'final_wajib',   label: 'Wajib Timing', maxBenar: 7,  mode: 'counter' },
     { key: 'final_lempar',  label: 'Lempar Rebut', maxBenar: 7,  mode: 'wajib-rebut' },
@@ -545,20 +544,17 @@ input[type=number]{-moz-appearance:textfield}
     routeSeq: 0,
   };
 
-  // In-flight management
   const inflight = {
     dashboard: null,
     actions: new Set(),
     savingRows: new Set(),
     rowTimers: new Map(),
-    autosaveSeq: new Map(),   // row -> sequence for race prevention
+    autosaveSeq: new Map(),   
   };
 
-  // Cell index for O(1) navigation
   const cellIndex = new Map();
   const dirtyRows = new Set();
 
-  // Non-blocking locks
   let rankTimer = null;
   let toastSeq = 0;
   let offlineBanner = null;
@@ -583,7 +579,6 @@ input[type=number]{-moz-appearance:textfield}
   const getKriteria = () => (S.dashboard || {}).kriteria || [];
   const getRows = () => (S.dashboard || {}).rows || [];
 
-  /** Sanitize decimal input: "1.2.34" -> "1.23" (fix M1) */
   function sanitizeDecimal(raw, maxDecimals = 2) {
     const s = String(raw ?? '').replace(/[^0-9.]/g, '');
     if (!s) return '';
@@ -601,9 +596,8 @@ input[type=number]{-moz-appearance:textfield}
     return Number.isFinite(n) ? n : NaN;
   }
 
-  /** Row complete: all juri + all criteria filled */
   function isRowComplete(r) {
-    if (isLcp()) return false;  // LCP uses different flow
+    if (isLcp()) return false; 
     const juri = getJuriList(), crit = getKriteria();
     if (!r.nilai || !juri.length || !crit.length) return false;
     return juri.every(j => {
@@ -619,13 +613,12 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §3 TOAST & CONFIRM (queued, non-blocking)
+   * §3 TOAST & CONFIRM
    * ═══════════════════════════════════════════════════════════════ */
   function toast(msg, type = 'info') {
     const wrap = $('#toastContainer');
     if (!wrap) return;
 
-    // Cap visible toasts (fix: prevent stack overflow on rapid errors)
     while (wrap.children.length >= CFG.MAX_TOASTS) {
       wrap.firstElementChild?.remove();
     }
@@ -687,7 +680,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §4 API LAYER (dedupe + timeout + retry + circuit breaker)
+   * §4 API LAYER
    * ═══════════════════════════════════════════════════════════════ */
   const apiCircuit = {
     failures: 0,
@@ -724,7 +717,7 @@ input[type=number]{-moz-appearance:textfield}
     }
 
     if (dedupeKey) {
-      const existing = inflight.dashboard;  // only dashboard uses dedupe currently
+      const existing = inflight.dashboard; 
       if (dedupeKey === 'dashboard' && existing) return existing;
     }
 
@@ -736,7 +729,6 @@ input[type=number]{-moz-appearance:textfield}
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(new Error('TIMEOUT')), timeout);
 
-        // Link external abort
         if (externalSignal) {
           if (externalSignal.aborted) { clearTimeout(timer); throw new Error('Aborted'); }
           externalSignal.addEventListener('abort', () => ctrl.abort(), { once: true });
@@ -784,7 +776,6 @@ input[type=number]{-moz-appearance:textfield}
     if (!force && isFresh) return S.dashboard;
     if (inflight.dashboard) return inflight.dashboard;
 
-    // Fix L5: wait pending saves to avoid stale response
     await waitForPendingSaves();
 
     const p = (async () => {
@@ -814,7 +805,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §5 ROUTER & VIEW MANAGEMENT
+   * §5 ROUTER & VIEW
    * ═══════════════════════════════════════════════════════════════ */
   function showView(name) {
     if (S.currentView === 'input' && name !== 'input') clearAutoSaveTimers();
@@ -833,12 +824,10 @@ input[type=number]{-moz-appearance:textfield}
     if (S.token && !S.dashboard && hash !== 'login') {
       try { await loadDashboard(); }
       catch (e) {
-        if (seq === S.routeSeq) {
-          toast('Gagal memuat data', 'error');
-        }
+        if (seq === S.routeSeq) toast('Gagal memuat data', 'error');
         return;
       }
-      if (seq !== S.routeSeq) return; // stale route
+      if (seq !== S.routeSeq) return;
     }
 
     switch (hash) {
@@ -881,15 +870,12 @@ input[type=number]{-moz-appearance:textfield}
       const res = await api('login_pewara', { token: tok }, { timeout: 15000 });
       if (res.error) { toast(res.message || 'Token salah', 'error'); return; }
 
-      // Fix L2: only persist token after verified
       S.token = tok;
       S.login = res;
       localStorage.setItem(LS_TOKEN, tok);
 
-      try {
-        await loadDashboard(true);
-      } catch (e) {
-        // Rollback if dashboard fails
+      try { await loadDashboard(true); } 
+      catch (e) {
         S.token = ''; S.login = null;
         localStorage.removeItem(LS_TOKEN);
         toast('Login berhasil tapi dashboard gagal dimuat', 'error');
@@ -921,13 +907,13 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §7 PANGGUNG SYNC (safety guards per M4/M5/H4)
+   * §7 PANGGUNG SYNC
    * ═══════════════════════════════════════════════════════════════ */
   async function syncPanggungAfterSave() {
     if (!S.dashboard) return;
     if (getState() === 'final') return;
-    if (isLcp()) return;  // Fix M4: LCP uses phase mode, no set_manual
-    if (getCab() === 'Lukis') return;  // Fix M5: timer mode, no set_manual
+    if (isLcp()) return;  
+    if (getCab() === 'Lukis') return;  
 
     const rows = getRows();
     if (!rows.length) return;
@@ -935,16 +921,11 @@ input[type=number]{-moz-appearance:textfield}
 
     try {
       if (firstIncomplete) {
-        await api('panggung_update', {
-          action_panggung: 'set_manual',
-          no_undian: firstIncomplete.No_Undian,
-        }, { timeout: 10000 });
+        await api('panggung_update', { action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian }, { timeout: 10000 });
       } else {
         await api('panggung_update', { action_panggung: 'selesai' }, { timeout: 10000 });
       }
-    } catch (e) {
-      // Silent — panggung sync is best-effort
-    }
+    } catch (e) { /* silent */ }
   }
 
   async function syncPanggungOnBoot() {
@@ -962,14 +943,12 @@ input[type=number]{-moz-appearance:textfield}
         const finalisSet = new Set(S.dashboard.finalis || []);
 
         if (getTahap() === 'penyisihan') {
-          // Fix H4: only check hadir rows
           const hadirRows = rows.filter(isPesertaHadir);
           const allPeny = hadirRows.length > 0 && hadirRows.every(r => r.fases?.penyisihan);
           const label = allPeny ? 'Sidang Finalis' : 'Babak Penyisihan';
           await api('panggung_update', { action_panggung: 'phase_set', phase_label: label }, { timeout: 10000 });
 
         } else if (getTahap() === 'final') {
-          // Fix H4 for finalists: only hadir finalists
           const finalisRows = rows.filter(r => finalisSet.has(r.No_Undian) && isPesertaHadir(r));
           if (!finalisRows.length) return;
 
@@ -986,20 +965,14 @@ input[type=number]{-moz-appearance:textfield}
         }
 
       } else if (cab === 'Lukis') {
-        // Timer mode — nothing to sync
         return;
-
       } else {
         const firstIncomplete = rows.find(r => !isRowComplete(r));
         if (firstIncomplete) {
-          await api('panggung_update', {
-            action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian,
-          }, { timeout: 10000 });
+          await api('panggung_update', { action_panggung: 'set_manual', no_undian: firstIncomplete.No_Undian }, { timeout: 10000 });
         } else if (rows.length > 0) {
           const last = rows[rows.length - 1];
-          await api('panggung_update', {
-            action_panggung: 'set_manual', no_undian: last.No_Undian,
-          }, { timeout: 10000 });
+          await api('panggung_update', { action_panggung: 'set_manual', no_undian: last.No_Undian }, { timeout: 10000 });
         }
       }
     } catch (e) { /* silent */ }
@@ -1052,7 +1025,7 @@ input[type=number]{-moz-appearance:textfield}
     const masalah = d.masalah || [];
     const seriInfo = getSeriInfo(d);
     const penilaianBuka = isPenilaianBuka();
-    const pewaraName = S.login?.pewara?.Nama || '-';  // Fix L1: safe access
+    const pewaraName = S.login?.pewara?.Nama || '-';  
 
     $('#dashTitle').textContent = 'Dashboard';
 
@@ -1079,9 +1052,9 @@ input[type=number]{-moz-appearance:textfield}
       warnings += `<div class="warn-banner"><span class="icon">⚠️</span><div><strong>${masalah.length} masalah:</strong> ${masalah.slice(0,3).map(esc).join(' · ')}${masalah.length > 3 ? '...' : ''}</div></div>`;
     }
     if (seriInfo.list.length) {
-      const label = seriInfo.mode === 'std' ? 'Seri belum diputuskan — koreksi nilai:'
-        : seriInfo.mode === 'lcp-final-tambahan' ? 'Seri di final — input soal tambahan:'
-        : 'Seri batas 5 besar — input soal tambahan:';
+      const label = seriInfo.mode === 'std' ? 'Seri belum diputuskan — koreksi nilai juri di menu Sidang:'
+        : seriInfo.mode === 'lcp-final-tambahan' ? 'Seri di final — input soal tambahan atau koreksi nilai:'
+        : 'Seri batas 5 besar — input soal tambahan atau koreksi nilai:';
       warnings += `<div class="warn-banner info"><span class="icon">⚖️</span><div>${label} <strong>${seriInfo.list.map(esc).join(', ')}</strong></div></div>`;
     }
 
@@ -1110,11 +1083,7 @@ input[type=number]{-moz-appearance:textfield}
 
     const mod = [];
     if (!isLcp()) {
-      mod.push({
-        route: 'input', icon: '📝', title: 'Input Nilai',
-        desc: `${getKriteria().length} kriteria × ${getJuriList().length} juri`,
-        disabled: !canInput,
-      });
+      mod.push({ route: 'input', icon: '📝', title: 'Input Nilai', desc: `${getKriteria().length} kriteria × ${getJuriList().length} juri`, disabled: !canInput });
     }
     mod.push({ route: 'kehadiran', icon: '👥', title: 'Kehadiran', desc: 'Tandai hadir / tidak hadir / sanksi', disabled: !canKehadiran });
     mod.push({ route: 'panggung', icon: '🎙️', title: 'Kendali Panggung', desc: 'Mulai lomba, Next, Timer', disabled: !penilaianBuka });
@@ -1177,7 +1146,15 @@ input[type=number]{-moz-appearance:textfield}
       const prev = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span>';
+      
       try {
+        if (action === 'lock' && dirtyRows.size > 0) {
+          btn.innerHTML = '<span class="spinner"></span> Menyimpan sisa...';
+          await saveNilai(true); 
+        } else {
+          await waitForPendingSaves();
+        }
+
         const res = action === 'lock'
           ? await api('kunci_nilai', {}, { timeout: 30000 })
           : await api('toggle_sidang', {}, { timeout: 30000 });
@@ -1198,14 +1175,13 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §9 INPUT TABLE (Non-LCP)
+   * §9 INPUT TABLE
    * ═══════════════════════════════════════════════════════════════ */
   function renderInput() {
     showView('input');
     const d = S.dashboard;
     if (!d || isLcp()) return (location.hash = '#dashboard');
 
-    // Fix L6: fresh state on render
     dirtyRows.clear();
     inflight.savingRows.clear();
     clearAutoSaveTimers();
@@ -1251,7 +1227,7 @@ input[type=number]{-moz-appearance:textfield}
       <button class="btn btn-primary" id="btnSaveNilai" ${!penilaianBuka ? 'disabled' : ''}>💾 Simpan Semua</button>`;
 
     bindInputTableEvents();
-    $('#btnSaveNilai').onclick = saveNilai;
+    $('#btnSaveNilai').onclick = () => saveNilai(false);
 
     $$('.missing-item').forEach(b => { b.onclick = () => focusRow(b.dataset.no); });
 
@@ -1293,7 +1269,6 @@ input[type=number]{-moz-appearance:textfield}
           const maxLen = String(c.max).length + 3;
           const filled = strVal !== '';
 
-          // Fix H3: lock when penilaian closed
           const isCellLocked = !penilaianBuka || isRowLocked || (strVal !== '' && !isSidangMode);
 
           return `<td><input class="input-cell${filled ? ' filled' : ''}${isCellLocked ? ' locked' : ''}" type="text" inputmode="decimal" maxlength="${maxLen}"
@@ -1302,7 +1277,6 @@ input[type=number]{-moz-appearance:textfield}
         }).join('');
       }).join('');
 
-      // Total = avg of juri totals
       let totalDisplay = '—';
       const totals = [];
       juri.forEach(j => {
@@ -1314,7 +1288,9 @@ input[type=number]{-moz-appearance:textfield}
         });
         if (filled === crit.length) totals.push(sum);
       });
-      if (totals.length) totalDisplay = (totals.reduce((s,v) => s+v, 0) / totals.length).toFixed(2);
+      if (totals.length) {
+        totalDisplay = (totals.reduce((s,v) => s+v, 0) / totals.length).toFixed(2);
+      }
 
       const saveBtnHtml = !isRowLocked && penilaianBuka
         ? `<button class="row-save-btn" data-no="${esc(no)}" title="Simpan baris ini">✓</button>`
@@ -1341,7 +1317,6 @@ input[type=number]{-moz-appearance:textfield}
     if (!wrap || wrap.dataset.bound === '1') return;
     wrap.dataset.bound = '1';
 
-    // Event delegation
     wrap.addEventListener('input', e => {
       const inp = e.target;
       if (!inp.classList?.contains('input-cell') || inp.readOnly) return;
@@ -1375,14 +1350,12 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   function handleCellInput(inp) {
-    // Fix H3: guard
     if (!isPenilaianBuka()) return;
 
-    let v = sanitizeDecimal(inp.value, 2);  // Fix M1
+    let v = sanitizeDecimal(inp.value, 2);  
     const max = parseFloat(inp.dataset.max);
     const min = parseFloat(inp.dataset.min || 0);
 
-    // Clamp value (but allow trailing dot for editing)
     if (v !== '' && v !== '.' && !v.endsWith('.')) {
       const n = parseFloat(v);
       if (!isNaN(n)) {
@@ -1403,12 +1376,14 @@ input[type=number]{-moz-appearance:textfield}
 
     const tr = inp.closest('tr');
     if (!tr) return;
+    
+    backupNonLcpDraft(tr); 
+
     updateRowOnly(tr);
     markRowDirty(tr.dataset.no);
     scheduleAutoSave(tr.dataset.no);
     scheduleGlobalUpdate();
 
-    // Auto-advance
     if (inp._advTimer) clearTimeout(inp._advTimer);
     inp._advTimer = setTimeout(() => {
       inp._advTimer = null;
@@ -1474,7 +1449,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §10 DIRTY ROW TRACKING & AUTOSAVE
+   * §10 DIRTY ROW & AUTOSAVE
    * ═══════════════════════════════════════════════════════════════ */
   function markRowDirty(no) {
     if (!no) return;
@@ -1564,7 +1539,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §11 DRAFT PERSISTENCE (non-LCP)
+   * §11 DRAFT PERSISTENCE
    * ═══════════════════════════════════════════════════════════════ */
   function backupNonLcpDraft(tr) {
     if (!tr) return;
@@ -1609,7 +1584,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §12 SAVE ROW (single, with full race protection)
+   * §12 SAVE ROW
    * ═══════════════════════════════════════════════════════════════ */
   async function saveRow(no, opts = {}) {
     const silent = !!opts.silent;
@@ -1681,7 +1656,6 @@ input[type=number]{-moz-appearance:textfield}
       const res = await api('simpan_nilai', { rows: completeRows }, { timeout: 30000 });
       if (res.error) throw new Error(res.message);
 
-      // Update local state
       const target = getRows().find(x => x.No_Undian === no);
       if (target) {
         if (!target.nilai) target.nilai = {};
@@ -1707,7 +1681,7 @@ input[type=number]{-moz-appearance:textfield}
         scheduleAutoSave(no);
       }
 
-      S.dashFetchedAt = 0;  // Invalidate cache
+      S.dashFetchedAt = 0; 
       scheduleGlobalUpdate();
     } catch (e) {
       if (silent) showAutoSaveIndicator(`✗ ${no}: ${e.message || ''}`, 'error');
@@ -1736,9 +1710,9 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §13 SAVE ALL (batch, non-LCP)
+   * §13 SAVE ALL
    * ═══════════════════════════════════════════════════════════════ */
-  async function saveNilai() {
+  async function saveNilai(isSilent = false) {
     const btn = $('#btnSaveNilai');
     if (!isPenilaianBuka()) return toast('Penilaian ditutup', 'error');
 
@@ -1748,7 +1722,10 @@ input[type=number]{-moz-appearance:textfield}
       ? allTrs.filter(tr => dirtyRows.has(tr.dataset.no))
       : allTrs;
 
-    if (!targetTrs.length) return toast('Tidak ada perubahan', 'info');
+    if (!targetTrs.length) {
+      if (!isSilent) toast('Tidak ada perubahan', 'info');
+      return;
+    }
 
     const rows = [], errs = [];
     const sentSnapshot = new Map();
@@ -1784,16 +1761,26 @@ input[type=number]{-moz-appearance:textfield}
       if (Object.keys(snap).length) sentSnapshot.set(no, snap);
     });
 
-    if (errs.length) return toast(errs[0] + (errs.length > 1 ? ` (+${errs.length - 1})` : ''), 'error');
-    if (!rows.length) return toast('Tidak ada nilai lengkap', 'info');
+    if (errs.length) {
+      toast(errs[0] + (errs.length > 1 ? ` (+${errs.length - 1})` : ''), 'error');
+      return;
+    }
+    if (!rows.length) {
+      if (!isSilent) toast('Tidak ada nilai lengkap', 'info');
+      return;
+    }
 
-    const ok = await showConfirm(`Simpan ${sentSnapshot.size} baris (${rows.length} set)?`, { title: 'Konfirmasi Simpan', okText: 'Simpan' });
-    if (!ok) return;
+    if (!isSilent) {
+      const ok = await showConfirm(`Simpan ${sentSnapshot.size} baris (${rows.length} set)?`, { title: 'Konfirmasi Simpan', okText: 'Simpan' });
+      if (!ok) return;
+    }
 
     await guardAction('save_nilai_all', async () => {
-      const prev = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<span class="spinner"></span> Menyimpan ${sentSnapshot.size} baris...`;
+      const prev = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner"></span> Menyimpan ${sentSnapshot.size} baris...`;
+      }
 
       try {
         const res = await api('simpan_nilai', { rows }, { timeout: 60000 });
@@ -1832,13 +1819,13 @@ input[type=number]{-moz-appearance:textfield}
       } catch (e) {
         toast('Gagal: ' + (e.message || 'Network error'), 'error');
       } finally {
-        if (btn.isConnected) { btn.disabled = false; btn.innerHTML = prev; }
+        if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = prev; }
       }
     });
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §14 CELL NAVIGATION (O(1))
+   * §14 CELL NAVIGATION
    * ═══════════════════════════════════════════════════════════════ */
   function buildCellIndex() {
     cellIndex.clear();
@@ -1991,7 +1978,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §16 KEHADIRAN (fix C1 + C2)
+   * §16 KEHADIRAN
    * ═══════════════════════════════════════════════════════════════ */
   function renderKehadiran() {
     showView('kehadiran');
@@ -2067,7 +2054,6 @@ input[type=number]{-moz-appearance:textfield}
   function bindKehadiranActions() {
     if (!isPenilaianBuka()) return;
 
-    // Fix C1: use correct selector — delegate on content container
     const content = $('#kehadiranContent');
     if (content.dataset.bound === '1') return;
     content.dataset.bound = '1';
@@ -2296,7 +2282,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §18 SERI — std (edit) & LCP (tambahan)
+   * §18 SERI
    * ═══════════════════════════════════════════════════════════════ */
   function renderSeri() {
     showView('seri');
@@ -2492,7 +2478,6 @@ input[type=number]{-moz-appearance:textfield}
       const peny = num(r.skor_penyisihan);
       const fin = num(r.total_final);
       const base = isFinal ? fin : peny;
-      // Fix M3: separate score + tiebreak
       return `<div class="seri-row" data-no="${esc(no)}" style="grid-template-columns:auto 1fr auto auto auto">
         <span class="nomor">${esc(no)}</span>
         <div class="info">
@@ -2554,7 +2539,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §19 PRINT (BA & DH)
+   * §19 PRINT
    * ═══════════════════════════════════════════════════════════════ */
   function buildKopHtml(kop) {
     if (!kop) return '';
@@ -2610,19 +2595,28 @@ input[type=number]{-moz-appearance:textfield}
       bodyHtml = buildBaTable(rows, cols);
     }
 
+    const juriListHtml = juri.length
+      ? juri.map(j => {
+          const nama = esc(j.Nama || '(nama juri)');
+          const nip = j.NIP ? ` <span style="color:#666;font-size:8.5pt;font-weight:500">— NIP. ${esc(j.NIP)}</span>` : '';
+          return `<div style="margin-bottom:3px">${j.Urutan}. <b>${nama}</b>${nip}</div>`;
+        }).join('')
+      : '<em style="color:#888">(belum ada juri)</em>';
+
     const ttdHtml = `
       <div class="ttd">
         <div class="cell">
           <div class="tanggal">Bantul, ${esc(tanggal)}</div>
-          <div class="jabatan">Koordinator Juri</div>
-          <div class="nama">${esc(ttd.koordinator_juri?.Nama || '(__________________)')}</div>
-          <div class="nip">${ttd.koordinator_juri?.NIP ? 'NIP. ' + esc(ttd.koordinator_juri.NIP) : '&nbsp;'}</div>
+          <div class="jabatan" style="margin-bottom:6px">Dewan Juri:</div>
+          <div style="min-height:80px;line-height:1.55;font-size:9pt;text-align:left;padding:0 14px;margin-bottom:10px">
+            ${juriListHtml}
+          </div>
         </div>
         <div class="cell">
           <div class="tanggal" style="visibility:hidden">_</div>
-          <div class="jabatan">Ketua Panitia</div>
-          <div class="nama">${esc(ttd.ketua_panitia?.Nama || '(__________________)')}</div>
-          <div class="nip">${ttd.ketua_panitia?.NIP ? 'NIP. ' + esc(ttd.ketua_panitia.NIP) : '&nbsp;'}</div>
+          <div class="jabatan">Ketua KKG PAI Kab. Bantul</div>
+          <div class="nama">${esc(ttd.ketua_kkg?.Nama || '(__________________)')}</div>
+          <div class="nip">${ttd.ketua_kkg?.NIP ? 'NIP. ' + esc(ttd.ketua_kkg.NIP) : '&nbsp;'}</div>
         </div>
       </div>`;
 
@@ -2634,6 +2628,7 @@ input[type=number]{-moz-appearance:textfield}
         <span class="k">Hari / Tanggal</span><span class="v">: ${esc(tanggal)}</span>
         <span class="k">Tempat</span><span class="v">: ${esc(tempat)}</span>
         <span class="k">Pewara</span><span class="v">: ${esc(pewara.Nama || '—')}${pewara.NIP ? ' / ' + esc(pewara.NIP) : ''}</span>
+        <span class="k">Panitia Pelaksana</span><span class="v">: ${esc(ttd.ketua_panitia?.Nama || '—')}${ttd.ketua_panitia?.NIP ? ' / ' + esc(ttd.ketua_panitia.NIP) : ''}</span>
         <span class="k">Juri</span><span class="v">: ${juri.map(j => esc(j.Nama)).join(', ') || '—'}</span>
       </div>
       ${bodyHtml}${ttdHtml}
@@ -2803,7 +2798,6 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       <button class="btn btn-primary" id="btnSaveLcpPeny" style="margin-top:0.5rem" ${!penilaianBuka ? 'disabled' : ''}>💾 Simpan & Grade</button>`;
 
-    // Grade preview debounce
     $$('#lcpPenyisihanContent .jawaban-input').forEach(inp => {
       inp.addEventListener('input', () => {
         let v = String(inp.value).toUpperCase().replace(/[^A-D-]/g, '').slice(0, 25);
@@ -2894,7 +2888,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §21 LCP TETAPKAN FINALIS (fix H2)
+   * §21 LCP FINALIS
    * ═══════════════════════════════════════════════════════════════ */
   function renderLcpFinalis() {
     showView('lcp-finalis');
@@ -2903,7 +2897,6 @@ input[type=number]{-moz-appearance:textfield}
     const rows = getRows();
     const finalis = new Set(d.finalis || []);
 
-    // Fix H2: filter hadir
     const ranked = rows
       .filter(r => r.fases?.penyisihan && isPesertaHadir(r))
       .map(r => ({
@@ -2912,8 +2905,9 @@ input[type=number]{-moz-appearance:textfield}
         kap: r.Kapanewon || '—',
         skor: num(r.skor_penyisihan),
         tambahan: num(r.skor_tambahan),
+        rankBackend: r.Rank_Penyisihan || 999
       }))
-      .sort((a, b) => (b.skor - a.skor) || (b.tambahan - a.tambahan));
+      .sort((a, b) => a.rankBackend - b.rankBackend);
 
     const tieBoundary = ranked.length >= 6 && ranked[4].skor === ranked[5].skor && ranked[4].tambahan === ranked[5].tambahan;
     const grupTambahan = d.grup_tambahan || [];
@@ -2982,7 +2976,7 @@ input[type=number]{-moz-appearance:textfield}
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * §22 LCP FINAL — with full H1 fix
+   * §22 LCP FINAL
    * ═══════════════════════════════════════════════════════════════ */
   function getBreakdownCache(tabKey) {
     try {
@@ -3053,7 +3047,6 @@ input[type=number]{-moz-appearance:textfield}
       });
       if (restored > 0) {
         toast(`🔄 Draft dipulihkan`, 'warning');
-        // Fix M6: no attachLiveUpdate here — renderLcpFinal does it
       }
     } catch (e) {}
   }
@@ -3061,7 +3054,6 @@ input[type=number]{-moz-appearance:textfield}
   function syncPanggungLcpFinal(tabKey) {
     if (!isLcp() || getTahap() !== 'final') return;
     const finalisSet = new Set(S.dashboard.finalis || []);
-    // Fix H4: only hadir finalists
     const finalistRows = getRows().filter(r => finalisSet.has(r.No_Undian) && isPesertaHadir(r));
     if (!finalistRows.length) return;
     const allSaved = finalistRows.every(r => r.fases?.[tabKey]);
@@ -3131,13 +3123,11 @@ input[type=number]{-moz-appearance:textfield}
         const fase = r.fases?.[tab.key] || {};
         const isSaved = !!r.fases?.[tab.key] && !isSidangMode;
 
-        // Fix H1: multi-source retrieval (state fields → jawaban pipe → localStorage cache)
         const parts = String(fase.jawaban || '').split('|');
         let wajibStr = fase.wajib_str || parts[0] || '';
         let rebutB = fase.rebut_b !== undefined ? fase.rebut_b : (parts[1] || '');
         let rebutS = fase.rebut_s !== undefined ? fase.rebut_s : (parts[2] || '');
 
-        // Fallback to localStorage cache if server lost breakdown (H1 mitigation)
         if (isSaved && !wajibStr) {
           const cached = getBreakdownFromCache(tab.key, r.No_Undian);
           if (cached) {
@@ -3238,7 +3228,6 @@ input[type=number]{-moz-appearance:textfield}
 
     attachLiveUpdate(tab);
 
-    // Bulk save
     $('#btnSaveLcpFinal').onclick = async e => {
       const btn = e.currentTarget;
       const unsavedRows = rows.filter(r => !r.fases?.[tab.key] || isSidangMode);
@@ -3282,7 +3271,6 @@ input[type=number]{-moz-appearance:textfield}
         const res = await api('simpan_lcp', { fase: tab.key, rows: payload }, { timeout: 60000 });
         if (res.error) throw new Error(res.message);
 
-        // Update local state with full breakdown (fix H1: don't lose breakdown)
         payload.forEach(p => {
           const target = getRows().find(x => x.No_Undian === p.No_Undian);
           if (target) {
@@ -3308,7 +3296,6 @@ input[type=number]{-moz-appearance:textfield}
         toast('Semua data tersimpan sekaligus', 'success');
 
         syncPanggungLcpFinal(tab.key);
-        // Fix H1: no reload — use local state (breakdown preserved)
         renderLcpFinal(tab.key);
       } catch (err) {
         toast('Gagal: ' + err.message, 'error');
@@ -3333,7 +3320,6 @@ input[type=number]{-moz-appearance:textfield}
       await executeSaveRow(no, tab, false);
       toast(`${no} berhasil disimpan & dikunci.`, 'success');
 
-      // Remove this row from draft
       try {
         const draftStr = localStorage.getItem(`${LS_LCP_DRAFT}${tabKey}`);
         if (draftStr) {
@@ -3345,7 +3331,6 @@ input[type=number]{-moz-appearance:textfield}
 
       S.dashFetchedAt = 0;
       syncPanggungLcpFinal(tab.key);
-      // Fix H1: no reload
       renderLcpFinal(tab.key);
     } catch (err) {
       toast('Gagal: ' + err.message, 'error');
@@ -3382,7 +3367,6 @@ input[type=number]{-moz-appearance:textfield}
         No_Undian: no,
         benar: wajibB + rebutB,
         salah: rebutS,
-        // Fix H1: include jawaban pipe format so backend can persist
         jawaban: `${wajibStrRaw}|${rebutB}|${rebutS}`,
       });
       breakdownData = { wajib_str: wajibStrRaw, rebut_b: rebutB, rebut_s: rebutS };
@@ -3400,7 +3384,6 @@ input[type=number]{-moz-appearance:textfield}
     const res = await api('simpan_lcp', { fase: tab.key, rows: payload }, { timeout: 20000 });
     if (res.error) throw new Error(res.message);
 
-    // Update local state with full data (fix H1)
     const target = getRows().find(x => x.No_Undian === no);
     if (target) {
       if (!target.fases) target.fases = {};
@@ -3487,7 +3470,6 @@ input[type=number]{-moz-appearance:textfield}
           info.querySelector('[data-pool-max]').textContent = String(pool);
           info.classList.toggle('error', attempts > pool || totalRebutB > pool);
 
-          // Fix M2: dynamic counter max
           rows.forEach(tr => {
             const rbInp = tr.querySelector('[data-key="rebut_b"]');
             const rsInp = tr.querySelector('[data-key="rebut_s"]');
@@ -3539,7 +3521,6 @@ input[type=number]{-moz-appearance:textfield}
     if (await showConfirm('Keluar dari portal pewara?', { okText: 'Keluar' })) doLogout();
   };
 
-  // Global counter click (LCP Final)
   document.addEventListener('click', e => {
     const btn = e.target.closest('#lcpFinalContent .counter-btn');
     if (!btn || btn.disabled) return;
@@ -3559,7 +3540,6 @@ input[type=number]{-moz-appearance:textfield}
     inp.dispatchEvent(new Event('input', { bubbles: true }));
   });
 
-  // Route change handler
   window.addEventListener('hashchange', async () => {
     const newHash = (location.hash || '').slice(1);
     const current = S.currentView;
@@ -3575,17 +3555,15 @@ input[type=number]{-moz-appearance:textfield}
     route();
   });
 
-  // Ctrl+S
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
       if (S.currentView !== 'input') return;
       e.preventDefault();
-      if (dirtyRows.size > 0) saveNilai();
+      if (dirtyRows.size > 0) saveNilai(false);
       else toast('Tidak ada perubahan', 'info');
     }
   });
 
-  // Before unload
   window.addEventListener('beforeunload', e => {
     if (dirtyRows.size > 0 || inflight.savingRows.size > 0) {
       e.preventDefault();
@@ -3594,7 +3572,6 @@ input[type=number]{-moz-appearance:textfield}
     }
   });
 
-  // Online/offline
   window.addEventListener('online', () => {
     if (offlineBanner) { offlineBanner.remove(); offlineBanner = null; }
     apiCircuit.reset();
@@ -3611,13 +3588,8 @@ input[type=number]{-moz-appearance:textfield}
     }
   });
 
-  // Global error boundary
-  window.addEventListener('error', e => {
-    console.error('[Global error]', e.error || e.message);
-  });
-  window.addEventListener('unhandledrejection', e => {
-    console.error('[Unhandled rejection]', e.reason);
-  });
+  window.addEventListener('error', e => { console.error('[Global error]', e.error || e.message); });
+  window.addEventListener('unhandledrejection', e => { console.error('[Unhandled rejection]', e.reason); });
 
   /* ═══════════════════════════════════════════════════════════════
    * §24 BOOT
